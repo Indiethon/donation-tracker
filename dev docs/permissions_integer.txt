@@ -13,7 +13,8 @@ Permissions can be merged together in one number. For example:
 0 = Add/Remove, Change, View
 1 = Change, View
 2 = Add/Remove, View
-3 = View
-4 = No Access
+3 = View Only
+
+If the permission is not included in the permission integer, it is assumed that the user/group does not have permission to see the requested resource.
 
 Permission 000 means full access to any part of the dashboard and overrides all other permissions (superuser).
