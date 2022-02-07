@@ -1,0 +1,142 @@
+{
+    "$id": "http://example.com/example.json",
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "default": {
+        "baseURL": "example.com",
+        "port": 3000,
+        "ssl": {
+            "enabled": false,
+            "keyPath": "",
+            "certPath": ""
+        },
+        "paypal": {
+            "useSandbox": false
+        }
+    },
+    "description": "The root schema comprises the entire JSON document.",
+    "examples": [
+        {
+            "baseURL": "example.com",
+            "port": 3000,
+            "ssl": {
+                "enabled": false,
+                "keyPath": "",
+                "certPath": ""
+            },
+            "paypal": {
+                "useSandbox": false
+            }
+        }
+    ],
+    "required": [
+        "baseURL",
+        "port",
+        "ssl",
+        "paypal"
+    ],
+    "title": "The root schema",
+    "type": "object",
+    "properties": {
+        "baseURL": {
+            "$id": "#/properties/baseURL",
+            "type": "string",
+            "title": "The baseURL schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "example.com"
+            ]
+        },
+        "port": {
+            "$id": "#/properties/port",
+            "type": "integer",
+            "title": "The port schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": 0,
+            "examples": [
+                3000
+            ]
+        },
+        "ssl": {
+            "$id": "#/properties/ssl",
+            "type": "object",
+            "title": "The ssl schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": {},
+            "examples": [
+                {
+                    "enabled": false,
+                    "keyPath": "",
+                    "certPath": ""
+                }
+            ],
+            "required": [
+                "enabled",
+                "keyPath",
+                "certPath"
+            ],
+            "properties": {
+                "enabled": {
+                    "$id": "#/properties/ssl/properties/enabled",
+                    "type": "boolean",
+                    "title": "The enabled schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": false,
+                    "examples": [
+                        false
+                    ]
+                },
+                "keyPath": {
+                    "$id": "#/properties/ssl/properties/keyPath",
+                    "type": "string",
+                    "title": "The keyPath schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": "",
+                    "examples": [
+                        ""
+                    ]
+                },
+                "certPath": {
+                    "$id": "#/properties/ssl/properties/certPath",
+                    "type": "string",
+                    "title": "The certPath schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": "",
+                    "examples": [
+                        ""
+                    ]
+                }
+            },
+            "additionalProperties": true
+        },
+        "paypal": {
+            "$id": "#/properties/paypal",
+            "type": "object",
+            "title": "The paypal schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": {},
+            "examples": [
+                {
+                    "useSandbox": false
+                }
+            ],
+            "required": [
+                "useSandbox"
+            ],
+            "properties": {
+                "useSandbox": {
+                    "$id": "#/properties/paypal/properties/useSandbox",
+                    "type": "boolean",
+                    "title": "The useSandbox schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": false,
+                    "examples": [
+                        false
+                    ]
+                }
+            },
+            "additionalProperties": true
+        }
+    },
+    "additionalProperties": true
+}

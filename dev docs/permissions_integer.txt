@@ -1,0 +1,19 @@
+How it works:
+Each permission has a 2-digit ID, and a permission level with a 1-digit number. For example:
+Let's say permission 24 is incentives, and 08 is donations.
+
+242: User can add/remove and view incentives, but cannot change them.
+244: User cannot view incentives.
+240: User can add/remove, change, and view incentives.
+
+Permissions can be merged together in one number. For example:
+
+241083: User can change and view incentives, but can only view donations.
+
+0 = Add/Remove, Change, View
+1 = Change, View
+2 = Add/Remove, View
+3 = View
+4 = No Access
+
+Permission 000 means full access to any part of the dashboard and overrides all other permissions (superuser).

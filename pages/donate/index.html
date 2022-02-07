@@ -18,6 +18,13 @@
 
   <script>
     function donateForm() {
+      let returnURL;
+      switch (<%= ssl %>) {
+        case true: returnURL = `https://<%= baseURL %>`; break;
+        case false: returnURL = `http://<%= baseURL %>:<%= port %>`; break;
+      };
+      let donateURL = "https://www.paypal.com/donate";
+      if (<%= useSandbox %>) donateURL = "https://www.sandbox.paypal.com/donate";
       let name = 'Anonymous';
       if (document.getElementById('name').value !== '') name = document.getElementById('name').value;
       const donationData = {
@@ -25,16 +32,17 @@
         email: document.getElementById('email').value,
         amount: document.getElementById('amount').value,
         comment: document.getElementById('comment').value,
-        incentives: {}
+        incentives: {},
+        custom: {},
       }
       document.body.insertAdjacentHTML("beforeend", `
-      <form id="donateForm" action="https://www.sandbox.paypal.com/donate" method="post" target="_top">
+      <form id="donateForm" action="${donateURL}" method="post" target="_top">
         <input type="hidden" name="cmd" value="_donations" />
         <input type="hidden" name="business" value="sb-x55mn12091780@business.example.com" />
         <input type="hidden" name="amount" value="${document.getElementById('amount').value}" />
         <input type="hidden" name="custom" value='${JSON.stringify(donationData)}' />
-        <input type="hidden" name="return" value="https://tracker.indiethon.live/donate/process" />
-        <input type="hidden" name="notify_url" value="https://tracker.indiethon.live/api/donation/ipn" />
+        <input type="hidden" name="return" value="${returnURL}/donate/process" />
+        <input type="hidden" name="notify_url" value="${returnURL}/api/donation/ipn" />
         </form>
     `)
       document.getElementById('donateForm').submit()
