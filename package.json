@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nicnacnic/donation-tracker.git"
+    "url": "git+https://github.com/indiethon/donation-tracker.git"
   },
   "author": "nicnacnic",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/nicnacnic/donation-tracker/issues"
+    "url": "https://github.com/indiethon/donation-tracker/issues"
   },
-  "homepage": "https://github.com/nicnacnic/donation-tracker#readme",
+  "homepage": "https://github.com/indiethon/donation-tracker#readme",
   "dependencies": {
     "@adminjs/design-system": "^2.0.4",
     "@adminjs/express": "^4.0.1",
