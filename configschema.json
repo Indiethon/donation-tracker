@@ -11,6 +11,12 @@
         },
         "paypal": {
             "useSandbox": false
+        },
+        "tracker": {
+            "name": "Donation Tracker",
+            "databaseURL": "localhost:27017/donation-tracker",
+            "logoURL": "",
+            "passwordHash": "some random string"
         }
     },
     "description": "The root schema comprises the entire JSON document.",
@@ -25,6 +31,12 @@
             },
             "paypal": {
                 "useSandbox": false
+            },
+            "tracker": {
+                "name": "Donation Tracker",
+                "databaseURL": "localhost:27017/donation-tracker",
+                "logoURL": "",
+                "passwordHash": "some random string"
             }
         }
     ],
@@ -32,7 +44,8 @@
         "baseURL",
         "port",
         "ssl",
-        "paypal"
+        "paypal",
+        "tracker"
     ],
     "title": "The root schema",
     "type": "object",
@@ -132,6 +145,70 @@
                     "default": false,
                     "examples": [
                         false
+                    ]
+                }
+            },
+            "additionalProperties": true
+        },
+        "tracker": {
+            "$id": "#/properties/tracker",
+            "type": "object",
+            "title": "The tracker schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": {},
+            "examples": [
+                {
+                    "name": "Donation Tracker",
+                    "databaseURL": "localhost:27017/donation-tracker",
+                    "logoURL": "",
+                    "passwordHash": "some random string"
+                }
+            ],
+            "required": [
+                "name",
+                "databaseURL",
+                "logoURL",
+                "passwordHash"
+            ],
+            "properties": {
+                "name": {
+                    "$id": "#/properties/tracker/properties/name",
+                    "type": "string",
+                    "title": "The name schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": "",
+                    "examples": [
+                        "Donation Tracker"
+                    ]
+                },
+                "databaseURL": {
+                    "$id": "#/properties/tracker/properties/databaseURL",
+                    "type": "string",
+                    "title": "The databaseURL schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": "",
+                    "examples": [
+                        "localhost:27017/donation-tracker"
+                    ]
+                },
+                "logoURL": {
+                    "$id": "#/properties/tracker/properties/logoURL",
+                    "type": "string",
+                    "title": "The logoURL schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": "",
+                    "examples": [
+                        ""
+                    ]
+                },
+                "passwordHash": {
+                    "$id": "#/properties/tracker/properties/passwordHash",
+                    "type": "string",
+                    "title": "The passwordHash schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": "",
+                    "examples": [
+                        "some random string"
                     ]
                 }
             },

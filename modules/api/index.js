@@ -1,9 +1,8 @@
 const { v4: uuid } = require('uuid');
-const apiKeys = require('./keys.json');
 
 //console.log(apiKeys[0]);
 
-module.exports.load = (tracker) => {
+module.exports = (tracker) => {
 
     // Unsecured API routes.
     tracker.app.get('/api/donation/create', (req, res) => res.status(200).send({ donationId: uuid() }))

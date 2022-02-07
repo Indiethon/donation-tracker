@@ -17,3 +17,6 @@ More specifically, I would like a front end developer to create the website page
 - Generate the config file. `npm run config`
 - Open `config.json` and change desired settings. Make sure to save!
 - Start the tracker. `npm start`
+
+# Simple Docs
+When creating users, the default password is `password`.

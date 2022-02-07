@@ -3,81 +3,16 @@ const AdminJS = require('adminjs')
 const AdminJSExpress = require('@adminjs/express')
 const AdminJSMongoose = require('@adminjs/mongoose')
 const bcrypt = require('bcrypt')
-const schemas = require('./schemas')
 const { v4: uuid } = require('uuid');
 const path = require('path')
 const express = require('express')
+const options = require('./options')
+let currentUser;
 
 module.exports = (tracker) => {
-    mongoose.Promise = global.Promise;
-    mongoose.connect("mongodb://localhost:27017/donation-tracker");
-    let User = mongoose.model('User', schemas.user)
-
     AdminJS.registerAdapter(AdminJSMongoose)
 
-    const adminJs = new AdminJS({
-        databases: [],
-        resources: [{
-            resource: User,
-            options: {
-                properties: {
-                    password: {
-                        isVisible: false,
-                    },
-                },
-                actions: {
-                    new: {
-                        before: async (request) => {
-                            if (request.payload.record.password) {
-                                request.payload.record = {
-                                    ...request.payload.record,
-                                    password: await bcrypt.hash(request.payload.record.password, 10),
-                                    password: undefined,
-                                }
-                            }
-                            return request
-                        },
-                    }
-                }
-            }
-        }],
-        branding: {
-            companyName: 'Test!',
-            softwareBrothers: false,
-            logo: 'https://www.w3.org/html/logo/downloads/HTML5_Logo_256.png',
-        },
-        locale: {
-            translations: {
-                messages: {
-                    loginWelcome: 'Administration Panel - Login' // the smaller text
-                },
-                labels: {
-                    loginWelcome: 'The Big Text', // this could be your project name
-                },
-            }
-        },
-        dashboard: {
-            component: AdminJS.bundle('./test')
-        },
-        assets: {
-            styles: ['/admin/custom/css.css'], // here you can hide the default images and re-position the boxes or text.
-            scripts: ['/admin/custom/test.js'],
-        },
-        pages: {
-            customPage: {
-                label: "Custom page",
-                handler: async (request, response, context) => {
-                    return {
-                        text: 'I am fetched from the backend',
-                    }
-                },
-            },
-            anotherPage: {
-                label: "TypeScript page",
-            },
-        },
-        rootPath: '/admin',
-    })
+    const adminJs = new AdminJS(options(tracker))
 
     //   {
     //     resource: User,
@@ -109,17 +44,20 @@ module.exports = (tracker) => {
 
 
     const router = AdminJSExpress.buildAuthenticatedRouter(adminJs, {
-        authenticate: async (username, password) => {
-            const user = await User.findOne({ username })
+        authenticate: async (username, password, lastLogin) => {
+            let user = await tracker.database.User.findOne({ username })
             if (user) {
                 const matched = await bcrypt.compare(password, user.password)
                 if (matched) {
+                    console.info(`User ${username} has logged in.`)
+                    user.lastLogin = Date.now();
+                    user.save();
                     return user
                 }
             }
             return false
         },
-        cookiePassword: 'some-secret-password-used-to-secure-cookie',
+        cookiePassword: tracker.config.tracker.passwordHash,
     })
 
     tracker.app.use('/admin/custom', express.static(path.join(__dirname, './css')));
