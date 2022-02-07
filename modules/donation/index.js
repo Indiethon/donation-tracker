@@ -1,7 +1,8 @@
 const fetch = require('node-fetch');
 const { v4: uuid } = require('uuid');
+const { addUser } = require('../admin');
 
-module.exports = () => {
+module.exports = (tracker) => {
     console.log('donation module started!')
 
     module.exports.verifyIPN = (req, res) => {
@@ -17,6 +18,10 @@ module.exports = () => {
             rejectUnauthorized: false,
             requestCert: true,
             agent: false
-        }).then((data) => console.log(req.body))
+        }).then((data) => {
+            console.log(JSON.parse(req.body.custom))
+            console.log('Payment Status: ' + req.body.payment_status)
+        })
     }
+    //setTimeout(() => tracker.modules.admin.addUser({ id: '123', username: 'nicnacnic', password: 'test', lastLogin: new Date(), isSuperuser: true, isStaff: true, isVolunteer: false, firstName: 'Nicolas', lastName: 'Baror', email: 'nicnacnic@nicnacnic.com', dateCreated: new Date()}), 5000)
 }

@@ -9,18 +9,32 @@
 
 
 <body>
-  <input placeholder="Name"></input>
+  <input id="name" placeholder="Name"></input>
+  <input id="email" placeholder="Email"></input>
   <input id="amount" placeholder="Amount"></input>
+  <input id="comment" placeholder="Comment"></input>
   <button id="donate" onclick="donateForm()">Donate!</button>
+  <p>All donation comments are screnned.</p>
 
   <script>
     function donateForm() {
+      let name = 'Anonymous';
+      if (document.getElementById('name').value !== '') name = document.getElementById('name').value;
+      const donationData = {
+        name: name,
+        email: document.getElementById('email').value,
+        amount: document.getElementById('amount').value,
+        comment: document.getElementById('comment').value,
+        incentives: {}
+      }
       document.body.insertAdjacentHTML("beforeend", `
       <form id="donateForm" action="https://www.sandbox.paypal.com/donate" method="post" target="_top">
+        <input type="hidden" name="cmd" value="_donations" />
         <input type="hidden" name="business" value="sb-x55mn12091780@business.example.com" />
         <input type="hidden" name="amount" value="${document.getElementById('amount').value}" />
-        <input type="hidden" name="notify_url" value="http://tracker.indiethon.live/api/donation/ipn" />
-        <input type="hidden" name="return" value="https://google.com" />
+        <input type="hidden" name="custom" value='${JSON.stringify(donationData)}' />
+        <input type="hidden" name="return" value="https://tracker.indiethon.live/donate/process" />
+        <input type="hidden" name="notify_url" value="https://tracker.indiethon.live/api/donation/ipn" />
         </form>
     `)
       document.getElementById('donateForm').submit()
