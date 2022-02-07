@@ -5,7 +5,8 @@ const AdminJSMongoose = require('@adminjs/mongoose')
 const bcrypt = require('bcrypt')
 
 module.exports = (tracker) => {
-    mongoose.Promise = global.Promise;mongoose.connect("mongodb://localhost:27017/donation-tracker");
+    mongoose.Promise = global.Promise;
+    mongoose.connect("mongodb://localhost:27017/donation-tracker");
     let User = mongoose.model('User', { id: String, username: String, password: String, lastLogin: Date, isSuperuser: Boolean, isStaff: Boolean, isVolunteer: Boolean,  firstName: String, lastName: String, email: String, dateCreated: Date })
     // const adminJs = new AdminJS({
     //     databases: [],
