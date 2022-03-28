@@ -1,8 +1,6 @@
-const bcrypt = require('bcrypt');
-
 module.exports = {
     username: { type: String, required: true },
-    password: { type: String, required: true, default: generatePassword() },
+    password: { type: String, required: true },
     lastLogin: { type: Date },
     isSuperuser: { type: Boolean, default: false },
     isStaff: { type: Boolean, default: false },
@@ -11,9 +9,5 @@ module.exports = {
     firstName: { type: String },
     lastName: { type: String },
     email: { type: String },
-    dateCreated: { type: Date, default: Date.now }
-}
-
-function generatePassword() {
-    bcrypt.hash('password', 10, (err, hash) => {return hash});
+    dateCreated: { type: Date, default: Date.now, required: true }
 }

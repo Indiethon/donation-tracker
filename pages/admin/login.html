@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Admin Login</title>
+    <script>let apiUrl = '<%= apiUrl %>';</script>
+    <script defer src="/pages/admin/utils.js"></script>
+</head>
+
+<body onload="load(true)">
+    <input id="username" placeholder="Username">
+    <input id="password" placeholder="Password">
+    <button id="login" onClick="login()">Login</button>
+    <h1 id="invalid" style="visibility: hidden;">Invalid username or password.</h1>
+
+    <script>
+        let input = document.getElementById('username')
+        input.addEventListener("keyup", (event) => {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                document.getElementById("login").click();
+            }
+        });
+    </script>
+</body>
+
+</html>

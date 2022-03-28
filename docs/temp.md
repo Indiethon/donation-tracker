@@ -1,0 +1,1 @@
+Temporary file to prevent the folder from being deleted.

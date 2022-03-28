@@ -34,7 +34,7 @@
             },
             "tracker": {
                 "name": "Donation Tracker",
-                "databaseURL": "localhost:27017/donation-tracker",
+                "databaseURL": "localhost:27017",
                 "logoURL": "",
                 "passwordHash": "some random string"
             }

@@ -1,13 +1,18 @@
 module.exports = {
+    id: { type: String, required: true },
     name: { type: String, required: true },
     short: { type: String, required: true },
     receiverName: { type: String, required: true },
     targetAmount: { type: Number, required: true },
     payeeEmail: { type: String, required: true },
-    charityLogo: { type: String, default: "" },
+    charityLogo: { type: String, },
     currency: { type: String, required: true },
     timezone: { type: String, required: true },
-    minimumDonation: { type: Number, required: true },
+    startTime: { type: Date, required: true },
+    endTime: { type: Date, required: true },
+    minDonation: { type: Number, required: true },
     hashtag: { type: String },
-    dateCreated: { type: Date, default: Date.now }
+    dateCreated: { type: Date, default: Date.now },
+    active: { type: Boolean, required: true },
+    retired: { type: Boolean, required: true },
 }
