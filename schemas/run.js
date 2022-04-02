@@ -1,9 +1,8 @@
 module.exports = {
-    id: { type: String, required: true },
+    event: { type: String, required: true },
     game: { type: String, required: true },
     runners: { type: Array, required: true },
     description: { type: String },
-    eventId: { type: Number, required: true },
     startTime: { type: Date },
     endTime: { type: Date },
     order: { type: Number, required: true },

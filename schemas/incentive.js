@@ -1,5 +1,5 @@
 module.exports = {
-    id: { type: String, required: true },
+    event: { type: String, required: true },
     run: { type: String, required: true },
     description: { type: String },
     type: { type: String, required: true },

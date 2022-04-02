@@ -1,5 +1,4 @@
 module.exports = {
-    id: { type: String, required: true },
     alias: { type: String, required: true },
     email: { type: String, required: true },
     firstName: { type: String },

@@ -4,7 +4,8 @@
 <head>
     <title>Admin Login</title>
     <script>let apiUrl = '<%= apiUrl %>';</script>
-    <script defer src="/pages/admin/utils.js"></script>
+    <script defer src="/content/pages/dashboard/utils.js"></script>
+    <link rel="stylesheet" href="/content/pages/dashboard/common.css" />
 </head>
 
 <body onload="load(true)">
@@ -22,6 +23,19 @@
             }
         });
     </script>
+    <style>
+        body {
+            margin: 10px;
+        }
+        input {
+            width: 100px;
+            height: 15px;
+        }
+        button {
+            width: 50px;
+            height: 20px;
+        }
+    </style>
 </body>
 
 </html>

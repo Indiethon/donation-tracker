@@ -16,7 +16,6 @@ new Tracker(start);
 
 // Wait for tracker object to initialize.
 function start(tracker, database) {
-  //console.log(tracker);
   // database.tracker.User = mongoose.model('User', require('./schemas/user'))
   // database.tracker.Event = mongoose.model('Event', require('./schemas/event'))
   // database.tracker.Donation = mongoose.model('Donation', require('./schemas/donation'))

@@ -1,5 +1,4 @@
 module.exports = {
-    id: { type: String, required: true },
     name: { type: String, required: true },
     email: { type: String },
     pronouns: { type: String },
@@ -7,5 +6,6 @@ module.exports = {
     twitter: { type: String },
     youtube: { type: String },
     notes: { type: String },
+    events: { type: Array },
     runs: { type: Array }
 }

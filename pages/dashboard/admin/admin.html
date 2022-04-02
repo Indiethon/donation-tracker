@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Admin Login</title>
+    <link rel="shortcut icon" href="/content/logo">
+    <script defer src="/content/pages/dashboard/utils.js"></script>
+    <script defer src="/content/pages/dashboard/admin/admin.js"></script>
+    <link rel="stylesheet" href="/content/pages/dashboard/common.css" />
+    <link rel="stylesheet" href="/content/pages/dashboard/admin/admin.css" />
+</head>
+
+<body onload="load(false)">
+    <div id="sidebar">
+        <div id="iconDiv">
+            <img id="icon" src="/content/logo">
+        </div>
+        <div id="navigation">
+            <div id="navGeneral">
+                <p>General</p>
+                <button onClick="expand('administrationNav', this)">Administration</button>
+                <div class="navDropdownDiv" id="administrationNav">
+                    <button>Audit Log</button>
+                    <button>Users</button>
+                    <button>Groups</button>
+                </div>
+                <button onClick="expand('trackerNav', this)">Tracker</button>
+                <div class="navDropdownDiv" id="trackerNav">
+                    <button>Events</button>
+                    <button>Charities</button>
+                    <button>Word Filters</button>
+                    <button>Settings</button>
+                </div>
+                <button onClick="expand('peopleNav', this)">People</button>
+                <div class="navDropdownDiv" id="peopleNav">
+                    <button>Runners</button>
+                    <button>Volunteers</button>
+                    <button>Donors</button>
+                </div>
+                <button onClick="expand('prizesNav', this)">Prizes</button>
+                <div class="navDropdownDiv" id="prizesNav">
+                    <button>Email Templates</button>
+                    <button>Attatchments</button>
+                    <button>Send Emails</button>
+                </div>
+            </div>
+            <div id="navEvents">
+                <p>Events</p>
+            </div>
+            <div id="navUser">
+
+            </div>
+        </div>
+    </div>
+    <div id="mainPage">
+        <div id="header">
+            <div id="pageName">Home</div>
+            <button id="volunteerView" onClick="">Switch To Volunteer View</button>
+            <button id="logout" onClick="logout()">Logout</button>
+        </div>
+        <div id="content">
+            <div id="pagePath">Dashboard</div>
+            <iframe id="pageFrame" src="/content/pages/dashboard/admin/tracker/events/events.html"></iframe>
+        </div>
+    </div>
+</body>
+
+</html>

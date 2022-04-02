@@ -35,7 +35,7 @@
             "tracker": {
                 "name": "Donation Tracker",
                 "databaseURL": "localhost:27017",
-                "logoURL": "",
+                "logoPath": "",
                 "passwordHash": "some random string"
             }
         }
@@ -160,14 +160,14 @@
                 {
                     "name": "Donation Tracker",
                     "databaseURL": "localhost:27017/donation-tracker",
-                    "logoURL": "",
+                    "logoPath": "",
                     "passwordHash": "some random string"
                 }
             ],
             "required": [
                 "name",
                 "databaseURL",
-                "logoURL",
+                "logoPath",
                 "passwordHash"
             ],
             "properties": {
@@ -191,10 +191,10 @@
                         "localhost:27017/donation-tracker"
                     ]
                 },
-                "logoURL": {
-                    "$id": "#/properties/tracker/properties/logoURL",
+                "logoPath": {
+                    "$id": "#/properties/tracker/properties/logoPath",
                     "type": "string",
-                    "title": "The logoURL schema",
+                    "title": "The logoPath schema",
                     "description": "An explanation about the purpose of this instance.",
                     "default": "",
                     "examples": [

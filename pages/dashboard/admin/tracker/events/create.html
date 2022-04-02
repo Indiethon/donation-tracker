@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="/content/pages/dashboard/utils.js"></script>
+</head>
+
+<body>
+    <div id="header">
+        <button id="back"
+            onclick="switchPage('/content/pages/dashboard/admin/tracker/events/events.html')">&lt;</button>
+        <div id="type">List</div>
+    </div>
+    <div id="content">
+        <form>
+            <label for="name"></label>
+            <input id="name">
+            <span for="name"></span>
+            <label for="nameShort"></label>
+            <input id="nameShort">
+            <span for="nameShort"></span>
+        </form>
+    </div>
+
+    <script>
+        function submit() {
+            POST('event/create', {}, (err, data) => {
+                if (!err) return;
+                console.log(err)
+            })
+        }
+    </script>
+</body>
+
+</html>

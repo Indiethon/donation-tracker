@@ -59,28 +59,17 @@ let signin;
 // }
 
 function load(signinPage) {
+    apiUrl = window.location.origin;
     signin = signinPage;
-    // GET('verify', (error, result) => {
-    //     if (signinPage) {
-    //         if (error) { document.getElementById('main').style.visibility = 'visible'; return; }
-    //         location.href = '/player/home'; return;
-    //     }
-    //     if (error) { location.href = '/'; return; }
-    //     document.getElementById('mainDiv').style.visibility = 'visible';
-    //     GET('user', (error, result) => {
-    //         if (error) { location.href = '/'; return; }
-    //         user = result.data;
-    //     })
-    //     GET('cards', (error, result) => {
-    //         if (error) return;
-    //         cardList = result.data.list;
-    //         try { 
-    //             document.getElementById('cmdrDatalist').innerHTML = result.data.datalist;
-    //             document.getElementById('partnerDatalist').innerHTML = result.data.partnerDatalist;
-    //         } catch {}
-    //         pageLoaded();
-    //     })
-    // })
+    GET('verify', (error, result) => {
+        if (signinPage) {
+            if (error) { document.querySelector('body').style.visibility = 'visible'; return; }
+            location.href = '/admin/dashboard'; return;
+        }
+        if (error) { location.href = '/login'; return; }
+        document.querySelector('body').style.visibility = 'visible';
+        pageLoaded();
+    })
 }
 
 function login() {
@@ -98,7 +87,7 @@ function login() {
             button.disabled = false; return
         }
         createCookie(result.data.username, result.data.id, result.data.token)
-        setTimeout(() => location.href = '/donate', 250)
+        setTimeout(() => location.href = '/admin/dashboard', 250)
     })
 }
 function logout() {
@@ -106,24 +95,24 @@ function logout() {
     d.setTime(d.getTime() - 10000);
     GET('logout', (error, result) => {
         document.cookie = `data=; expires=${d.toUTCString()}; path=/`;
-        location.href = '/'
+        location.href = '/login'
     })
 }
 
 function apiError(error) {
-    if (error.status === 401 && !signin) location.href = '/';
+    if (error.status === 401 && !signin) location.href = '/login';
     else console.error(error)
 }
 
 function createCookie(username, id, token) {
-    document.cookie = `data=${JSON.stringify({ username: username, id: id, token: token })}; expires=0; path=/`;
+    document.cookie = `data=${JSON.stringify({ username: username, id: id, token: token })}; expires=0; path=/;`;
 }
 
 function GET(endpoint, callback) {
     let headers;
     try { headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${JSON.parse(document.cookie.substring(5)).token}` } }
     catch { headers = { 'Content-Type': 'application/json' } }
-    fetch(`${apiUrl}/api/${endpoint}`, {
+    fetch(`${window.location.origin}/api/${endpoint}`, {
         method: 'GET',
         headers: headers,
     }).then(response => response.json().then(data => ({ status: response.status, data: data })))
@@ -139,7 +128,7 @@ function POST(endpoint, body, callback) {
     let headers;
     try { headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${JSON.parse(document.cookie.substring(5)).token}` } }
     catch { headers = { 'Content-Type': 'application/json' } }
-    fetch(`${apiUrl}/api/${endpoint}`, {
+    fetch(`${window.location.origin}/api/${endpoint}`, {
         method: 'POST',
         headers: headers,
         body: JSON.stringify(body)
@@ -156,7 +145,7 @@ function PUT(endpoint, body, callback) {
     let headers;
     try { headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${JSON.parse(document.cookie.substring(5)).token}` } }
     catch { headers = { 'Content-Type': 'application/json' } }
-    fetch(`${apiUrl}/api/${endpoint}`, {
+    fetch(`${window.location.origin}/api/${endpoint}`, {
         method: 'PUT',
         headers: headers,
         body: JSON.stringify(body)
@@ -173,7 +162,7 @@ function DELETE(endpoint, body, callback) {
     let headers;
     try { headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${JSON.parse(document.cookie.substring(5)).token}` } }
     catch { headers = { 'Content-Type': 'application/json' } }
-    fetch(`${apiUrl}/api/${endpoint}`, {
+    fetch(`${window.location.origin}/api/${endpoint}`, {
         method: 'DELETE',
         headers: headers,
         body: JSON.stringify(body)
@@ -184,4 +173,8 @@ function DELETE(endpoint, body, callback) {
                 default: apiError(result); callback(true, result); break;
             }
         })
+}
+
+function switchPage(page) {
+    window.parent.postMessage(page, window.parent)
 }

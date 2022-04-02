@@ -33,6 +33,7 @@
     "node-fetch": "^2.6.7",
     "node-localstorage": "^2.2.1",
     "react": "^16.13.1",
+    "tzdata": "^1.0.30",
     "uuid": "^8.3.2"
   }
 }
