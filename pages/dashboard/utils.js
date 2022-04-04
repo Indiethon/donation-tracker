@@ -176,5 +176,18 @@ function DELETE(endpoint, body, callback) {
 }
 
 function switchPage(page) {
-    window.parent.postMessage(page, window.parent)
+    console.log('switching to ' + page)
+    window.parent.postMessage({ name: 'page', data: page }, window.parent)
+}
+
+function showPopup(type, message) {
+    window.parent.postMessage({ name: 'popup', data: { type: type, message: message }}, window.parent)
+}
+
+function showToast(type, message) {
+    window.parent.postMessage({ name: 'toast', data: { type: type, message: message }}, window.parent)
+}
+
+function showDialog(data) {
+    window.parent.postMessage({ name: 'dialog', data: data }, window.parent)
 }

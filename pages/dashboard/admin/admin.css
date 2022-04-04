@@ -57,3 +57,51 @@
     height: 100%;
     border: none;
 }
+
+#toast {
+    visibility: hidden;
+    width: 360px;
+    color: #000000;
+    text-align: center;
+    border: none;
+    padding: 16px;
+    position: fixed;
+    z-index: 100;
+    right: -360px;
+    bottom: 0;
+    transition-timing-function: ease-in;
+    transition-duration: 0.5s;
+}
+
+#toastHeader {
+    margin: 0;
+    width: 100%;
+    height: 3px;
+}
+
+#toastContent {
+    width: 320px;
+    padding: 20px;
+    text-align: left;
+    overflow-wrap: break-word;
+}
+
+#toast.showToast {
+    visibility: visible;
+    right: -20px;
+    transition-timing-function: ease-out;
+    transition-duration: 0.5s;
+}
+
+#dialog {
+    display: none;
+    position: fixed;
+    z-index: 90;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; 
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+  }

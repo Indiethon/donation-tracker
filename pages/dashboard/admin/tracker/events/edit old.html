@@ -5,8 +5,7 @@
     <script src="/content/pages/dashboard/utils.js"></script>
 </head>
 
-<body onLoad="loadPage()">
-    <datalist id='charityDatalist'></datalist>
+<body onLoad="load()">
     <div id="header">
         <button id="back"
             onclick="switchPage('/content/pages/dashboard/admin/tracker/events/events.html')">&lt;</button>
@@ -36,7 +35,7 @@
             </div>
             <div id="charity" class="inputDiv">
                 <label class="label">Charity</label>
-                <input class="input" list="charityDatalist">
+                <input class="input">
                 <span class="errorText"></span>
             </div>
             <div id="currency" class="inputDiv">
@@ -90,48 +89,19 @@
                 <span class="errorText"></span>
             </div>
         </form>
-        <button id="submit" onClick="submit()"></button>
+        <button id="create" onClick="submit()">Save</button>
     </div>
 
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        let charityList;
-
-        function loadPage() {
-            try {
-                fetchCharities();
-                switch (urlParams.get('type')) {
-                    case 'create': create(); break;
-                    case 'edit': edit(urlParams.get('event')); break;
-                    case 'view': view(urlParams.get('event')); break;
-                    default:
-                        showToast('error', `Error opening page. Please contact the system administrator.`)
-                        switchPage('/content/pages/dashboard/admin/tracker/events/events.html')
-                }
-            } catch {
-                showToast('error', `Error opening page. Please contact the system administrator.`)
-                switchPage('/content/pages/dashboard/admin/tracker/events/events.html')
-            }
-        }
-
-        function fetchCharities() {
-            GET('charities/all', (err, data) => {
-                if (err) return;
-                charityList = data.data;
-                let charityDatalist = document.getElementById('charityDatalist');
-                for (const charity of data.data) {
-                    charityDatalist.innerHTML += `<option charity="${charity.id}" value="${charity.name}">ID: ${charity._id}</option>`;
-                }
-            })
-        }
-        function fetchData(event, callback) {
+        function load() {
+            const urlParams = new URLSearchParams(window.location.search);
             GET(`events/${urlParams.get('event')}`, (err, data) => {
                 if (err) return;
                 document.querySelector('#name input').value = data.data.name;
                 document.querySelector('#short input').value = data.data.short;
                 document.querySelector('#description input').value = data.data.description;
                 document.querySelector('#hashtag input').value = data.data.hashtag;
-                document.querySelector('#charity input').value = data.data.charityName;
+                document.querySelector('#charity input').value = data.data.charityId;
                 document.querySelector('#currency input').value = data.data.currency;
                 document.querySelector('#targetAmount input').value = data.data.targetAmount;
                 document.querySelector('#minDonation input').value = data.data.minDonation;
@@ -139,58 +109,24 @@
                 document.querySelector('#timezone input').value = data.data.timezone;
                 document.querySelector('#startTime input').value = data.data.startTime.split('.')[0]
                 document.querySelector('#endTime input').value = data.data.endTime.split('.')[0]
-                document.querySelector('#prizeTime input').value = (data.data.prizeTime !== null && data.data.prizeTime !== undefined) ? data.data.prizeTime.split('.')[0] : ""
+                document.querySelector('#prizeTime input').value = (data.data.prizeTime !== null && data.data.prizeTime !== undefined) ? data.data.prizeTime.split('.')[0]: ""
                 document.querySelector('#visible input').checked = data.data.visible;
                 document.querySelector('#active input').checked = data.data.active;
-                callback();
-            })
-        }
-
-        function create() {
-            document.getElementById('submit').innerHTML = 'Create';
-            document.body.style.visibility = 'visible';
-        }
-
-        function edit(event) {
-            fetchData(event, () => {
-                document.getElementById('submit').innerHTML = 'Save';
-                document.body.style.visibility = 'visible';
-            })
-        }
-        function view(event) {
-            fetchData(event, () => {
-                document.querySelector('#name input').disabled = true;
-                document.querySelector('#short input').disabled = true;
-                document.querySelector('#description input').disabled = true;
-                document.querySelector('#hashtag input').disabled = true;
-                document.querySelector('#charity input').disabled = true;
-                document.querySelector('#currency input').disabled = true;
-                document.querySelector('#targetAmount input').disabled = true;
-                document.querySelector('#minDonation input').disabled = true;
-                document.querySelector('#autoScreen input').disabled = true;
-                document.querySelector('#timezone input').disabled = true;
-                document.querySelector('#startTime input').disabled = true;
-                document.querySelector('#endTime input').disabled = true;
-                document.querySelector('#prizeTime input').disabled = true;
-                document.querySelector('#visible input').disabled = true;
-                document.querySelector('#active input').disabled = true;
-                document.getElementById('submit').style.visibility = 'hidden';
-                document.body.style.visibility = 'visible';
+                console.log(data.data.active)
             })
         }
 
         function submit() {
             let options = {};
-            let startTime, endTime, prizeTime, charity;
+            let startTime, endTime, prizeTime;
             try { startTime = new Date(document.querySelector('#startTime input').value).toISOString() } catch { startTime = document.querySelector('#startTime input').value }
             try { endTime = new Date(document.querySelector('#endTime input').value).toISOString() } catch { endTime = document.querySelector('#endTime input').value }
             try { prizeTime = new Date(document.querySelector('#prizeTime input').value).toISOString() } catch { prizeTime = "" }
-            try { charity = charityList.find(el => el.name === document.querySelector('#charity input').value)._id; } catch { charity = "" };
             options.name = document.querySelector('#name input').value;
             options.short = document.querySelector('#short input').value;
             options.description = document.querySelector('#description input').value;
             options.hashtag = document.querySelector('#hashtag input').value;
-            options.charity = charity;
+            options.charity = document.querySelector('#charity input').value;
             options.currency = document.querySelector('#currency input').value;
             options.targetAmount = +parseFloat(document.querySelector('#targetAmount input').value).toFixed(2);
             options.minDonation = +parseFloat(document.querySelector('#minDonation input').value).toFixed(2);
@@ -209,9 +145,9 @@
                 el.style.visibility = 'none';
             });
 
-            POST(`events/${(urlParams.get('type') === 'create') ? 'create' : 'update'}`, options, (err, data) => {
+            POST('events/update', options, (err, data) => {
                 if (!err) {
-                    showToast('success', `Event ${options.name} updated successfully.`)
+                    showPopup('success', `Event ${options.name} created successfully.`)
                     switchPage('/content/pages/dashboard/admin/tracker/events/events.html')
                     return;
                 }
@@ -221,14 +157,11 @@
                     element.innerHTML = error.code;
                     element.style.visibility = 'inherit';
                 })
-                showToast('error', `Validation errors found, please resolve them.`)
+                showPopup('error', `Validation errors found, please resolve them.`)
             })
         }
     </script>
     <style>
-        body {
-            visibility: hidden;
-        }
         .errorText {
             color: red;
         }

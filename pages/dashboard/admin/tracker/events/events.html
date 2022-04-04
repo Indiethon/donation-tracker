@@ -9,7 +9,7 @@
     <div id="header">
         <div id="type">List</div>
         <div id="headerButtonDiv">
-            <button onClick="switchPage('/content/pages/dashboard/admin/tracker/events/create.html')">Create New</button>
+            <button onClick="switchPage('/content/pages/dashboard/admin/tracker/events/edit.html?type=create')">Create New</button>
         </div>
     </div>
     <div id="tableDiv">
@@ -23,10 +23,15 @@
                 <th>Start Time</th>
                 <th>End Time</th>
                 <th>Visible</th>
-                <th>State</th>
+                <th>Active</th>
                 <th></th>
             </tr>
         </table>
+        <div class="tableDropdownContent" id="test">
+            <button class="tableDropdownButton" onClick="dropdownSwitchPage(this)">View</button>
+            <button class="tableDropdownButton" onClick="dropdownSwitchPage(this)">Edit</button>
+            <button class="tableDropdownButton" onClick="dropdownSwitchPage(this)">Delete</button>
+        </div>
     </div>
     <script>
         GET('events/all', (err, data) => {
@@ -52,13 +57,50 @@
                 row.insertCell().innerHTML = `<p class="tableText">${startTime}</p>`;
                 row.insertCell().innerHTML = `<p class="tableText">${endTime}</p>`;
                 row.insertCell().innerHTML = `<p class="tableText">${event.visible}</p>`;
-                row.insertCell().innerHTML = `<p class="tableText">${event.state}</p>`;
+                row.insertCell().innerHTML = `<p class="tableText">${event.active}</p>`;
+                row.insertCell().innerHTML = `
+                <div class="tableDropdown">
+                    <button class="tableButton">...</button>
+                    <div class="tableDropdownContent">
+                        <button class="tableDropdownButton" onClick="dropdownSwitchPage('view', '${event._id}')">View</button>
+                        <button class="tableDropdownButton" onClick="dropdownSwitchPage('edit', '${event._id}')">Edit</button>
+                        <button class="tableDropdownButton" onClick="deleteItem('${event.id}', '${event.name}')">Delete</button>
+                    </div>
+                </div>`;
             })
         });
 
         window.addEventListener("message", (event) => {
 
         }, false);
+
+        function dropdownSwitchPage(page, event) {
+            switch (page) {
+                case 'view': switchPage(`/content/pages/dashboard/admin/tracker/events/edit.html?type=view&event=${event}`); break;
+                case 'edit': switchPage(`/content/pages/dashboard/admin/tracker/events/edit.html?type=edit&event=${event}`); break;
+            }
+        }
+
+        function deleteItem(event, name) {
+            let dialogOptions = {
+                header: 'Delete',
+                content: `Are you sure you want to delete event ${name}?`,
+                buttons: [{
+                    text: 'Yes',
+                    color: 'red',
+                    click: function() {
+                        DELETE(`events/delete/${event}`, (err, data) => {
+                            if (err) return showToast('error', `Error when deleating event ${name}.`)
+                            showToast('success', `Event deleted successfully.`)
+                        });
+                    },
+                }, {
+                    text: 'Cancel',
+                    color: 'lightblue'
+                }]
+            }
+            showDialog(dialogOptions)
+        }
     </script>
     <style>
         body {
@@ -77,11 +119,42 @@
             margin: 24px;
         }
 
-        table {}
-
-        th,
-        td {
+        th, td {
             border-bottom: 1px solid #F6F7FB;
+        }
+
+        .tableDropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tableDropdownContent {
+            display: none;
+            position: absolute;
+            top: 20px;
+            left: 0;
+            min-width: 160px;
+            z-index: 10;
+            background-color: #F2F2F2;
+            padding: 5px;
+        }
+
+        .tableButton:hover {
+            color: red;
+        }
+
+        .tableButton:hover ~ .tableDropdownContent {
+            color: red;
+            display: block;
+        }
+
+        .tableDropdownContent:hover {
+            display: block;
+        }
+
+        .tableDropdownButton {
+            width: 100%;
+            margin: 5px;
         }
     </style>
 </body>
