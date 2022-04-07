@@ -5,24 +5,17 @@ module.exports = {
     charityId: { type: String, required: true },
     charityName: { type: String, required: true },
     targetAmount: { type: Number, required: true },
+    minDonation: { type: Number, required: true },
     currency: { type: String, required: true },
     currencySymbol: { type: String, required: true },
     timezone: { type: String, required: true },
     startTime: { type: Date, required: true },
     endTime: { type: Date, required: true },
     prizeTime: { type: Date },
-    minDonation: { type: Number, required: true },
     hashtag: { type: String },
     autoScreen: { type: Boolean, required: true },
     dateCreated: { type: Date, default: Date.now },
     visible: { type: Boolean, required: true },
     active: { type: Boolean, required: true },
-    customFields: { type: Array },
-    stats: {
-        runners: { type: Number },
-        runs: { type: Number },
-        donors: { type: Number },
-        donations: { type: Number },
-        donationTotal: { type: Number },
-    }
+    customFields: { type: Array }
 }

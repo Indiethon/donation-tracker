@@ -9,7 +9,7 @@
 
 
 <body>
-  <input id="name" placeholder="Name"></input>
+  <input id="alias" placeholder="Alias"></input>
   <input id="email" placeholder="Email"></input>
   <input id="amount" placeholder="Amount"></input>
   <input id="comment" placeholder="Comment"></input>
@@ -18,31 +18,36 @@
 
   <script>
     function donateForm() {
-      fetch(`${window.location.origin}/api/donation/create`, { method: 'GET' }).then(response => response.json()).then(data => {
-        const donationData = {
-          id: data.donationId,
-          name: (document.getElementById('name').value !== '') ? document.getElementById('name').value : 'Anonymous',
-          email: document.getElementById('email').value,
-          amount: Number(document.getElementById('amount').value).toFixed(2),
-          comment: document.getElementById('comment').value,
-          incentives: {},
-          custom: {},
-        }
+      let donationData = {
+        alias: (document.getElementById('alias').value !== '') ? document.getElementById('alias').value : 'Anonymous',
+        email: document.getElementById('email').value,
+        amount: +parseFloat(document.getElementById('amount').value).toFixed(2),
+        comment: document.getElementById('comment').value,
+        incentives: {},
+        custom: {},
+      };
+
+      fetch(`${window.location.origin}/api/donation/create`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(donationData),
+      }).then(response => response.json().then(data => {
+        if (response.status !== 200) return console.error(data);
         document.body.insertAdjacentHTML("beforeend", `
       <form id="donateForm" action="${data.url}" method="post" target="_top">
         <input type="hidden" name="cmd" value="_donations" />
         <input type="hidden" name="business" value="${data.payee}" />
         <input type="hidden" name="amount" value="${document.getElementById('amount').value}" />
         <input type="hidden" name="currency_code" value="${data.currency}" />
-        <input type="hidden" name="custom" value='${JSON.stringify(donationData)}' />
+        <input type="hidden" name="custom" value='${data.id}' />
         <input type="hidden" name="return" value="${window.location.origin}/donate/process" />
         <input type="hidden" name="notify_url" value="${window.location.origin}/api/donation/ipn" />
         </form>
-    `)
-    // Paypal Sandbox: sb-x55mn12091780@business.example.com
+    `);
+        // Paypal Sandbox: sb-x55mn12091780@business.example.com
         document.getElementById('donateForm').submit()
-      });
-    }
+      }));
+    };
   </script>
 
 </html>
