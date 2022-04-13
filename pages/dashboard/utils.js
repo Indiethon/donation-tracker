@@ -1,74 +1,27 @@
 let user;
 let signin;
 
-// const currentMatch = nodecg.Replicant('currentMatch')
-// const playerDatabase = nodecg.Replicant('playerDatabase');
-// const cardList = nodecg.Replicant('cardList')
-
-// NodeCG.waitForReplicants(playerDatabase, cardList).then(() => {
-//     cardList.on('change', (newVal) => {
-//         for (let commander in newVal.commander) {
-//             cmdrDatalist = cmdrDatalist + `<option data-value="${commander}" value="${newVal.commander[commander]}">`
-//         }
-//         try { document.getElementById('cmdrDatalist').innerHTML = cmdrDatalist; } catch (e) { console.log(e) }
-//     })
-//     try { replicantsLoaded() } catch { }
-// });
-
-// nodecg.listenFor('forceLogOutUser', (value) => {
-//     if (value.length <= 0 || value.includes(user.username))
-//         location.href = '/signin'
-// })
-
-// function loadPage(signin) {
-//     document.getElementById('main').style.visibility = 'visible'
-//     if (signin)
-//         verifyLoginToken();
-//     else
-//         verifyToken()
-// }
-
-// function verifyLoginToken() {
-//     try {
-//         nodecg.sendMessage('verifyToken', JSON.parse(document.cookie.substring(5)).token, (error, result) => {
-//             if (!error)
-//                 location.href = '/player/home'
-//             else
-//                 document.getElementById('main').style.visibility = 'visible'
-//         });
-//     } catch {
-//         document.getElementById('main').style.visibility = 'visible'
-//     }
-//     document.getElementById('loginButton').disabled = false;
-// }
-
-
-// function verifyToken() {
-
-//     try {
-//         nodecg.sendMessage('verifyToken', JSON.parse(document.cookie.substring(5)).token, (error, result) => {
-//             if (error)
-//                 location.href = '/signin'
-//             else {
-//                 document.getElementById('mainDiv').style.visibility = 'visible';
-//                 user.username = JSON.parse(document.cookie.substring(5)).username;
-//                 user.id = JSON.parse(document.cookie.substring(5)).id;
-//             }
-//         });
-//     } catch { location.href = '/signin' }
-// }
-
 function load(signinPage) {
     apiUrl = window.location.origin;
     signin = signinPage;
     GET('verify', (error, result) => {
         if (signinPage) {
-            if (error) { document.querySelector('body').style.visibility = 'visible'; return; }
-            location.href = '/admin/dashboard'; return;
+            if (error) return document.body.style.visibility = 'visible';
+            return location.href = '/admin/dashboard';
         }
-        if (error) { location.href = '/login'; return; }
-        document.querySelector('body').style.visibility = 'visible';
-        pageLoaded();
+        if (error) {
+            forceLogout();
+            location.href = '/login';
+            return;
+        }
+        try {
+            let cookie = JSON.parse(document.cookie.substring(5))
+            user = {
+                username: cookie.username,
+                id: cookie.id,
+            }
+            pageLoaded()
+        } catch { };
     })
 }
 
@@ -176,18 +129,30 @@ function DELETE(endpoint, body, callback) {
 }
 
 function switchPage(page) {
-    console.log('switching to ' + page)
     window.parent.postMessage({ name: 'page', data: page }, window.parent)
 }
 
+function forceLogout() {
+    window.parent.postMessage({ name: 'login' }, window.parent)
+}
+
 function showPopup(type, message) {
-    window.parent.postMessage({ name: 'popup', data: { type: type, message: message }}, window.parent)
+    window.parent.postMessage({ name: 'popup', data: { type: type, message: message } }, window.parent)
 }
 
 function showToast(type, message) {
-    window.parent.postMessage({ name: 'toast', data: { type: type, message: message }}, window.parent)
+    window.parent.postMessage({ name: 'toast', data: { type: type, message: message } }, window.parent)
 }
 
 function showDialog(data) {
     window.parent.postMessage({ name: 'dialog', data: data }, window.parent)
+}
+
+function showBody() {
+    document.body.style.visibility = 'visible';
+}
+
+function showContent() {
+    document.querySelector('.loadingContent').style.display = 'none';
+    document.querySelector('.content').style.visibility = 'visible';
 }

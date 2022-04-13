@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="/content/pages/dashboard/utils.js"></script>
+    <link rel="stylesheet" href="/content/pages/dashboard/admin/common.css" />
+</head>
+
+<body onLoad="load(false)">
+    <script>let model = 'users';</script>
+    <ul class="breadcrumb">
+        <li><a onClick="switchPage(`/content/pages/dashboard/admin/home.html`)">Home</a></li>
+        <li><a onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)">Users</a></li>
+        <li><a onClick="location.reload()">Edit</a>
+        </li>
+    </ul>
+    <div class="header">
+        <div class="editHeader">
+            <button class="editBack" onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)">&lt;</button>
+            <h2 class="title"></h2>
+        </div>
+    </div>
+    <div class="loadingContent">
+        <div class="loadingAnimation">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <div class="content">
+        <form>
+            <div id="username" class="inputDiv">
+                <label class="label">Username</label>
+                <input class="input">
+                <span class="errorText"></span>
+            </div>
+            <div id="firstName" class="inputDiv">
+                <label class="label">First Name</label>
+                <input class="input">
+                <span class="errorText"></span>
+            </div>
+            <div id="lastName" class="inputDiv">
+                <label class="label">Last Name</label>
+                <input class="input">
+                <span class="errorText"></span>
+            </div>
+            <div id="email" class="inputDiv">
+                <label class="label">Email</label>
+                <input class="input">
+                <span class="errorText"></span>
+            </div>
+            <div id="isSuperuser" class="inputDiv">
+                <label class="label">Superuser</label>
+                <input class="input" type="checkbox">
+                <span class="errorText"></span>
+            </div>
+            <div id="isStaff" class="inputDiv">
+                <label class="label">Staff</label>
+                <input class="input" type="checkbox">
+                <span class="errorText"></span>
+            </div>
+            <div id="isVolunteer" class="inputDiv">
+                <label class="label">Volunteer</label>
+                <input class="input" type="checkbox">
+                <span class="errorText"></span>
+            </div>
+            <!-- Will be implemented later! -->
+            <!-- <div id="group" class="inputDiv">
+                <label class="label">Group</label>
+                <input class="input">
+                <span class="errorText"></span>
+            </div> -->
+        </form>
+        <button id="submit" onClick="submit()"></button>
+        <div></div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+
+        function pageLoaded() {
+            showBody();
+            try {
+                switch (urlParams.get('type')) {
+                    case 'create': create(); break;
+                    case 'edit': edit(urlParams.get('id')); break;
+                    case 'view': view(urlParams.get('id')); break;
+                    default:
+                        showToast('error', `Error opening page. Please contact the system administrator.`)
+                        switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)
+                }
+            } catch {
+                showToast('error', `Error opening page. Please contact the system administrator.`)
+                switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)
+            }
+        }
+
+        function fetchData(user, callback) {
+            GET(`users/${urlParams.get('id')}`, (err, data) => {
+                if (err) return;
+                document.querySelector('#username input').value = data.data.username;
+                document.querySelector('#firstName input').value = data.data.firstName;
+                document.querySelector('#lastName input').value = data.data.lastName;
+                document.querySelector('#email input').value = data.data.email;
+                document.querySelector('#isSuperuser input').checked = data.data.isSuperuser;
+                document.querySelector('#isStaff input').checked = data.data.isStaff;
+                document.querySelector('#isVolunteer input').checked = data.data.isVolunteer;
+                //document.querySelector('#group input').value = data.data.groupName;
+                console.log(data);
+                callback();
+            })
+        }
+
+        function create() {
+            document.querySelector('.title').innerHTML = 'Create User';
+            document.getElementById('submit').innerHTML = 'Create';
+            showContent();
+        }
+
+        function edit(user) {
+            fetchData(user, () => {
+                console.log(urlParams.get('id'))
+                document.querySelector('.title').innerHTML = 'Edit User';
+                document.getElementById('submit').innerHTML = 'Save';
+                showContent();
+            })
+        }
+        function view(user) {
+            fetchData(user, () => {
+                document.querySelector('#username input').disabled = true;
+                document.querySelector('#firstName input').disabled = true;
+                document.querySelector('#lastName input').disabled = true;
+                document.querySelector('#email input').disabled = true;
+                document.querySelector('#isSuperuser input').disabled = true;
+                document.querySelector('#isStaff input').disabled = true;
+                document.querySelector('#isVolunteer input').disabled = true;
+                //document.querySelector('#group input').disabled = true;
+                document.getElementById('submit').style.visibility = 'hidden';
+                document.querySelector('.title').innerHTML = 'View User';
+                showContent();
+            })
+        }
+
+        function submit() {
+            let options = {};
+            options.username = document.querySelector('#username input').value;
+            options.firstName = document.querySelector('#firstName input').value;
+            options.lastName = document.querySelector('#lastName input').value;
+            options.email = document.querySelector('#email input').value;
+            options.isSuperuser = document.querySelector('#isSuperuser input').checked;
+            options.isStaff = document.querySelector('#isStaff input').checked;
+            options.isVolunteer = document.querySelector('#isVolunteer input').checked;
+            //options.group = document.querySelector('#group input').value;
+
+            let elementList = document.querySelectorAll('.inputDiv');
+            [...elementList].forEach(element => {
+                let el = document.querySelector(`#${element.id} span`)
+                el.innerHTML = '';
+                el.style.visibility = 'hidden';
+            });
+
+            POST(`users${(urlParams.get('type') === 'create') ? '' : `/${urlParams.get('id')}`}`, options, (err, data) => {
+                console.log(data)
+                if (!err) {
+                    showToast('success', `User ${options.username} updated successfully.`)
+                    switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)
+                    return;
+                }
+
+                data.data.errorCodes.forEach(error => {
+                    let element = document.querySelector(`#${error.item} span`);
+                    element.innerHTML = error.code;
+                    element.style.visibility = 'inherit';
+                })
+                showToast('error', `Validation errors found, please resolve them.`)
+            })
+        }
+    </script>
+</body>
+
+</html>

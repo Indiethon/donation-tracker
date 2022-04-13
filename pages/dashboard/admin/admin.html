@@ -2,11 +2,11 @@
 <html>
 
 <head>
-    <title>Admin Login</title>
+    <title>Admin - Donation Tracker</title>
     <link rel="shortcut icon" href="/content/logo">
     <script defer src="/content/pages/dashboard/utils.js"></script>
     <script defer src="/content/pages/dashboard/admin/admin.js"></script>
-    <link rel="stylesheet" href="/content/pages/dashboard/common.css" />
+    <!-- <link rel="stylesheet" href="/content/pages/dashboard/common.css" /> -->
     <link rel="stylesheet" href="/content/pages/dashboard/admin/admin.css" />
 </head>
 
@@ -21,13 +21,13 @@
                 <button onClick="expand('administrationNav', this)">Administration</button>
                 <div class="navDropdownDiv" id="administrationNav">
                     <button>Audit Log</button>
-                    <button>Users</button>
+                    <button onClick="switchPage('/content/pages/dashboard/admin/users/users.html')">Users</button>
                     <button>Groups</button>
                 </div>
                 <button onClick="expand('trackerNav', this)">Tracker</button>
                 <div class="navDropdownDiv" id="trackerNav">
-                    <button>Events</button>
-                    <button>Charities</button>
+                    <button onClick="switchPage('/content/pages/dashboard/admin/events/events.html')">Events</button>
+                    <button onClick="switchPage('/content/pages/dashboard/admin/charities/charities.html')">Charities</button>
                     <button>Word Filters</button>
                     <button>Settings</button>
                 </div>
@@ -54,13 +54,12 @@
     </div>
     <div id="mainPage">
         <div id="header">
-            <div id="pageName">Home</div>
+            <div id="welcomeText"></div>
             <button id="volunteerView" onClick="">Switch To Volunteer View</button>
             <button id="logout" onClick="logout()">Logout</button>
         </div>
         <div id="content">
-            <div id="pagePath">Dashboard</div>
-            <iframe id="pageFrame" src="/content/pages/dashboard/admin/tracker/events/events.html"></iframe>
+            <iframe id="pageFrame" src="/content/pages/dashboard/admin/home.html"></iframe>
         </div>
     </div>
     <div id="toast">
@@ -71,9 +70,10 @@
     <!-- https://www.w3schools.com/howto/howto_css_modals.asp -->
     <div id="dialog">
         <div id="dialogContent">
-            <div id="dialogHeader"></div>
             <div id="dialogText"></div>
             <div id="dialogButtonDiv">
+                <button id="dialogDelete" onClick="dialogConfirm(this)">Delete</button>
+                <button id="dialogCancel" onClick="document.querySelector('#dialog').style.display = 'none'">Cancel</button>
             </div>
         </div>
     </div>

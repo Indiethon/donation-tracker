@@ -19,4 +19,4 @@ More specifically, I would like a front end developer to create the website page
 - Start the tracker. `npm start`
 
 # Simple Docs
-When creating users, the default password is `password`.
+When creating users or resetting their passwords, the default password is `password`. Each individual user is able to change their own password once they log in.

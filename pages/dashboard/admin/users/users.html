@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="/content/pages/dashboard/utils.js"></script>
+    <link rel="stylesheet" href="/content/pages/dashboard/admin/common.css" />
+</head>
+
+<body onLoad="load(false)">
+    <script>let model = 'users';</script>
+    <ul class="breadcrumb">
+        <li><a onClick="switchPage('/content/pages/dashboard/admin/home.html')">Home</a></li>
+        <li><a onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)">Users</a></li>
+    </ul>
+    <div class="header">
+        <h2 class="title">Users</h2>
+        <div id="headerButtonDiv">
+            <button onClick="switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=create`)">Create
+                New</button>
+        </div>
+    </div>
+    <div class="loadingContent">
+        <div class="loadingAnimation">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <div class="content">
+        <table id="table">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" item="all" /></th>
+                    <th>Username</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Superuser</th>
+                    <th>Staff</th>
+                    <th>Volunteer</th>
+                    <th>Group</th>
+                    <th>Last Login</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+        <div class="tableDropdownContent" id="test">
+            <button class="tableDropdownButton" onClick="dropdownSwitchPage(this)">View</button>
+            <button class="tableDropdownButton" onClick="dropdownSwitchPage(this)">Edit</button>
+            <button class="tableDropdownButton" onClick="dropdownSwitchPage(this)">Delete</button>
+        </div>
+    </div>
+    <script>
+        function pageLoaded() {
+            showBody();
+            GET('users', (err, data) => {
+                if (err) return;
+                let table = document.querySelector('tbody');
+                for (const user of data.data) {
+
+                    let lastLogin = new Date(user.lastLogin);
+                    lastLoginHours = (lastLogin.getHours() < 10) ? '0' + lastLogin.getHours() : '' + lastLogin.getHours();
+                    lastLoginMins = (lastLogin.getMinutes() < 10) ? '0' + lastLogin.getMinutes() : '' + lastLogin.getMinutes();
+                    lastLogin = `${lastLogin.getDate()}/${lastLogin.getMonth() + 1}/${lastLogin.getFullYear()} ${lastLoginHours}:${lastLoginMins} `
+
+                    let row = table.insertRow();
+                    row.insertCell().innerHTML = `<input type="checkbox" item="${user.id}" />`;
+                    row.insertCell().innerHTML = `<p class="tableText">${user.username}</p>`;
+                    row.insertCell().innerHTML = `<p class="tableText">${user.firstName}</p>`;
+                    row.insertCell().innerHTML = `<p class="tableText">${user.lastName}</p>`;
+                    row.insertCell().innerHTML = `<p class="tableText">${user.isSuperuser}</p>`;
+                    row.insertCell().innerHTML = `<p class="tableText">${user.isStaff}</p>`;
+                    row.insertCell().innerHTML = `<p class="tableText">${user.isVolunteer}</p>`;
+                    row.insertCell().innerHTML = `<p class="tableText">${user.groupName}</p>`;
+                    row.insertCell().innerHTML = `<p class="tableText">${lastLogin}</p>`;
+                    row.insertCell().innerHTML = `
+                <div class="tableDropdown">
+                    <button class="tableButton">...</button>
+                    <div class="tableDropdownContent">
+                        <button class="tableDropdownButton" onClick="dropdownSwitchPage('view', '${user._id}')">View</button>
+                        <button class="tableDropdownButton" onClick="dropdownSwitchPage('edit', '${user._id}')">Edit</button>
+                        <button class="tableDropdownButton" onClick="deleteItem('${user._id}', '${user.name}')">Delete</button>
+                    </div>
+                </div>`;
+                }
+                showContent();
+            });
+        }
+
+        function dropdownSwitchPage(page, user) {
+            switch (page) {
+                case 'view': switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=view&id=${user}`); break;
+                case 'edit': switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=edit&id=${user}`); break;
+            }
+        }
+
+        function deleteItem(id, name) {
+            showDialog({
+                model: 'user',
+                name: name,
+                endpoint: `users/${id}`,
+            })
+        }
+
+        // Listen for events from parent.
+        window.addEventListener("message", (event) => {
+            if (event.origin !== window.location.origin) return;
+            switch (event.data.name) {
+                case 'reload': location.reload(); break;
+            }
+        }, false);
+    </script>
+</body>
+
+</html>

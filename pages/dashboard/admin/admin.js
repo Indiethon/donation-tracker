@@ -1,8 +1,9 @@
 function pageLoaded() {
+    document.querySelector('#welcomeText').innerHTML = `Welcome ${user.username}!`
     GET('events/list', (err, data) => {
         if (err) return;
         let nav = document.getElementById('navEvents');
-        data.data.forEach(event => {
+        for (const event of data.data) {
             nav.innerHTML += `
             <button onClick="expandEvent('eventNav', '${event}', this)">${event}</button>
             <div class="navDropdownDiv" id="eventNav" event="${event}">
@@ -14,7 +15,8 @@ function pageLoaded() {
             <button>Ads</button>
             </div>
             `
-        })
+        }
+        showBody();
     })
 }
 
@@ -47,6 +49,7 @@ window.addEventListener("message", (event) => {
         case 'popup': showPopup(event.data.data); break;
         case 'toast': showToast(event.data.data); break;
         case 'dialog': showDialog(event.data.data); break;
+        case 'login': location.href = '/login'; break;
     }
 
 }, false);
@@ -71,20 +74,19 @@ function showToast(data) {
     toastContent.innerHTML = data.message;
     toast.className = 'showToast';
     setTimeout(() => toast.classList.remove("showToast"), 5000);
-    console.table(data)
 }
 
 function showDialog(data) {
-    let dialog = document.getElementById('dialog');
-    let dialogButtons = document.getElementById('dialogButtonDiv');
-    document.getElementById('dialogHeader').innerHTML = data.header;
-    document.getElementById('dialogText').innerHTML = data.content;
-    for (const button of data.buttons) {
-        let element = document.createElement('button');
-        element.style.backgroundColor = (button.color !== undefined) ? button.color : '#FFFFFF';
-        element.innerHTML = button.text;
-        element.onClick = `document.getElementById("dialog").style.display = "none"; ${(button.click !== undefined) ? button.click : ''}`
-        dialogButtons.appendChild(element)
-    }
-    dialog.style.display = 'block';
+    document.getElementById('dialogText').innerHTML = `Are you sure you want to delete ${data.model} ${data.name}?`;
+    document.getElementById('dialogDelete').setAttribute('endpoint', data.endpoint);
+    document.getElementById('dialog').style.display = 'block';
+}
+
+function dialogConfirm(button) {
+    document.getElementById('dialog').style.display = 'none';
+    DELETE(`${button.getAttribute('endpoint')}`, {}, (err, result) => {
+        if (err) return showToast('error', 'Error when deleting resource.')
+        document.querySelector('#pageFrame').contentWindow.postMessage({ name: 'reload' }, document.querySelector('#pageFrame'))
+        return showToast({ type: 'success', message: 'Successfully deleted resource.' })
+    })
 }
