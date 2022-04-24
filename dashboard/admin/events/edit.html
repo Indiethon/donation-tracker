@@ -51,7 +51,7 @@
                 <input class="input">
                 <span class="errorText"></span>
             </div>
-            <div id="charity" class="inputDiv">
+            <div id="charityId" class="inputDiv">
                 <label class="label">Charity</label>
                 <input class="input" list="charityDatalist">
                 <span class="errorText"></span>
@@ -140,11 +140,12 @@
         function fetchData(event, callback) {
             GET(`events/${urlParams.get('id')}`, (err, data) => {
                 if (err) return;
+                console.log(data)
                 document.querySelector('#name input').value = data.data.name;
                 document.querySelector('#short input').value = data.data.short;
                 document.querySelector('#description input').value = data.data.description;
                 document.querySelector('#hashtag input').value = data.data.hashtag;
-                document.querySelector('#charity input').value = data.data.charityName;
+                try { document.querySelector('#charityId input').value = data.data.charity.name; } catch { document.querySelector('#charityId input').value = ''; }
                 document.querySelector('#targetAmount input').value = data.data.targetAmount;
                 document.querySelector('#minDonation input').value = data.data.minDonation;
                 document.querySelector('#autoScreen input').checked = data.data.autoScreen;
@@ -176,7 +177,7 @@
                 document.querySelector('#short input').disabled = true;
                 document.querySelector('#description input').disabled = true;
                 document.querySelector('#hashtag input').disabled = true;
-                document.querySelector('#charity input').disabled = true;
+                document.querySelector('#charityId input').disabled = true;
                 document.querySelector('#targetAmount input').disabled = true;
                 document.querySelector('#minDonation input').disabled = true;
                 document.querySelector('#autoScreen input').disabled = true;
@@ -197,12 +198,12 @@
             try { startTime = new Date(document.querySelector('#startTime input').value).toISOString() } catch { startTime = document.querySelector('#startTime input').value }
             try { endTime = new Date(document.querySelector('#endTime input').value).toISOString() } catch { endTime = document.querySelector('#endTime input').value }
             try { prizeTime = new Date(document.querySelector('#prizeTime input').value).toISOString() } catch { prizeTime = "" }
-            try { charity = charityList.find(el => el.name === document.querySelector('#charity input').value)._id; } catch { charity = "" };
+            try { charity = charityList.find(el => el.name === document.querySelector('#charityId input').value)._id; } catch { charity = "" };
             options.name = document.querySelector('#name input').value;
             options.short = document.querySelector('#short input').value;
             options.description = document.querySelector('#description input').value;
             options.hashtag = document.querySelector('#hashtag input').value;
-            options.charity = charity;
+            options.charityId = charity;
             options.targetAmount = +parseFloat(document.querySelector('#targetAmount input').value).toFixed(2);
             options.minDonation = +parseFloat(document.querySelector('#minDonation input').value).toFixed(2);
             options.autoScreen = document.querySelector('#autoScreen input').checked;
@@ -211,6 +212,8 @@
             options.prizeTime = prizeTime;
             options.visible = document.querySelector('#visible input').checked;
             options.active = document.querySelector('#active input').checked;
+
+            console.log(charity)
 
             let elementList = document.querySelectorAll('.inputDiv');
             [...elementList].forEach(element => {
@@ -222,6 +225,7 @@
             POST(`events${(urlParams.get('type') === 'create') ? '' : `/${urlParams.get('id')}`}`, options, (err, data) => {
                 if (!err) {
                     showToast('success', `Event ${options.name} updated successfully.`)
+                    refreshNav();
                     switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)
                     return;
                 }

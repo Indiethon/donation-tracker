@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="/content/pages/dashboard/utils.js"></script>
+    <link rel="stylesheet" href="/content/pages/dashboard/admin/common.css" />
+</head>
+
+<body onLoad="load(false)">
+    <script>
+        let model = 'incentives';
+        const urlParams = new URLSearchParams(window.location.search);
+    </script>
+    <ul class="breadcrumb">
+        <li><a onClick="switchPage('/content/pages/dashboard/admin/home.html')">Home</a></li>
+        <li><a onClick="switchPage(`/content/pages/dashboard/admin/eventPages/${model}/${model}.html?event=${urlParams.get('event')}`)">Incentives</a>
+        </li>
+    </ul>
+    <div class="header">
+        <h2 class="title">Incentives</h2>
+        <div id="headerButtonDiv">
+            <button
+                onClick="switchPage(`/content/pages/dashboard/admin/eventPages/${model}/edit.html?type=create&event=${urlParams.get('event')}`)">Create
+                New</button>
+        </div>
+    </div>
+    <div class="loadingContent">
+        <div class="loadingAnimation">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <div class="content">
+        <table id="table">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" item="all" /></th>
+                    <th>Name</th>
+                    <th>Run</th>
+                    <th>Type</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Visible</th>
+                    <th>Active</th>
+                    <th>Completed</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+        <div class="tableDropdownContent" id="test">
+            <button class="tableDropdownButton" onClick="dropdownSwitchPage(this)">View</button>
+            <button class="tableDropdownButton" onClick="dropdownSwitchPage(this)">Edit</button>
+            <button class="tableDropdownButton" onClick="dropdownSwitchPage(this)">Delete</button>
+        </div>
+    </div>
+    <script>
+        function pageLoaded() {
+            const urlParams = new URLSearchParams(window.location.search);
+
+            showBody();
+
+            GET(`incentives/event/${urlParams.get('event')}`, (err, data) => {
+                if (err) return;
+                let table = document.querySelector('tbody');
+                for (const incentive of data.data) {
+
+                    let row = table.insertRow();
+                    row.insertCell().innerHTML = `<input type="checkbox" item="${incentive.id}" />`;
+                    row.insertCell().innerHTML = `<p class="tableText">${incentive.name}</p>`;
+                    try { row.insertCell().innerHTML = `<p class="tableText">${incentive.run.game} ${incentive.run.category}</p>`; } catch { } 
+                    row.insertCell().innerHTML = `<p class="tableText">${incentive.type}</p>`;
+                    row.insertCell().innerHTML = `<p class="tableText">${incentive.startTime}</p>`;
+                    row.insertCell().innerHTML = `<p class="tableText">${incentive.endTime}</p>`;
+                    row.insertCell().innerHTML = `<p class="tableText">${incentive.visible}</p>`;
+                    row.insertCell().innerHTML = `<p class="tableText">${incentive.active}</p>`;
+                    row.insertCell().innerHTML = `<p class="tableText">${incentive.completed}</p>`;
+                    row.insertCell().innerHTML = `
+                <div class="tableDropdown">
+                    <button class="tableButton">...</button>
+                    <div class="tableDropdownContent">
+                        <button class="tableDropdownButton" onClick="dropdownSwitchPage('view', '${incentive._id}')">View</button>
+                        <button class="tableDropdownButton" onClick="dropdownSwitchPage('edit', '${incentive._id}')">Edit</button>
+                        <button class="tableDropdownButton" onClick="deleteItem('${incentive._id}', '${incentive.name}')">Delete</button>
+                    </div>
+                </div>`;
+                }
+                showContent();
+            });
+        }
+
+        function dropdownSwitchPage(page, incentive) {
+            switch (page) {
+                case 'view': switchPage(`/content/pages/dashboard/admin/eventPages/${model}/edit.html?type=view&id=${incentive}&event=${urlParams.get('event')}`); break;
+                case 'edit': switchPage(`/content/pages/dashboard/admin/eventPages/${model}/edit.html?type=edit&id=${incentive}&event=${urlParams.get('event')}`); break;
+            }
+        }
+
+        function deleteItem(id, name) {
+            showDialog({
+                model: 'incentive',
+                name: name,
+                endpoint: `incentives/${id}`,
+            })
+        }
+
+        // Listen for events from parent.
+        window.addEventListener("message", (event) => {
+            if (event.origin !== window.location.origin) return;
+            switch (event.data.name) {
+                case 'reload': location.reload(); break;
+            }
+        }, false);
+    </script>
+</body>
+
+</html>

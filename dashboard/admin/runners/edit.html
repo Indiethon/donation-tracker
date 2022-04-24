@@ -7,10 +7,10 @@
 </head>
 
 <body onLoad="load(false)">
-    <script>let model = 'charities';</script>
+    <script>let model = 'runners';</script>
     <ul class="breadcrumb">
         <li><a onClick="switchPage(`/content/pages/dashboard/admin/home.html`)">Home</a></li>
-        <li><a onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)">Charities</a></li>
+        <li><a onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)">Runners</a></li>
         <li><a onClick="location.reload()">Edit</a>
         </li>
     </ul>
@@ -34,18 +34,33 @@
                 <input class="input">
                 <span class="errorText"></span>
             </div>
-            <div id="description" class="inputDiv">
-                <label class="label">Description</label>
+            <div id="email" class="inputDiv">
+                <label class="label">Email</label>
                 <input class="input">
                 <span class="errorText"></span>
             </div>
-            <div id="payee" class="inputDiv">
-                <label class="label">Payee</label>
+            <div id="pronouns" class="inputDiv">
+                <label class="label">Pronouns</label>
                 <input class="input">
                 <span class="errorText"></span>
             </div>
-            <div id="logoUrl" class="inputDiv">
-                <label class="label">Logo URL</label>
+            <div id="twitch" class="inputDiv">
+                <label class="label">Twitch</label>
+                <input class="input">
+                <span class="errorText"></span>
+            </div>
+            <div id="twitter" class="inputDiv">
+                <label class="label">Twitter</label>
+                <input class="input">
+                <span class="errorText"></span>
+            </div>
+            <div id="youtube" class="inputDiv">
+                <label class="label">YouTube</label>
+                <input class="input">
+                <span class="errorText"></span>
+            </div>
+            <div id="notes" class="inputDiv">
+                <label class="label">Notes</label>
                 <input class="input">
                 <span class="errorText"></span>
             </div>
@@ -75,36 +90,41 @@
         }
 
         function fetchData(event, callback) {
-            GET(`charities/${urlParams.get('id')}`, (err, data) => {
+            GET(`runners/${urlParams.get('id')}`, (err, data) => {
                 if (err) return;
                 document.querySelector('#name input').value = data.data.name;
-                document.querySelector('#description input').value = data.data.description;
-                document.querySelector('#payee input').value = data.data.payee;
-                document.querySelector('#logoUrl input').value = data.data.logoUrl;
+                document.querySelector('#email input').value = data.data.email;
+                document.querySelector('#pronouns input').value = data.data.pronouns;
+                document.querySelector('#twitch input').value = data.data.twitch;
+                document.querySelector('#twitter input').value = data.data.twitter;
+                document.querySelector('#youtube input').value = data.data.youtube;
+                document.querySelector('#notes input').value = data.data.notes;
                 callback();
             })
         }
 
         function create() {
-            document.querySelector('.title').innerHTML = 'Create Charity';
+            document.querySelector('.title').innerHTML = 'Create Runner';
             document.getElementById('submit').innerHTML = 'Create';
             showContent();
         }
 
-        function edit(charity) {
-            fetchData(charity, () => {
-                console.log(urlParams.get('id'))
-                document.querySelector('.title').innerHTML = 'Edit Charity';
+        function edit(runner) {
+            fetchData(runner, () => {
+                document.querySelector('.title').innerHTML = 'Edit Runner';
                 document.getElementById('submit').innerHTML = 'Save';
                 showContent();
             })
         }
-        function view(charity) {
-            fetchData(charity, () => {
+        function view(runner) {
+            fetchData(runner, () => {
                 document.querySelector('#name input').disabled = true;
-                document.querySelector('#description input').disabled = true;
-                document.querySelector('#payee input').disabled = true;
-                document.querySelector('#logoUrl input').disabled = true;
+                document.querySelector('#email input').disabled = true;
+                document.querySelector('#pronouns input').disabled = true;
+                document.querySelector('#twitch input').disabled = true;
+                document.querySelector('#twitter input').disabled = true;
+                document.querySelector('#youtube input').disabled = true;
+                document.querySelector('#notes input').disabled = true;
                 document.getElementById('submit').style.visibility = 'hidden';
                 document.querySelector('.title').innerHTML = 'View Event';
                 showContent();
@@ -114,9 +134,12 @@
         function submit() {
             let options = {};
             options.name = document.querySelector('#name input').value;
-            options.description = document.querySelector('#description input').value;
-            options.payee = document.querySelector('#payee input').value;
-            options.logoUrl = document.querySelector('#logoUrl input').value;
+            options.email = document.querySelector('#email input').value;
+            options.pronouns = document.querySelector('#pronouns input').value;
+            options.twitch = document.querySelector('#twitch input').value;
+            options.twitter = document.querySelector('#twitter input').value;
+            options.youtube = document.querySelector('#youtube input').value;
+            options.notes = document.querySelector('#notes input').value;
 
             let elementList = document.querySelectorAll('.inputDiv');
             [...elementList].forEach(element => {
@@ -125,10 +148,10 @@
                 el.style.visibility = 'hidden';
             });
 
-            POST(`charities${(urlParams.get('type') === 'create') ? '' : `/${urlParams.get('id')}`}`, options, (err, data) => {
+            POST(`runners${(urlParams.get('type') === 'create') ? '' : `/${urlParams.get('id')}`}`, options, (err, data) => {
                 console.log(data)
                 if (!err) {
-                    showToast('success', `Charity ${options.name} updated successfully.`)
+                    showToast('success', `Runner ${options.name} updated successfully.`)
                     switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)
                     return;
                 }

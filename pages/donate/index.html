@@ -23,7 +23,7 @@
         email: document.getElementById('email').value,
         amount: +parseFloat(document.getElementById('amount').value).toFixed(2),
         comment: document.getElementById('comment').value,
-        incentives: {},
+        incentives: [],
         custom: {},
       };
 
@@ -41,6 +41,7 @@
         <input type="hidden" name="currency_code" value="${data.currency}" />
         <input type="hidden" name="custom" value='${data.id}' />
         <input type="hidden" name="return" value="${window.location.origin}/donate/process" />
+        <input type="hidden" name="cancel_return" value="${window.location.origin}/donate" />
         <input type="hidden" name="notify_url" value="${window.location.origin}/api/donation/ipn" />
         </form>
     `);

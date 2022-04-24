@@ -58,6 +58,7 @@
             GET('events', (err, data) => {
                 if (err) return;
                 let table = document.querySelector('tbody');
+                console.log(data)
                 for (const event of data.data) {
                     let startTime = new Date(event.startTime);
                     startTimeHours = (startTime.getHours() < 10) ? '0' + startTime.getHours() : '' + startTime.getHours();
@@ -73,7 +74,7 @@
                     row.insertCell().innerHTML = `<input type="checkbox" item="${event.id}" />`;
                     row.insertCell().innerHTML = `<p class="tableText">${event.name}</p>`;
                     row.insertCell().innerHTML = `<p class="tableText">${event.short}</p>`;
-                    row.insertCell().innerHTML = `<p class="tableText">${event.charityName}</p>`;
+                    try { row.insertCell().innerHTML = `<p class="tableText">${event.charity.name}</p>`; } catch { row.insertCell().innerHTML = `<p class="tableText"></p>`; }
                     row.insertCell().innerHTML = `<p class="tableText">${event.targetAmount}</p>`;
                     row.insertCell().innerHTML = `<p class="tableText">${startTime}</p>`;
                     row.insertCell().innerHTML = `<p class="tableText">${endTime}</p>`;
@@ -85,7 +86,7 @@
                     <div class="tableDropdownContent">
                         <button class="tableDropdownButton" onClick="dropdownSwitchPage('view', '${event._id}')">View</button>
                         <button class="tableDropdownButton" onClick="dropdownSwitchPage('edit', '${event._id}')">Edit</button>
-                        <button class="tableDropdownButton" onClick="deleteItem('${event.id}', '${event.name}')">Delete</button>
+                        <button class="tableDropdownButton" onClick="deleteItem('${event._id}', '${event.name}')">Delete</button>
                     </div>
                 </div>`;
                 }

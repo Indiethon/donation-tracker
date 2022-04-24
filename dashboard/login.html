@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Admin Login</title>
+    <script defer src="/content/pages/dashboard/utils.js"></script>
+    <link rel="stylesheet" href="/content/pages/dashboard/common.css" />
+</head>
+
+<body onload="load(true)">
+    <div id="contentDiv">
+        <div id="logo">
+            <img src="/content/logo">
+        </div>
+        <div id="loginDiv">
+            <label for="username">Username</label>
+            <input id="username">
+            <label for="password">Password</label>
+            <input id="password">
+            <div id="invalid" style="visibility: hidden;">Invalid username or password.</div>
+        </div>
+        <button id="login" onClick="login()">Login</button>
+    </div>
+
+    <script>
+        let input = document.getElementById('password')
+        input.addEventListener("keyup", (event) => {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                document.getElementById("login").click();
+            }
+        });
+    </script>
+</body>
+
+</html>

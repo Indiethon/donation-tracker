@@ -156,3 +156,7 @@ function showContent() {
     document.querySelector('.loadingContent').style.display = 'none';
     document.querySelector('.content').style.visibility = 'visible';
 }
+
+function refreshNav() {
+    window.parent.postMessage({ name: 'event', data: {}}, window.parent)
+}

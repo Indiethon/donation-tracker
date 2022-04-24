@@ -35,8 +35,6 @@
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Superuser</th>
-                    <th>Staff</th>
-                    <th>Volunteer</th>
                     <th>Group</th>
                     <th>Last Login</th>
                     <th></th>
@@ -71,8 +69,6 @@
                     row.insertCell().innerHTML = `<p class="tableText">${user.firstName}</p>`;
                     row.insertCell().innerHTML = `<p class="tableText">${user.lastName}</p>`;
                     row.insertCell().innerHTML = `<p class="tableText">${user.isSuperuser}</p>`;
-                    row.insertCell().innerHTML = `<p class="tableText">${user.isStaff}</p>`;
-                    row.insertCell().innerHTML = `<p class="tableText">${user.isVolunteer}</p>`;
                     row.insertCell().innerHTML = `<p class="tableText">${user.groupName}</p>`;
                     row.insertCell().innerHTML = `<p class="tableText">${lastLogin}</p>`;
                     row.insertCell().innerHTML = `

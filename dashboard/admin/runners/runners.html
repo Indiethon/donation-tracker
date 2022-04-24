@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="/content/pages/dashboard/utils.js"></script>
+    <link rel="stylesheet" href="/content/pages/dashboard/admin/common.css" />
+</head>
+
+<body onLoad="load(false)">
+    <script>let model = 'runners';</script>
+    <ul class="breadcrumb">
+        <li><a onClick="switchPage('/content/pages/dashboard/admin/home.html')">Home</a></li>
+        <li><a onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)">Runners</a></li>
+    </ul>
+    <div class="header">
+        <h2 class="title">Runners</h2>
+        <div id="headerButtonDiv">
+            <button onClick="switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=create`)">Create
+                New</button>
+        </div>
+    </div>
+    <div class="loadingContent">
+        <div class="loadingAnimation">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <div class="content">
+        <table id="table">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" item="all" /></th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Pronouns</th>
+                    <th>Twitch</th>
+                    <th>Twitter</th>
+                    <th>YouTube</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+        <div class="tableDropdownContent" id="test">
+            <button class="tableDropdownButton" onClick="dropdownSwitchPage(this)">View</button>
+            <button class="tableDropdownButton" onClick="dropdownSwitchPage(this)">Edit</button>
+            <button class="tableDropdownButton" onClick="dropdownSwitchPage(this)">Delete</button>
+        </div>
+    </div>
+    <script>
+        function pageLoaded() {
+            showBody();
+            GET('runners', (err, data) => {
+                if (err) return;
+                let table = document.querySelector('tbody');
+                for (const runner of data.data) {
+                    let row = table.insertRow();
+                    row.insertCell().innerHTML = `<input type="checkbox" item="${runner.id}" />`;
+                    row.insertCell().innerHTML = `<p class="tableText">${runner.name}</p>`;
+                    row.insertCell().innerHTML = `<p class="tableText">${runner.email}</p>`;
+                    row.insertCell().innerHTML = `<p class="tableText">${runner.pronouns}</p>`;
+                    row.insertCell().innerHTML = `<p class="tableText">${runner.twitch}</p>`;
+                    row.insertCell().innerHTML = `<p class="tableText">${runner.twitter}</p>`;
+                    row.insertCell().innerHTML = `<p class="tableText">${runner.youtube}</p>`;
+                    row.insertCell().innerHTML = `
+                <div class="tableDropdown">
+                    <button class="tableButton">...</button>
+                    <div class="tableDropdownContent">
+                        <button class="tableDropdownButton" onClick="dropdownSwitchPage('view', '${runner._id}')">View</button>
+                        <button class="tableDropdownButton" onClick="dropdownSwitchPage('edit', '${runner._id}')">Edit</button>
+                        <button class="tableDropdownButton" onClick="deleteItem('${runner._id}', '${runner.name}')">Delete</button>
+                    </div>
+                </div>`;
+                }
+                showContent();
+            });
+        }
+
+        function dropdownSwitchPage(page, runner) {
+            switch (page) {
+                case 'view': switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=view&id=${runner}`); break;
+                case 'edit': switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=edit&id=${runner}`); break;
+            }
+        }
+
+        function deleteItem(id, name) {
+            showDialog({
+                model: 'runner',
+                name: name,
+                endpoint: `runners/${id}`,
+            })
+        }
+
+        // Listen for events from parent.
+        window.addEventListener("message", (event) => {
+            if (event.origin !== window.location.origin) return;
+            switch (event.data.name) {
+                case 'reload': location.reload(); break;
+            }
+        }, false);
+    </script>
+</body>
+
+</html>

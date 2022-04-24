@@ -54,16 +54,6 @@
                 <input class="input" type="checkbox">
                 <span class="errorText"></span>
             </div>
-            <div id="isStaff" class="inputDiv">
-                <label class="label">Staff</label>
-                <input class="input" type="checkbox">
-                <span class="errorText"></span>
-            </div>
-            <div id="isVolunteer" class="inputDiv">
-                <label class="label">Volunteer</label>
-                <input class="input" type="checkbox">
-                <span class="errorText"></span>
-            </div>
             <!-- Will be implemented later! -->
             <!-- <div id="group" class="inputDiv">
                 <label class="label">Group</label>
@@ -102,10 +92,7 @@
                 document.querySelector('#firstName input').value = data.data.firstName;
                 document.querySelector('#lastName input').value = data.data.lastName;
                 document.querySelector('#email input').value = data.data.email;
-                document.querySelector('#isSuperuser input').checked = data.data.isSuperuser;
-                document.querySelector('#isStaff input').checked = data.data.isStaff;
-                document.querySelector('#isVolunteer input').checked = data.data.isVolunteer;
-                //document.querySelector('#group input').value = data.data.groupName;
+                document.querySelector('#isSuperuser input').checked = data.data.isSuperuser;                //document.querySelector('#group input').value = data.data.groupName;
                 console.log(data);
                 callback();
             })
@@ -132,8 +119,6 @@
                 document.querySelector('#lastName input').disabled = true;
                 document.querySelector('#email input').disabled = true;
                 document.querySelector('#isSuperuser input').disabled = true;
-                document.querySelector('#isStaff input').disabled = true;
-                document.querySelector('#isVolunteer input').disabled = true;
                 //document.querySelector('#group input').disabled = true;
                 document.getElementById('submit').style.visibility = 'hidden';
                 document.querySelector('.title').innerHTML = 'View User';
@@ -148,8 +133,6 @@
             options.lastName = document.querySelector('#lastName input').value;
             options.email = document.querySelector('#email input').value;
             options.isSuperuser = document.querySelector('#isSuperuser input').checked;
-            options.isStaff = document.querySelector('#isStaff input').checked;
-            options.isVolunteer = document.querySelector('#isVolunteer input').checked;
             //options.group = document.querySelector('#group input').value;
 
             let elementList = document.querySelectorAll('.inputDiv');

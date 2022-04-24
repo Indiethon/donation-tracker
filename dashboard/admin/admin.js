@@ -1,18 +1,26 @@
 function pageLoaded() {
     document.querySelector('#welcomeText').innerHTML = `Welcome ${user.username}!`
-    GET('events/list', (err, data) => {
+    updateNav();
+}
+
+function updateNav() {
+    let nav = document.getElementById('navEvents');
+    nav.innerHTML = '<div class="navEventText">EVENTS</div>';
+    GET('events', (err, data) => {
         if (err) return;
-        let nav = document.getElementById('navEvents');
         for (const event of data.data) {
             nav.innerHTML += `
-            <button onClick="expandEvent('eventNav', '${event}', this)">${event}</button>
-            <div class="navDropdownDiv" id="eventNav" event="${event}">
-            <button>Overview</button>
-            <button>Speedruns</button>
-            <button>Donations</button>
-            <button>Incentives</button>
-            <button>Prizes</button>
-            <button>Ads</button>
+            <button class="mainNavButton" onClick="expandEvent('eventNav', '${event._id}', this)">
+            <div class="buttonText">${event.name}</div>
+                    <span class="material-icons-outlined button-expand">expand_more</span>
+            </button>
+            <div class="navDropdownDiv" id="eventNav" event="${event._id}">
+            <button onClick="switchPage('/content/pages/dashboard/admin/eventPages/overview.html?event=${event._id}')">Overview</button>
+            <button onClick="switchPage('/content/pages/dashboard/admin/eventPages/speedruns/speedruns.html?event=${event._id}')">Speedruns</button>
+            <button onClick="switchPage('/content/pages/dashboard/admin/eventPages/donations/donations.html?event=${event._id}')">Donations</button>
+            <button onClick="switchPage('/content/pages/dashboard/admin/eventPages/incentives/incentives.html?event=${event._id}')">Incentives</button>
+            <button onClick="switchPage('/content/pages/dashboard/admin/eventPages/prizes/prizes.html?event=${event._id}')">Prizes</button>
+            <button onClick="switchPage('/content/pages/dashboard/admin/eventPages/ads/ads.html?event=${event._id}')">Ads</button>
             </div>
             `
         }
@@ -22,24 +30,24 @@ function pageLoaded() {
 
 function expand(element, button) {
     let div = document.getElementById(element);
-    if (div.style.display === 'none' || div.style.display === '') {
-        div.style.display = 'inherit';
-        button.style.backgroundColor = 'lightblue';
+    if (!div.classList.contains('visible')) {
+        div.classList.add('visible')
+        button.classList.add('pressed')
         return;
     }
-    div.style.display = 'none';
-    button.style.backgroundColor = '#E2E2E2';
+    div.classList.remove('visible')
+    button.classList.remove('pressed')
 }
 
 function expandEvent(element, event, button) {
     let div = document.querySelector(`#${element}[event="${event}"]`);
-    if (div.style.display === 'none' || div.style.display === '') {
-        div.style.display = 'inherit';
-        button.style.backgroundColor = 'lightblue';
+    if (!div.classList.contains('visible')) {
+        div.classList.add('visible')
+        button.classList.add('pressed')
         return;
     }
-    div.style.display = 'none';
-    button.style.backgroundColor = '#E2E2E2';
+    div.classList.remove('visible')
+    button.classList.remove('pressed')
 }
 
 window.addEventListener("message", (event) => {
@@ -50,6 +58,7 @@ window.addEventListener("message", (event) => {
         case 'toast': showToast(event.data.data); break;
         case 'dialog': showDialog(event.data.data); break;
         case 'login': location.href = '/login'; break;
+        case 'event': updateNav(); break;
     }
 
 }, false);
@@ -87,6 +96,7 @@ function dialogConfirm(button) {
     DELETE(`${button.getAttribute('endpoint')}`, {}, (err, result) => {
         if (err) return showToast('error', 'Error when deleting resource.')
         document.querySelector('#pageFrame').contentWindow.postMessage({ name: 'reload' }, document.querySelector('#pageFrame'))
+        if (button.getAttribute('endpoint').includes('event')) updateNav();
         return showToast({ type: 'success', message: 'Successfully deleted resource.' })
     })
 }

@@ -1,18 +1,99 @@
-module.exports = {
-    name: { type: String, required: true },
-    short: { type: String, required: true },
-    description: { type: String },
-    charityId: { type: String, required: true },
-    charityName: { type: String, required: true },
-    targetAmount: { type: Number, required: true },
-    minDonation: { type: Number, required: true },
-    startTime: { type: Date, required: true },
-    endTime: { type: Date, required: true },
-    prizeTime: { type: Date },
-    hashtag: { type: String },
-    autoScreen: { type: Boolean, required: true },
-    dateCreated: { type: Date, default: Date.now },
-    visible: { type: Boolean, required: true },
-    active: { type: Boolean, required: true },
-    customFields: { type: Array }
+const blockedShorts = ['all', 'active', 'tracker', 'create', 'edit', 'view', 'delete']
+
+module.exports.schema = (mongoose, database) => {
+    let schema = mongoose.Schema({
+        name: {
+            type: String,
+            unique: true,
+            uniqueCaseInsensitive: true,
+            maxLength: [60, 'Event name is too long.'],
+            required: [true, 'Event name is required.']
+        },
+        short: {
+            type: String,
+            unique: true,
+            uniqueCaseInsensitive: true,
+            maxLength: [10, 'Short is too long.'],
+            required: [true, 'Short is required.'],
+            validate: {
+                validator: function (v) {
+                    if (!blockedShorts.includes(v)) return true;
+                    return false;
+                },
+                message: () => `Short is already in use.`
+            },
+        },
+        description: { type: String },
+        charityId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'charity',
+            required: [true, 'Charity is required.'],
+        },
+        targetAmount: {
+            type: Number,
+            required: [true, 'Target amount is required.'],
+            min: [0.01, 'Target amount must be greater than zero.'],
+        },
+        minDonation: {
+            type: Number,
+            required: [true, 'Minimum donation is required.'],
+            min: [0.01, 'Minimum donation must be greater than zero.'],
+            validate: {
+                validator: function (v) {
+                    return v < this.targetAmount;
+                },
+                message: () => `Minimum donation must be less that the target amount.`
+            },
+        },
+        startTime: {
+            type: Date,
+            required: [true, 'Start time is required.'],
+        },
+        endTime: {
+            type: Date,
+            required: [true, 'End time is required.'],
+            validate: {
+                validator: function (v) {
+                    return this.startTime < v;
+                },
+                message: () => `End time must be after the start time.`
+            },
+        },
+        prizeTime: { type: Date },
+        hashtag: { type: String },
+        autoScreen: {
+            type: Boolean,
+            default: false,
+        },
+        dateCreated: {
+            type: Date,
+            default: Date.now,
+        },
+        visible: {
+            type: Boolean,
+            default: false,
+        },
+        active: {
+            type: Boolean,
+            default: false,
+            validate: {
+                validator: async function (v) {
+                    const event = await database.models['event'].findOne({ active: true });
+                    if (event === null || event === undefined) return true;
+                    if (v === true && event.short !== this.short) return false;
+                    return true;
+                },
+                message: () => 'There is already an active event.'
+            }
+        },
+        customFields: [{ type: Object }]
+    }, { toJSON: { virtuals: true } }, { toObject: { virtuals: true }});
+    
+    schema.virtual('charity', {
+        ref: 'charity',
+        localField: 'charityId',
+        foreignField: '_id',
+        justOne: true,
+    });
+    return schema;
 }

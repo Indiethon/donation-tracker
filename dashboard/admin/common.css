@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+@import "https://fonts.googleapis.com/icon?family=Material+Icons";
 
 body {
     width: calc(100% - 48px);
@@ -279,6 +279,24 @@ form .inputDiv {
     border-color: rgb(68, 107, 246);
 }
 
+.inputDiv select {
+    width: 100%;
+    height: 36px;
+    padding: 4px 8px;
+    margin: 5px 0;
+    font-size: 14px;
+    border: 1px solid rgb(192, 192, 202);
+    outline: none;
+}
+
+.inputDiv select:hover {
+    border-color: rgb(68, 107, 246);
+}
+
+.inputDiv select:focus {
+    border-color: rgb(68, 107, 246);
+}
+
 .inputDiv .errorText {
     font-size: 14px;
     color: red;
@@ -297,6 +315,131 @@ form .inputDiv {
 }
 
 .inputDiv input:disabled:focus {
+    opacity: 0.8;
+    border-color: rgb(192, 192, 202);
+    background-color: rgb(240, 240, 240);
+}
+
+.arrayInputDiv {
+    margin-bottom: 10px;
+}
+
+.arrayInputDiv .label {
+    font-size: 14px;
+}
+
+.arrayInputDiv .errorText {
+    font-size: 14px;
+    color: red;
+    visibility: hidden;
+}
+
+.arrayInput input {
+    width: 100%;
+    height: 26px;
+    padding: 4px 8px;
+    margin: 5px 0;
+    font-size: 14px;
+    border: 1px solid rgb(192, 192, 202);
+    outline: none;
+}
+
+.arrayInput input:hover {
+    border-color: rgb(68, 107, 246);
+}
+
+.arrayInput input:focus {
+    border-color: rgb(68, 107, 246);
+}
+
+.arrayInput input:disabled {
+    opacity: 0.8;
+    background-color: rgb(240, 240, 240);
+}
+
+.arrayInput input:disabled:hover {
+    opacity: 0.8;
+    border-color: rgb(192, 192, 202);
+    background-color: rgb(240, 240, 240);
+}
+
+.arrayInput input:disabled:focus {
+    opacity: 0.8;
+    border-color: rgb(192, 192, 202);
+    background-color: rgb(240, 240, 240);
+}
+
+.deleteButton {
+    text-align: center;
+    width: 36px;
+    height: 36px;
+    background-color: #FF4567;
+    border-radius: 100%;
+    margin-left: 15px;
+    margin-top: 11px;
+    transition-duration: 0.2s;
+}
+
+.deleteButton:hover {
+    background-color: #DE405D;
+    transition-duration: 0.2s;
+}
+
+.arrayInput div {
+    display: flex;
+    align-items: center;
+    padding-bottom: 5px;
+}
+
+.arrayInputContainer {
+    border-width: 1px 1px 1px 8px;
+    border-style: dotted dotted dotted solid;
+    border-color: rgb(203, 213, 253);
+    padding: 30px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.arrayAddButton {
+    background-color: #FFFFFF;
+    color: rgb(66, 104, 246);
+    border: 1px solid rgb(66, 104, 246);
+    border-radius: 20px;
+    transition-duration: 0.2s;
+}
+
+.arrayAddButton:hover {
+    color: #FFFFFF;
+    background-color: #535B8E;
+    transition-duration: 0.2s;
+    border-color: #535B8E;
+}
+
+.arrayInputDivChild {
+    flex-wrap: wrap;
+    flex-grow: 1;
+    height: 100%;
+    margin: 0 5px;
+    padding: 0;
+}
+
+.arrayInputDivChild label {
+    font-size: 14px;
+    text-align: left;
+}
+
+.inputDiv select:disabled {
+    opacity: 0.8;
+    background-color: rgb(240, 240, 240);
+}
+
+.inputDiv select:disabled:hover {
+    opacity: 0.8;
+    border-color: rgb(192, 192, 202);
+    background-color: rgb(240, 240, 240);
+}
+
+.inputDiv select:disabled:focus {
     opacity: 0.8;
     border-color: rgb(192, 192, 202);
     background-color: rgb(240, 240, 240);
