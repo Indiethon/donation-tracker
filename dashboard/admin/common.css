@@ -85,6 +85,8 @@ button.editBack {
     border-radius: 100%;
     width: 34px;
     padding: 0;
+    padding-top: 2px;
+    padding-right: 1px;
     margin-right: 16px;
 }
 
@@ -230,11 +232,11 @@ table input[type=checkbox] {
 }
 
 .tableButton:hover {
-    color: red;
+    color: white;
 }
 
 .tableButton:hover~.tableDropdownContent {
-    color: red;
+    color: white;
     display: block;
 }
 
@@ -320,6 +322,12 @@ form .inputDiv {
     background-color: rgb(240, 240, 240);
 }
 
+input[type=checkbox] {
+    display: block;
+    width: 26px;
+    
+}
+
 .arrayInputDiv {
     margin-bottom: 10px;
 }
@@ -364,6 +372,41 @@ form .inputDiv {
 }
 
 .arrayInput input:disabled:focus {
+    opacity: 0.8;
+    border-color: rgb(192, 192, 202);
+    background-color: rgb(240, 240, 240);
+}
+
+.arrayInput select {
+    width: 100%;
+    height: 36px;
+    padding: 4px 8px;
+    margin: 5px 0;
+    font-size: 14px;
+    border: 1px solid rgb(192, 192, 202);
+    outline: none;
+}
+
+.arrayInput select:hover {
+    border-color: rgb(68, 107, 246);
+}
+
+.arrayInput select:focus {
+    border-color: rgb(68, 107, 246);
+}
+
+.arrayInput select:disabled {
+    opacity: 0.8;
+    background-color: rgb(240, 240, 240);
+}
+
+.arrayInput select:disabled:hover {
+    opacity: 0.8;
+    border-color: rgb(192, 192, 202);
+    background-color: rgb(240, 240, 240);
+}
+
+.arrayInput select:disabled:focus {
     opacity: 0.8;
     border-color: rgb(192, 192, 202);
     background-color: rgb(240, 240, 240);

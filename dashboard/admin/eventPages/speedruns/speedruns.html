@@ -70,13 +70,18 @@
                         runnerList.push(runner.name)
                     }
 
+                    let startTime = new Date(speedrun.startTime);
+                    startTimeHours = (startTime.getHours() < 10) ? '0' + startTime.getHours() : '' + startTime.getHours();
+                    startTimeMins = (startTime.getMinutes() < 10) ? '0' + startTime.getMinutes() : '' + startTime.getMinutes();
+                    startTime = `${startTime.getMonth() + 1}/${startTime.getDate()}/${startTime.getFullYear()} ${startTimeHours}:${startTimeMins} `
+
                     let row = table.insertRow();
                     row.insertCell().innerHTML = `<input type="checkbox" item="${speedrun.id}" />`;
                     row.insertCell().innerHTML = `<p class="tableText">${speedrun.game}</p>`;
                     row.insertCell().innerHTML = `<p class="tableText">${speedrun.category}</p>`;
                     row.insertCell().innerHTML = `<p class="tableText">${runnerList.join(', ')}</p>`;
                     row.insertCell().innerHTML = `<p class="tableText">${speedrun.estimate}</p>`;
-                    row.insertCell().innerHTML = `<p class="tableText">${speedrun.startTime}</p>`;
+                    row.insertCell().innerHTML = `<p class="tableText">${startTime}</p>`;
                     row.insertCell().innerHTML = `<p class="tableText">${speedrun.multiplayer}</p>`;
                     row.insertCell().innerHTML = `
                 <div class="tableDropdown">

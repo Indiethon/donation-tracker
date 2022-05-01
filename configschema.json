@@ -1,45 +1,28 @@
 {
+    "$schema": "http://json-schema.org/draft/2019-09/schema",
     "$id": "http://example.com/example.json",
-    "$schema": "http://json-schema.org/draft-07/schema",
+    "type": "object",
     "default": {
-        "baseURL": "example.com",
-        "port": 3000,
+        "baseURL": "localhost",
+        "port": 8080,
         "ssl": {
             "enabled": false,
             "keyPath": "",
             "certPath": ""
         },
         "paypal": {
-            "useSandbox": false
+            "useSandbox": false,
+            "currency": "USD"
         },
         "tracker": {
             "name": "Donation Tracker",
-            "databaseURL": "localhost:27017/donation-tracker",
-            "logoURL": "",
-            "passwordHash": "some random string"
+            "databaseURL": "mongodb://localhost:27017",
+            "logoPath": "",
+            "passwordHash": "some_random_string_here",
+            "tokens": []
         }
     },
-    "description": "The root schema comprises the entire JSON document.",
-    "examples": [
-        {
-            "baseURL": "example.com",
-            "port": 3000,
-            "ssl": {
-                "enabled": false,
-                "keyPath": "",
-                "certPath": ""
-            },
-            "paypal": {
-                "useSandbox": false
-            },
-            "tracker": {
-                "name": "Donation Tracker",
-                "databaseURL": "localhost:27017",
-                "logoPath": "",
-                "passwordHash": "some random string"
-            }
-        }
-    ],
+    "title": "Root Schema",
     "required": [
         "baseURL",
         "port",
@@ -47,42 +30,27 @@
         "paypal",
         "tracker"
     ],
-    "title": "The root schema",
-    "type": "object",
     "properties": {
         "baseURL": {
-            "$id": "#/properties/baseURL",
             "type": "string",
-            "title": "The baseURL schema",
-            "description": "An explanation about the purpose of this instance.",
             "default": "",
+            "title": "The baseURL Schema",
             "examples": [
-                "example.com"
+                "localhost"
             ]
         },
         "port": {
-            "$id": "#/properties/port",
             "type": "integer",
-            "title": "The port schema",
-            "description": "An explanation about the purpose of this instance.",
             "default": 0,
+            "title": "The port Schema",
             "examples": [
-                3000
+                8080
             ]
         },
         "ssl": {
-            "$id": "#/properties/ssl",
             "type": "object",
-            "title": "The ssl schema",
-            "description": "An explanation about the purpose of this instance.",
             "default": {},
-            "examples": [
-                {
-                    "enabled": false,
-                    "keyPath": "",
-                    "certPath": ""
-                }
-            ],
+            "title": "The ssl Schema",
             "required": [
                 "enabled",
                 "keyPath",
@@ -90,130 +58,148 @@
             ],
             "properties": {
                 "enabled": {
-                    "$id": "#/properties/ssl/properties/enabled",
                     "type": "boolean",
-                    "title": "The enabled schema",
-                    "description": "An explanation about the purpose of this instance.",
                     "default": false,
+                    "title": "The enabled Schema",
                     "examples": [
                         false
                     ]
                 },
                 "keyPath": {
-                    "$id": "#/properties/ssl/properties/keyPath",
                     "type": "string",
-                    "title": "The keyPath schema",
-                    "description": "An explanation about the purpose of this instance.",
                     "default": "",
+                    "title": "The keyPath Schema",
                     "examples": [
                         ""
                     ]
                 },
                 "certPath": {
-                    "$id": "#/properties/ssl/properties/certPath",
                     "type": "string",
-                    "title": "The certPath schema",
-                    "description": "An explanation about the purpose of this instance.",
                     "default": "",
+                    "title": "The certPath Schema",
                     "examples": [
                         ""
                     ]
                 }
             },
-            "additionalProperties": true
+            "examples": [{
+                "enabled": false,
+                "keyPath": "",
+                "certPath": ""
+            }]
         },
         "paypal": {
-            "$id": "#/properties/paypal",
             "type": "object",
-            "title": "The paypal schema",
-            "description": "An explanation about the purpose of this instance.",
             "default": {},
-            "examples": [
-                {
-                    "useSandbox": false
-                }
-            ],
+            "title": "The paypal Schema",
             "required": [
-                "useSandbox"
+                "useSandbox",
+                "currency"
             ],
             "properties": {
                 "useSandbox": {
-                    "$id": "#/properties/paypal/properties/useSandbox",
                     "type": "boolean",
-                    "title": "The useSandbox schema",
-                    "description": "An explanation about the purpose of this instance.",
                     "default": false,
+                    "title": "The useSandbox Schema",
                     "examples": [
                         false
                     ]
+                },
+                "currency": {
+                    "type": "string",
+                    "default": "",
+                    "title": "The currency Schema",
+                    "examples": [
+                        "USD"
+                    ]
                 }
             },
-            "additionalProperties": true
+            "examples": [{
+                "useSandbox": false,
+                "currency": "USD"
+            }]
         },
         "tracker": {
-            "$id": "#/properties/tracker",
             "type": "object",
-            "title": "The tracker schema",
-            "description": "An explanation about the purpose of this instance.",
             "default": {},
-            "examples": [
-                {
-                    "name": "Donation Tracker",
-                    "databaseURL": "localhost:27017/donation-tracker",
-                    "logoPath": "",
-                    "passwordHash": "some random string"
-                }
-            ],
+            "title": "The tracker Schema",
             "required": [
                 "name",
                 "databaseURL",
                 "logoPath",
-                "passwordHash"
+                "passwordHash",
+                "tokens"
             ],
             "properties": {
                 "name": {
-                    "$id": "#/properties/tracker/properties/name",
                     "type": "string",
-                    "title": "The name schema",
-                    "description": "An explanation about the purpose of this instance.",
                     "default": "",
+                    "title": "The name Schema",
                     "examples": [
                         "Donation Tracker"
                     ]
                 },
                 "databaseURL": {
-                    "$id": "#/properties/tracker/properties/databaseURL",
                     "type": "string",
-                    "title": "The databaseURL schema",
-                    "description": "An explanation about the purpose of this instance.",
                     "default": "",
+                    "title": "The databaseURL Schema",
                     "examples": [
-                        "localhost:27017/donation-tracker"
+                        "mongodb://localhost:27017"
                     ]
                 },
                 "logoPath": {
-                    "$id": "#/properties/tracker/properties/logoPath",
                     "type": "string",
-                    "title": "The logoPath schema",
-                    "description": "An explanation about the purpose of this instance.",
                     "default": "",
+                    "title": "The logoPath Schema",
                     "examples": [
                         ""
                     ]
                 },
                 "passwordHash": {
-                    "$id": "#/properties/tracker/properties/passwordHash",
                     "type": "string",
-                    "title": "The passwordHash schema",
-                    "description": "An explanation about the purpose of this instance.",
                     "default": "",
+                    "title": "The passwordHash Schema",
                     "examples": [
-                        "some random string"
+                        "some_random_string_here"
+                    ]
+                },
+                "tokens": {
+                    "type": "array",
+                    "default": [],
+                    "title": "The tokens Schema",
+                    "items": {},
+                    "examples": [
+                        []
                     ]
                 }
             },
-            "additionalProperties": true
+            "examples": [{
+                "name": "Donation Tracker",
+                "databaseURL": "mongodb://localhost:27017",
+                "logoPath": "",
+                "passwordHash": "some_random_string_here",
+                "tokens": []
+            }]
         }
     },
-    "additionalProperties": true
+    "examples": [{
+        "baseURL": "localhost",
+        "port": 8080,
+        "ssl": {
+            "enabled": false,
+            "keyPath": "",
+            "certPath": ""
+        },
+        "paypal": {
+            "useSandbox": false,
+            "currency": "USD"
+        },
+        "tracker": {
+            "name": "Donation Tracker",
+            "databaseURL": "mongodb://localhost:27017",
+            "logoPath": "",
+            "passwordHash": "some_random_string_here",
+            "tokens": []
+        }
+    }]
 }

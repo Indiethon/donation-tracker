@@ -111,6 +111,7 @@ button {
 
 .navDropdownDiv button:hover {
     color: rgb(66, 104, 246);
+    cursor:pointer;
 }
 
 #pageFrame {
@@ -187,6 +188,10 @@ button {
     background-color: #FFFFFF;
     border: none;
     padding: 7px 16px;
+}
+
+.mainNavButton:hover {
+    cursor:pointer;
 }
 
 .mainNavButton.pressed {

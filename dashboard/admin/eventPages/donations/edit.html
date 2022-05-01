@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="/content/pages/dashboard/utils.js"></script>
+    <link rel="stylesheet" href="/content/pages/dashboard/admin/common.css" />
+</head>
+
+<body onLoad="load(false)">
+    <script>let model = 'donations';</script>
+    <datalist id='donorDatalist'></datalist>
+    <datalist id='incentiveDatalist'></datalist>
+    <ul class="breadcrumb">
+        <li><a onClick="switchPage(`/content/pages/dashboard/admin/home.html`)">Home</a></li>
+        <li><a
+                onClick="switchPage(`/content/pages/dashboard/admin/eventPages/${model}/${model}.html?event=${urlParams.get('event')}`)">Donations</a>
+        </li>
+        <li><a onClick="location.reload()">Edit</a>
+        </li>
+    </ul>
+    <div class="header">
+        <div class="editHeader">
+            <button class="editBack"
+                onClick="switchPage(`/content/pages/dashboard/admin/eventPages/${model}/${model}.html?event=${urlParams.get('event')}`)">&lt;</button>
+            <h2 class="title"></h2>
+        </div>
+    </div>
+    <div class="loadingContent">
+        <div class="loadingAnimation">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <div class="content">
+        <form>
+            <div id="id" class="inputDiv">
+                <label class="label">ID</label>
+                <input class="input" disabled>
+                <span class="errorText"></span>
+            </div>
+            <div id="donorId" class="inputDiv">
+                <label class="label">Donor</label>
+                <input class="input" list="donorDatalist">
+                <span class="errorText"></span>
+            </div>
+            <div id="alias" class="inputDiv">
+                <label class="label">Alias</label>
+                <input class="input">
+                <span class="errorText"></span>
+            </div>
+            <div id="amount" class="inputDiv">
+                <label class="label">Amount</label>
+                <input class="input" type="number">
+                <span class="errorText"></span>
+            </div>
+            <div id="comment" class="inputDiv">
+                <label class="label">Comment</label>
+                <input class="input">
+                <span class="errorText"></span>
+            </div>
+            <div id="incentives" class="arrayInputDiv">
+                <label class="label">Incentives</label>
+                <div class="arrayInputContainer">
+                    <div class="arrayInput">
+
+                    </div>
+                    <button type="button" class="arrayAddButton"
+                        onClick="addIncentiveArrayElement(document.querySelector(`#options .arrayInput`), '', '', '')">Add
+                        New
+                        Item</button>
+                </div>
+                <span class="errorText"></span>
+            </div>
+            <div id="custom" class="arrayInputDiv">
+                <label class="label">Custom</label>
+                <div class="arrayInputContainer">
+                    <div class="arrayInput">
+
+                    </div>
+                    <button type="button" class="arrayAddButton"
+                        onClick="addArrayElement(document.querySelector(`#options .arrayInput`), '', '', '')">Add
+                        New
+                        Item</button>
+                </div>
+                <span class="errorText"></span>
+            </div>
+            <div id="timestamp" class="inputDiv">
+                <label class="label">Timestamp</label>
+                <input class="input" type="datetime-local">
+                <span class="errorText"></span>
+            </div>
+            <div id="completed" class="inputDiv">
+                <label class="label">Completed</label>
+                <input class="input" type="checkbox">
+                <span class="errorText"></span>
+            </div>
+            <div id="verified" class="inputDiv">
+                <label class="label">Verified</label>
+                <input class="input" type="checkbox">
+                <span class="errorText"></span>
+            </div>
+            <div id="visible" class="inputDiv">
+                <label class="label">Visible</label>
+                <input class="input" type="checkbox">
+                <span class="errorText"></span>
+            </div>
+        </form>
+        <button id="submit" onClick="submit()"></button>
+        <div></div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        let donorList;
+        let incentiveList;
+        let incentiveDb;
+
+        function pageLoaded() {
+            showBody();
+            fetchDonors();
+            fetchIncentives();
+            try {
+                switch (urlParams.get('type')) {
+                    case 'create': create(); break;
+                    case 'edit': edit(urlParams.get('id')); break;
+                    case 'view': view(urlParams.get('id')); break;
+                    default:
+                        showToast('error', `Error opening page. Please contact the system administrator.`)
+                        switchPage(`/content/pages/dashboard/admin/eventPages/${model}/${model}.html?event=${urlParams.get('event')}`)
+                }
+            } catch (e) {
+                console.error(e)
+                showToast('error', `Error opening page. Please contact the system administrator.`)
+                switchPage(`/content/pages/dashboard/admin/eventPages/${model}/${model}.html?event=${urlParams.get('event')}`)
+            }
+        }
+
+        function fetchDonors() {
+            GET(`donors`, (err, data) => {
+                if (err) return;
+                donorList = data.data;
+                let donorDatalist = document.getElementById('donorDatalist');
+                if (data.data.length <= 0) {
+                    showToast('error', `There are no saved donors. Please add a donor before continuing.`)
+                    switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)
+                    return;
+                }
+                for (const donor of data.data) {
+                    donorDatalist.innerHTML += `<option donor="${donor.id}" value="${donor.email}">ID: ${donor._id}</option>`;
+                }
+            })
+        }
+
+        function fetchIncentives() {
+            GET(`incentives/event/${urlParams.get('event')}`, (err, data) => {
+                if (err) return;
+                incentiveList = data.data;
+                let incentiveDatalist = document.getElementById('incentiveDatalist');
+                for (const incentive of data.data) {
+                    incentiveDatalist.innerHTML += `<option run="${incentive.id}" value="${incentive.name}">ID: ${incentive._id}</option>`;
+                }
+                incentiveDb = data.data;
+            })
+        }
+
+        function fetchData(incentive, callback) {
+            GET(`donations/${urlParams.get('id')}`, (err, data) => {
+                if (err) return;
+                document.querySelector('#id input').value = data.data.id;
+                try { document.querySelector('#donorId input').value = data.data.donor.email; } catch { document.querySelector('#donorId input').value = ''; }
+                document.querySelector('#alias input').value = data.data.alias;
+                document.querySelector('#amount input').value = data.data.amount;
+                document.querySelector('#comment input').value = data.data.comment;
+                document.querySelector('#timestamp input').value = data.data.timestamp.split('.')[0];
+                document.querySelector('#completed input').checked = data.data.completed;
+                document.querySelector('#verified input').checked = data.data.verified;
+                document.querySelector('#visible input').checked = data.data.visible;
+                // for (const option of data.data.options) {
+                //     addArrayElement(document.querySelector(`#options .arrayInput`), option.name, option.total, option._id, option.userOption)
+                // }
+                callback();
+            })
+        }
+
+        function create() {
+            document.querySelector('#id').style.display = 'none';
+            document.querySelector('.title').innerHTML = 'Create Donation';
+            document.getElementById('submit').innerHTML = 'Create';
+            showContent();
+        }
+
+        function edit(incentive) {
+            fetchData(incentive, () => {
+                document.querySelector('.title').innerHTML = 'Edit Donation';
+                document.getElementById('submit').innerHTML = 'Save';
+                showContent();
+            })
+        }
+        function view(incentive) {
+            fetchData(incentive, () => {
+                document.querySelector('#alias input').disabled = true;
+                document.querySelector('#amount input').disabled = true;
+                document.querySelector('#comment input').disabled = true;
+                document.querySelector('#timestamp input').disabled = true;
+                document.querySelector('#completed input').disabled = true;
+                document.querySelector('#verified input').disabled = true;
+                document.querySelector('#visible input').disabled = true;
+                document.getElementById('submit').style.display = 'none';
+                document.querySelector('.title').innerHTML = 'View Donation';
+                // for (const option of document.querySelectorAll('.arrayInput div:not(.arrayInputDivChild)')) {
+                //     option.querySelectorAll('.arrayInputDivChild input')[0].disabled = true;
+                //     option.querySelectorAll('.arrayInputDivChild input')[1].disabled = true;
+                //     option.querySelector('button').style.display = 'none'
+                // }
+                // document.querySelector('.arrayAddButton').style.display = 'none'
+                showContent();
+            })
+        }
+
+        function submit() {
+            let options = {};
+            let timestamp, donorId;
+            try { timestamp = new Date(document.querySelector('#timestamp input').value).toISOString() } catch { timestamp = document.querySelector('#timestamp input').value }
+            try { donorId = donorList.find(el => el.email === document.querySelector('#donorId input').value)._id; } catch { donorId = "" };
+            options.eventId = urlParams.get('event');
+            options.donorId = donorId;
+            options.alias = document.querySelector('#alias input').value;
+            options.amount = document.querySelector('#amount input').value;
+            options.comment = document.querySelector('#comment input').value;
+            options.timestamp = timestamp;
+            options.completed = document.querySelector('#completed input').checked;
+            options.verified = document.querySelector('#verified input').checked;
+            options.visible = document.querySelector('#visible input').checked;
+            // options.options = [];
+            // for (const option of document.querySelectorAll('.arrayInput div:not(.arrayInputDivChild)')) {
+            //     let bidwarOption = {};
+            //     console.log(option)
+            //     if (option.getAttribute('optionId') !== '') bidwarOption._id = option.getAttribute('optionId');
+            //     bidwarOption.name = option.querySelectorAll('.arrayInputDivChild input')[0].value;
+            //     bidwarOption.total = option.querySelectorAll('.arrayInputDivChild input')[1].value;
+            //     bidwarOption.userOption = option.getAttribute('userOption')
+            //     options.options.push(bidwarOption);
+            // }
+
+            console.log(options.donorId)
+
+            let elementList = document.querySelectorAll('.inputDiv');
+            [...elementList].forEach(element => {
+                let el = document.querySelector(`#${element.id} span`)
+                el.innerHTML = '';
+                el.style.visibility = 'hidden';
+            });
+
+            POST(`donations${(urlParams.get('type') === 'create') ? '' : `/${urlParams.get('id')}`}`, options, (err, data) => {
+                if (!err) {
+                    showToast('success', `Donation updated successfully.`)
+                    switchPage(`/content/pages/dashboard/admin/eventPages/${model}/${model}.html?event=${urlParams.get('event')}`)
+                    return;
+                }
+
+                data.data.errorCodes.forEach(error => {
+                    let element = document.querySelector(`#${error.item.split('.')[0]} span`);
+                    element.innerHTML = error.code;
+                    element.style.visibility = 'inherit';
+                })
+                showToast('error', `Validation errors found, please resolve them.`)
+            })
+        }
+
+        function addArrayElement(div, value, totalRaised, optionId, userOption) {
+
+            let name = document.createElement('div');
+            name.setAttribute('class', 'arrayInputDivChild')
+
+            let label = document.createElement('label');
+            label.setAttribute('class', 'label')
+            label.innerHTML = 'Name';
+
+            let input = document.createElement('input');
+            input.setAttribute('class', 'input');
+            input.value = value;
+
+            name.appendChild(label);
+            name.appendChild(input)
+
+            let total = document.createElement('div');
+            total.setAttribute('class', 'arrayInputDivChild')
+
+            let label2 = document.createElement('label');
+            label2.setAttribute('class', 'label')
+            label2.innerHTML = 'Total';
+
+            let input2 = document.createElement('input');
+            input2.setAttribute('class', 'input');
+            input2.setAttribute('type', 'number');
+            input2.value = totalRaised;
+
+            total.appendChild(label2);
+            total.appendChild(input2);
+
+            let button = document.createElement('button');
+            button.setAttribute('type', 'button');
+            button.setAttribute('class', 'deleteButton material-icons');
+            button.setAttribute('onClick', 'this.parentNode.remove()');
+            button.innerHTML = 'delete_forever';
+
+            let divDiv = document.createElement('div');
+            divDiv.setAttribute('style', 'width: 100%')
+            divDiv.setAttribute('optionId', optionId)
+            divDiv.setAttribute('userOption', userOption)
+
+            divDiv.appendChild(name);
+            divDiv.appendChild(total);
+            divDiv.appendChild(button);
+            div.appendChild(divDiv)
+            // div.innerHTML = `
+            // <div>
+            //     <input class="input" list="runnerDatalist">
+            //     <button type="button" class="deleteButton material-icons" onClick="this.parentNode.remove()">delete_forever</button>
+            //     </div>
+            // ` + div.innerHTML;
+            //div.querySelector('input').value = value;
+        }
+
+        function addIncentiveArrayElement(div, incentiveId, optionName, amount) {
+
+            let name = document.createElement('div');
+            name.setAttribute('class', 'arrayInputDivChild')
+
+            let label = document.createElement('label');
+            label.setAttribute('class', 'label')
+            label.innerHTML = 'Incentive';
+
+            let input = document.createElement('input');
+            input.setAttribute('class', 'input');
+            input.setAttribute('list', 'incentiveDatalist');
+            input.value = incentiveId;
+
+            name.appendChild(label);
+            name.appendChild(input)
+
+            let option = document.createElement('div');
+            total.setAttribute('class', 'arrayInputDivChild')
+
+            let label2 = document.createElement('label');
+            label2.setAttribute('class', 'label')
+            label2.innerHTML = 'Option';
+
+            let input2 = document.createElement('input');
+            input2.setAttribute('class', 'input');
+            input2.setAttribute('type', 'number');
+            input2.value = optionName;
+
+            option.appendChild(label2);
+            option.appendChild(input2);
+
+            let total = document.createElement('div');
+            total.setAttribute('class', 'arrayInputDivChild')
+
+            let label3 = document.createElement('label');
+            label3.setAttribute('class', 'label')
+            label3.innerHTML = 'Amount';
+
+            let input3 = document.createElement('input');
+            input3.setAttribute('class', 'input');
+            input3.setAttribute('type', 'number');
+            input3.value = amount;
+
+            total.appendChild(label3);
+            total.appendChild(input3);
+
+            let button = document.createElement('button');
+            button.setAttribute('type', 'button');
+            button.setAttribute('class', 'deleteButton material-icons');
+            button.setAttribute('onClick', 'this.parentNode.remove()');
+            button.innerHTML = 'delete_forever';
+
+            let divDiv = document.createElement('div');
+            divDiv.setAttribute('style', 'width: 100%')
+            divDiv.setAttribute('optionId', optionId)
+            divDiv.setAttribute('userOption', userOption)
+
+            divDiv.appendChild(name);
+            divDiv.appendChild(total);
+            divDiv.appendChild(button);
+            div.appendChild(divDiv)
+        }
+    </script>
+</body>
+
+</html>

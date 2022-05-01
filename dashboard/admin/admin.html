@@ -36,7 +36,7 @@
                 <div class="navDropdownDiv" id="trackerNav">
                     <button onClick="switchPage('/content/pages/dashboard/admin/events/events.html')">Events</button>
                     <button onClick="switchPage('/content/pages/dashboard/admin/charities/charities.html')">Charities</button>
-                    <button>Word Filters</button>
+                    <button onClick="switchPage('/content/pages/dashboard/admin/wordFilters/wordFilters.html')">Word Filters</button>
                     <button>Settings</button>
                 </div>
                 <button class="mainNavButton" onClick="expand('peopleNav', this)">
@@ -46,8 +46,7 @@
                 </button>
                 <div class="navDropdownDiv" id="peopleNav">
                     <button onClick="switchPage('/content/pages/dashboard/admin/runners/runners.html')">Runners</button>
-                    <button>Commentators</button>
-                    <button>Donors</button>
+                    <button onClick="switchPage('/content/pages/dashboard/admin/donors/donors.html')">Donors</button>
                 </div>
                 <button class="mainNavButton" onClick="expand('prizesNav', this)">
                     <span class="material-icons-outlined">emoji_events</span>
@@ -66,7 +65,7 @@
         </div>
         <div id="navUser">
             <div class="navUserText">USER</div>
-            <button class="mainNavButton">
+            <button class="mainNavButton" onClick="switchPage('/content/pages/dashboard/admin/changePassword.html')">
                 <span class="material-icons-outlined">password</span>
                 <div class="buttonText">Change Password</div>
             </button>

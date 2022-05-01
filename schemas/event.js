@@ -86,7 +86,18 @@ module.exports.schema = (mongoose, database) => {
                 message: () => 'There is already an active event.'
             }
         },
-        customFields: [{ type: Object }]
+        customFields: [{
+            type: {
+                type: String,
+                enum: ['input', 'checkbox'],
+                required: [true, 'Type is required.']
+            },
+            name: {
+                type: String,
+                maxLength: [60, 'Name is too long.'],
+                required: [true, 'Name is required.']
+            }
+        }]
     }, { toJSON: { virtuals: true } }, { toObject: { virtuals: true }});
     
     schema.virtual('charity', {
@@ -95,5 +106,21 @@ module.exports.schema = (mongoose, database) => {
         foreignField: '_id',
         justOne: true,
     });
+
+    schema.method('getStats', async function(callback) {
+        const donations = await database.models['donation'].find({ eventId: this.id, completed: true })
+        let stats = {};
+        let totalArray = [];
+        for (const donation of donations) {
+            totalArray.push(donation.amount);
+        }
+        stats.total = totalArray.reduce(function(a, b){ return a + b }, 0);
+        stats.min = Math.min(...totalArray)
+        stats.max = Math.max(...totalArray)
+        stats.avg = stats.total / totalArray.length;
+        totalArray = [...totalArray].sort((a, b) => a - b);
+        stats.median = (totalArray[totalArray.length - 1 >> 1] + totalArray[totalArray.length >> 1]) / 2;
+        callback(stats)   
+      });
     return schema;
 }

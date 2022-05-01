@@ -36,6 +36,7 @@
         document.body.insertAdjacentHTML("beforeend", `
       <form id="donateForm" action="${data.url}" method="post" target="_top">
         <input type="hidden" name="cmd" value="_donations" />
+        <input type="hidden" name="image_url" value="${data.logo}">
         <input type="hidden" name="business" value="${data.payee}" />
         <input type="hidden" name="amount" value="${document.getElementById('amount').value}" />
         <input type="hidden" name="currency_code" value="${data.currency}" />

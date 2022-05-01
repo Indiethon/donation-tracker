@@ -58,17 +58,16 @@
             GET('events', (err, data) => {
                 if (err) return;
                 let table = document.querySelector('tbody');
-                console.log(data)
                 for (const event of data.data) {
                     let startTime = new Date(event.startTime);
                     startTimeHours = (startTime.getHours() < 10) ? '0' + startTime.getHours() : '' + startTime.getHours();
                     startTimeMins = (startTime.getMinutes() < 10) ? '0' + startTime.getMinutes() : '' + startTime.getMinutes();
-                    startTime = `${startTime.getDate()}/${startTime.getMonth() + 1}/${startTime.getFullYear()} ${startTimeHours}:${startTimeMins}`
+                    startTime = `${startTime.getMonth() + 1}/${startTime.getDate()}/${startTime.getFullYear()} ${startTimeHours}:${startTimeMins}`
 
                     let endTime = new Date(event.endTime);
                     endTimeHours = (endTime.getHours() < 10) ? '0' + endTime.getHours() : '' + endTime.getHours();
                     endTimeMins = (endTime.getMinutes() < 10) ? '0' + endTime.getMinutes() : '' + endTime.getMinutes();
-                    endTime = `${endTime.getDate()}/${endTime.getMonth() + 1}/${endTime.getFullYear()} ${endTimeHours}:${endTimeMins} `
+                    endTime = `${endTime.getMonth() + 1}/${endTime.getDate()}/${endTime.getFullYear()} ${endTimeHours}:${endTimeMins} `
 
                     let row = table.insertRow();
                     row.insertCell().innerHTML = `<input type="checkbox" item="${event.id}" />`;

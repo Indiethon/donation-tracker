@@ -29,6 +29,11 @@
     </div>
     <div class="content">
         <form>
+            <div id="id" class="inputDiv">
+                <label class="label">ID</label>
+                <input class="input" disabled>
+                <span class="errorText"></span>
+            </div>
             <div id="username" class="inputDiv">
                 <label class="label">Username</label>
                 <input class="input">
@@ -88,17 +93,19 @@
         function fetchData(user, callback) {
             GET(`users/${urlParams.get('id')}`, (err, data) => {
                 if (err) return;
+                document.querySelector('#id input').value = data.data.id;
                 document.querySelector('#username input').value = data.data.username;
                 document.querySelector('#firstName input').value = data.data.firstName;
                 document.querySelector('#lastName input').value = data.data.lastName;
                 document.querySelector('#email input').value = data.data.email;
-                document.querySelector('#isSuperuser input').checked = data.data.isSuperuser;                //document.querySelector('#group input').value = data.data.groupName;
-                console.log(data);
+                document.querySelector('#isSuperuser input').checked = data.data.isSuperuser;
+                //document.querySelector('#group input').value = data.data.groupName;
                 callback();
             })
         }
 
         function create() {
+            document.querySelector('#id').style.display = 'none';
             document.querySelector('.title').innerHTML = 'Create User';
             document.getElementById('submit').innerHTML = 'Create';
             showContent();
@@ -106,7 +113,6 @@
 
         function edit(user) {
             fetchData(user, () => {
-                console.log(urlParams.get('id'))
                 document.querySelector('.title').innerHTML = 'Edit User';
                 document.getElementById('submit').innerHTML = 'Save';
                 showContent();
@@ -120,7 +126,7 @@
                 document.querySelector('#email input').disabled = true;
                 document.querySelector('#isSuperuser input').disabled = true;
                 //document.querySelector('#group input').disabled = true;
-                document.getElementById('submit').style.visibility = 'hidden';
+                document.getElementById('submit').style.display = 'none';
                 document.querySelector('.title').innerHTML = 'View User';
                 showContent();
             })
@@ -143,7 +149,6 @@
             });
 
             POST(`users${(urlParams.get('type') === 'create') ? '' : `/${urlParams.get('id')}`}`, options, (err, data) => {
-                console.log(data)
                 if (!err) {
                     showToast('success', `User ${options.username} updated successfully.`)
                     switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)

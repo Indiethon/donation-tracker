@@ -94,7 +94,7 @@ function showDialog(data) {
 function dialogConfirm(button) {
     document.getElementById('dialog').style.display = 'none';
     DELETE(`${button.getAttribute('endpoint')}`, {}, (err, result) => {
-        if (err) return showToast('error', 'Error when deleting resource.')
+        if (err) return showToast({ type: 'error', message: 'Error when deleting resource. Check the browser console for more details.'})
         document.querySelector('#pageFrame').contentWindow.postMessage({ name: 'reload' }, document.querySelector('#pageFrame'))
         if (button.getAttribute('endpoint').includes('event')) updateNav();
         return showToast({ type: 'success', message: 'Successfully deleted resource.' })

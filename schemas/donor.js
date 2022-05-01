@@ -16,10 +16,12 @@ module.exports.schema = (mongoose, database) => {
             },
         },
         firstName: {
-            type: String
+            type: String,
+            default: '',
         },
         lastName: {
-            type: String
+            type: String,
+            default: '',
         },
         address: {
             name: {

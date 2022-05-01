@@ -33,6 +33,11 @@
     </div>
     <div class="content">
         <form>
+            <div id="id" class="inputDiv">
+                <label class="label">ID</label>
+                <input class="input" disabled>
+                <span class="errorText"></span>
+            </div>
             <div id="name" class="inputDiv">
                 <label class="label">Name</label>
                 <input class="input">
@@ -167,6 +172,7 @@
         function fetchData(incentive, callback) {
             GET(`incentives/${urlParams.get('id')}`, (err, data) => {
                 if (err) return;
+                document.querySelector('#id input').value = data.data.id;
                 document.querySelector('#name input').value = data.data.name;
                 try { document.querySelector('#runId input').value = data.data.run.game + ' ' + data.data.run.category; } catch { document.querySelector('#runId input').value = ''; }
                 document.querySelector('#description input').value = data.data.description;
@@ -183,13 +189,14 @@
                 document.querySelector('#notes input').value = data.data.notes;
                 if (data.data.type === 'bidwar') changeType('bidwar');
                 for (const option of data.data.options) {
-                    addArrayElement(document.querySelector(`#options .arrayInput`), option.name, option.total, option._id, option.userOption)
+                   addArrayElement(document.querySelector(`#options .arrayInput`), option.name, option.total, option._id, option.userOption)
                 }
                 callback();
             })
         }
 
         function create() {
+            document.querySelector('#id').style.display = 'none';
             document.querySelector('.title').innerHTML = 'Create Incentive';
             document.getElementById('submit').innerHTML = 'Create';
             showContent();
@@ -218,7 +225,7 @@
                 document.querySelector('#active input').disabled = true;
                 document.querySelector('#completed input').disabled = true;
                 document.querySelector('#notes input').disabled = true;
-                document.getElementById('submit').style.visibility = 'hidden';
+                document.getElementById('submit').style.display = 'none';
                 document.querySelector('.title').innerHTML = 'View Incentive';
                 for (const option of document.querySelectorAll('.arrayInput div:not(.arrayInputDivChild)')) {
                    option.querySelectorAll('.arrayInputDivChild input')[0].disabled = true;
@@ -331,13 +338,6 @@
             divDiv.appendChild(total);
             divDiv.appendChild(button);
             div.appendChild(divDiv)
-            // div.innerHTML = `
-            // <div>
-            //     <input class="input" list="runnerDatalist">
-            //     <button type="button" class="deleteButton material-icons" onClick="this.parentNode.remove()">delete_forever</button>
-            //     </div>
-            // ` + div.innerHTML;
-            //div.querySelector('input').value = value;
         }
 
         function changeType(value) {

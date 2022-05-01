@@ -7,10 +7,10 @@
 </head>
 
 <body onLoad="load(false)">
-    <script>let model = 'charities';</script>
+    <script>let model = 'wordFilters';</script>
     <ul class="breadcrumb">
         <li><a onClick="switchPage(`/content/pages/dashboard/admin/home.html`)">Home</a></li>
-        <li><a onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)">Charities</a></li>
+        <li><a onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)">Word Filters</a></li>
         <li><a onClick="location.reload()">Edit</a>
         </li>
     </ul>
@@ -34,24 +34,19 @@
                 <input class="input" disabled>
                 <span class="errorText"></span>
             </div>
-            <div id="name" class="inputDiv">
-                <label class="label">Name</label>
+            <div id="word" class="inputDiv">
+                <label class="label">Word or Phrase</label>
                 <input class="input">
                 <span class="errorText"></span>
             </div>
-            <div id="description" class="inputDiv">
-                <label class="label">Description</label>
-                <input class="input">
+            <div id="blocked" class="inputDiv">
+                <label class="label">Blocked</label>
+                <input class="input" type="checkbox">
                 <span class="errorText"></span>
             </div>
-            <div id="payee" class="inputDiv">
-                <label class="label">Payee</label>
-                <input class="input">
-                <span class="errorText"></span>
-            </div>
-            <div id="logoUrl" class="inputDiv">
-                <label class="label">Logo URL</label>
-                <input class="input">
+            <div id="allowed" class="inputDiv">
+                <label class="label">Allowed</label>
+                <input class="input" type="checkbox">
                 <span class="errorText"></span>
             </div>
         </form>
@@ -80,49 +75,46 @@
         }
 
         function fetchData(event, callback) {
-            GET(`charities/${urlParams.get('id')}`, (err, data) => {
+            GET(`wordFilters/${urlParams.get('id')}`, (err, data) => {
                 if (err) return;
                 document.querySelector('#id input').value = data.data._id;
-                document.querySelector('#name input').value = data.data.name;
-                document.querySelector('#description input').value = data.data.description;
-                document.querySelector('#payee input').value = data.data.payee;
-                document.querySelector('#logoUrl input').value = data.data.logoUrl;
+                document.querySelector('#word input').value = data.data.word;
+                document.querySelector('#blocked input').checked = data.data.blocked;
+                document.querySelector('#allowed input').checked = data.data.allowed;
                 callback();
             })
         }
 
         function create() {
             document.querySelector('#id').style.display = 'none';
-            document.querySelector('.title').innerHTML = 'Create Charity';
+            document.querySelector('.title').innerHTML = 'Create Word Filter';
             document.getElementById('submit').innerHTML = 'Create';
             showContent();
         }
 
-        function edit(charity) {
-            fetchData(charity, () => {
-                document.querySelector('.title').innerHTML = 'Edit Charity';
+        function edit(wordFilter) {
+            fetchData(wordFilter, () => {
+                document.querySelector('.title').innerHTML = 'Edit Word Filter';
                 document.getElementById('submit').innerHTML = 'Save';
                 showContent();
             })
         }
-        function view(charity) {
-            fetchData(charity, () => {
-                document.querySelector('#name input').disabled = true;
-                document.querySelector('#description input').disabled = true;
-                document.querySelector('#payee input').disabled = true;
-                document.querySelector('#logoUrl input').disabled = true;
+        function view(wordFilter) {
+            fetchData(wordFilter, () => {
+                document.querySelector('#word input').disabled = true;
+                document.querySelector('#blocked input').disabled = true;
+                document.querySelector('#allowed input').disabled = true;
                 document.getElementById('submit').style.display = 'none';
-                document.querySelector('.title').innerHTML = 'View Event';
+                document.querySelector('.title').innerHTML = 'View Word Filter';
                 showContent();
             })
         }
 
         function submit() {
             let options = {};
-            options.name = document.querySelector('#name input').value;
-            options.description = document.querySelector('#description input').value;
-            options.payee = document.querySelector('#payee input').value;
-            options.logoUrl = document.querySelector('#logoUrl input').value;
+            options.word = document.querySelector('#word input').value;
+            options.blocked = document.querySelector('#blocked input').checked;
+            options.allowed = document.querySelector('#allowed input').checked;
 
             let elementList = document.querySelectorAll('.inputDiv');
             [...elementList].forEach(element => {
@@ -131,10 +123,10 @@
                 el.style.visibility = 'hidden';
             });
 
-            POST(`charities${(urlParams.get('type') === 'create') ? '' : `/${urlParams.get('id')}`}`, options, (err, data) => {
+            POST(`wordFilters${(urlParams.get('type') === 'create') ? '' : `/${urlParams.get('id')}`}`, options, (err, data) => {
                 console.log(data)
                 if (!err) {
-                    showToast('success', `Charity ${options.name} updated successfully.`)
+                    showToast('success', `Word filter updated successfully.`)
                     switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)
                     return;
                 }

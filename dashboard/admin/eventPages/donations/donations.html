@@ -7,9 +7,116 @@
 </head>
 
 <body onLoad="load(false)">
-    <h1>Donations</h1>
     <script>
-        showBody()
+        let model = 'donations';
+        const urlParams = new URLSearchParams(window.location.search);
+    </script>
+    <ul class="breadcrumb">
+        <li><a onClick="switchPage('/content/pages/dashboard/admin/home.html')">Home</a></li>
+        <li><a onClick="switchPage(`/content/pages/dashboard/admin/eventPages/${model}/${model}.html?event=${urlParams.get('event')}`)">Donations</a>
+        </li>
+    </ul>
+    <div class="header">
+        <h2 class="title">Donations</h2>
+        <div id="headerButtonDiv">
+            <button
+                onClick="switchPage(`/content/pages/dashboard/admin/eventPages/${model}/edit.html?type=create&event=${urlParams.get('event')}`)">Create
+                New</button>
+        </div>
+    </div>
+    <div class="loadingContent">
+        <div class="loadingAnimation">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <div class="content">
+        <table id="table">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" item="all" /></th>
+                    <th>Alias</th>
+                    <th>Email</th>
+                    <th>Amount</th>
+                    <th>Timestamp</th>
+                    <th>Completed</th>
+                    <th>Verified</th>
+                    <th>Visible</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+        <div class="tableDropdownContent" id="test">
+            <button class="tableDropdownButton" onClick="dropdownSwitchPage(this)">View</button>
+            <button class="tableDropdownButton" onClick="dropdownSwitchPage(this)">Edit</button>
+            <button class="tableDropdownButton" onClick="dropdownSwitchPage(this)">Delete</button>
+        </div>
+    </div>
+    <script>
+        function pageLoaded() {
+            const urlParams = new URLSearchParams(window.location.search);
+
+            showBody();
+
+            GET(`donations/event/${urlParams.get('event')}`, (err, data) => {
+                if (err) return;
+                let table = document.querySelector('tbody');
+                for (const donation of data.data) {
+
+                    let timestamp = new Date(donation.timestamp);
+                    timestampHours = (timestamp.getHours() < 10) ? '0' + timestamp.getHours() : '' + timestamp.getHours();
+                    timestampMins = (timestamp.getMinutes() < 10) ? '0' + timestamp.getMinutes() : '' + timestamp.getMinutes();
+                    timestamp = `${timestamp.getMonth() + 1}/${timestamp.getDate()}/${timestamp.getFullYear()} ${timestampHours}:${timestampMins} `
+
+                    let row = table.insertRow();
+                    row.insertCell().innerHTML = `<input type="checkbox" item="${donation.id}" />`;
+                    row.insertCell().innerHTML = `<p class="tableText">${donation.alias}</p>`;
+                    try { row.insertCell().innerHTML = `<p class="tableText">${donation.donor.email}</p>`; } catch { } 
+                    row.insertCell().innerHTML = `<p class="tableText">${donation.amount}</p>`;
+                    row.insertCell().innerHTML = `<p class="tableText">${timestamp}</p>`;
+                    row.insertCell().innerHTML = `<p class="tableText">${donation.completed}</p>`;
+                    row.insertCell().innerHTML = `<p class="tableText">${donation.verified}</p>`;
+                    row.insertCell().innerHTML = `<p class="tableText">${donation.visible}</p>`;
+                    row.insertCell().innerHTML = `
+                <div class="tableDropdown">
+                    <button class="tableButton">...</button>
+                    <div class="tableDropdownContent">
+                        <button class="tableDropdownButton" onClick="dropdownSwitchPage('view', '${donation._id}')">View</button>
+                        <button class="tableDropdownButton" onClick="dropdownSwitchPage('edit', '${donation._id}')">Edit</button>
+                        <button class="tableDropdownButton" onClick="deleteItem('${donation._id}', '${donation.alias}')">Delete</button>
+                    </div>
+                </div>`;
+                }
+                showContent();
+            });
+        }
+
+        function dropdownSwitchPage(page, donation) {
+            switch (page) {
+                case 'view': switchPage(`/content/pages/dashboard/admin/eventPages/${model}/edit.html?type=view&id=${donation}&event=${urlParams.get('event')}`); break;
+                case 'edit': switchPage(`/content/pages/dashboard/admin/eventPages/${model}/edit.html?type=edit&id=${donation}&event=${urlParams.get('event')}`); break;
+            }
+        }
+
+        function deleteItem(id, name) {
+            showDialog({
+                model: 'donation',
+                name: name,
+                endpoint: `donations/${id}`,
+            })
+        }
+
+        // Listen for events from parent.
+        window.addEventListener("message", (event) => {
+            if (event.origin !== window.location.origin) return;
+            switch (event.data.name) {
+                case 'reload': location.reload(); break;
+            }
+        }, false);
     </script>
 </body>
 

@@ -19,4 +19,4 @@ More specifically, I would like a front end developer to create the website page
 - Start the tracker. `npm start`
 
 # Simple Docs
-When creating users or resetting their passwords, the default password is `password`. Each individual user is able to change their own password once they log in.
+When creating users or resetting their passwords, the default password is `password`. Each individual user is able to change their own password once they log in. For security reasons, a password from another user cannot be changed through the dashboard. To change another user's password, open the MongoDB database directly through a program (such as MongoDB Compass) or through the command line, find the user, delete the password field, then restart the dashboard. The affected user's password will be reset to the default once the dashboard restarts.

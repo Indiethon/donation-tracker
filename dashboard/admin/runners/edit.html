@@ -29,6 +29,11 @@
     </div>
     <div class="content">
         <form>
+            <div id="id" class="inputDiv">
+                <label class="label">ID</label>
+                <input class="input" disabled>
+                <span class="errorText"></span>
+            </div>
             <div id="name" class="inputDiv">
                 <label class="label">Name</label>
                 <input class="input">
@@ -92,6 +97,7 @@
         function fetchData(event, callback) {
             GET(`runners/${urlParams.get('id')}`, (err, data) => {
                 if (err) return;
+                document.querySelector('#id input').value = data.data.id;
                 document.querySelector('#name input').value = data.data.name;
                 document.querySelector('#email input').value = data.data.email;
                 document.querySelector('#pronouns input').value = data.data.pronouns;
@@ -104,6 +110,7 @@
         }
 
         function create() {
+            document.querySelector('#id').style.display = 'none';
             document.querySelector('.title').innerHTML = 'Create Runner';
             document.getElementById('submit').innerHTML = 'Create';
             showContent();
@@ -125,7 +132,7 @@
                 document.querySelector('#twitter input').disabled = true;
                 document.querySelector('#youtube input').disabled = true;
                 document.querySelector('#notes input').disabled = true;
-                document.getElementById('submit').style.visibility = 'hidden';
+                document.getElementById('submit').style.display = 'none';
                 document.querySelector('.title').innerHTML = 'View Event';
                 showContent();
             })

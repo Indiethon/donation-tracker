@@ -7,13 +7,13 @@
 </head>
 
 <body onLoad="load(false)">
-    <script>let model = 'users';</script>
+    <script>let model = 'wordFilters';</script>
     <ul class="breadcrumb">
         <li><a onClick="switchPage('/content/pages/dashboard/admin/home.html')">Home</a></li>
-        <li><a onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)">Users</a></li>
+        <li><a onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)">Word Filters</a></li>
     </ul>
     <div class="header">
-        <h2 class="title">Users</h2>
+        <h2 class="title">Word Filters</h2>
         <div id="headerButtonDiv">
             <button onClick="switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=create`)">Create
                 New</button>
@@ -31,12 +31,9 @@
             <thead>
                 <tr>
                     <th><input type="checkbox" item="all" /></th>
-                    <th>Username</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Superuser</th>
-                    <th>Group</th>
-                    <th>Last Login</th>
+                    <th>Word</th>
+                    <th>Blocked</th>
+                    <th>Allowed</th>
                     <th></th>
                 </tr>
             </thead>
@@ -53,31 +50,22 @@
     <script>
         function pageLoaded() {
             showBody();
-            GET('users', (err, data) => {
+            GET('wordFilters', (err, data) => {
                 if (err) return;
                 let table = document.querySelector('tbody');
-                for (const user of data.data) {
-
-                    let lastLogin = new Date(user.lastLogin);
-                    lastLoginHours = (lastLogin.getHours() < 10) ? '0' + lastLogin.getHours() : '' + lastLogin.getHours();
-                    lastLoginMins = (lastLogin.getMinutes() < 10) ? '0' + lastLogin.getMinutes() : '' + lastLogin.getMinutes();
-                    lastLogin = `${lastLogin.getMonth() + 1}/${lastLogin.getDate()}/${lastLogin.getFullYear()} ${lastLoginHours}:${lastLoginMins} `
-
+                for (const word of data.data) {
                     let row = table.insertRow();
-                    row.insertCell().innerHTML = `<input type="checkbox" item="${user.id}" />`;
-                    row.insertCell().innerHTML = `<p class="tableText">${user.username}</p>`;
-                    row.insertCell().innerHTML = `<p class="tableText">${user.firstName}</p>`;
-                    row.insertCell().innerHTML = `<p class="tableText">${user.lastName}</p>`;
-                    row.insertCell().innerHTML = `<p class="tableText">${user.isSuperuser}</p>`;
-                    row.insertCell().innerHTML = `<p class="tableText">${user.groupName}</p>`;
-                    row.insertCell().innerHTML = `<p class="tableText">${lastLogin}</p>`;
+                    row.insertCell().innerHTML = `<input type="checkbox" item="${word.id}" />`;
+                    row.insertCell().innerHTML = `<p class="tableText">${word.word}</p>`;
+                    row.insertCell().innerHTML = `<p class="tableText">${word.blocked}</p>`;
+                    row.insertCell().innerHTML = `<p class="tableText">${word.allowed}</p>`;
                     row.insertCell().innerHTML = `
                 <div class="tableDropdown">
                     <button class="tableButton">...</button>
                     <div class="tableDropdownContent">
-                        <button class="tableDropdownButton" onClick="dropdownSwitchPage('view', '${user._id}')">View</button>
-                        <button class="tableDropdownButton" onClick="dropdownSwitchPage('edit', '${user._id}')">Edit</button>
-                        <button class="tableDropdownButton" onClick="deleteItem('${user._id}', '${user.username}')">Delete</button>
+                        <button class="tableDropdownButton" onClick="dropdownSwitchPage('view', '${word._id}')">View</button>
+                        <button class="tableDropdownButton" onClick="dropdownSwitchPage('edit', '${word._id}')">Edit</button>
+                        <button class="tableDropdownButton" onClick="deleteItem('${word._id}', '${word.name}')">Delete</button>
                     </div>
                 </div>`;
                 }
@@ -85,18 +73,18 @@
             });
         }
 
-        function dropdownSwitchPage(page, user) {
+        function dropdownSwitchPage(page, word) {
             switch (page) {
-                case 'view': switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=view&id=${user}`); break;
-                case 'edit': switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=edit&id=${user}`); break;
+                case 'view': switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=view&id=${word}`); break;
+                case 'edit': switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=edit&id=${word}`); break;
             }
         }
 
         function deleteItem(id, name) {
             showDialog({
-                model: 'user',
+                model: 'wordFilter',
                 name: name,
-                endpoint: `users/${id}`,
+                endpoint: `wordFilters/${id}`,
             })
         }
 

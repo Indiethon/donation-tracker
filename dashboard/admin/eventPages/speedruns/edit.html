@@ -33,6 +33,11 @@
     </div>
     <div class="content">
         <form>
+            <div id="id" class="inputDiv">
+                <label class="label">ID</label>
+                <input class="input" disabled>
+                <span class="errorText"></span>
+            </div>
             <div id="game" class="inputDiv">
                 <label class="label">Game</label>
                 <input class="input">
@@ -142,7 +147,7 @@
         function fetchData(event, callback) {
             GET(`speedruns/${urlParams.get('id')}`, (err, data) => {
                 if (err) return;
-                console.log(data);
+                document.querySelector('#id input').value = data.data.id;
                 document.querySelector('#game input').value = data.data.game;
                 document.querySelector('#category input').value = data.data.category;
                 document.querySelector('#description input').value = data.data.description;
@@ -161,6 +166,7 @@
         }
 
         function create() {
+            document.querySelector('#id').style.display = 'none';
             document.querySelector('.title').innerHTML = 'Create Speedrun';
             document.getElementById('submit').innerHTML = 'Create';
             showContent();
@@ -186,7 +192,7 @@
                 document.querySelector('#releaseYear input').disabled = true;
                 document.querySelector('#console input').disabled = true;
                 document.querySelector('#notes input').disabled = true;
-                document.getElementById('submit').style.visibility = 'hidden';
+                document.getElementById('submit').style.display = 'none';
                 document.querySelector('.title').innerHTML = 'View Speedrun';
                 for (const input of document.querySelectorAll('.arrayInput div')) {
                     input.querySelector('input').disabled = true;
@@ -267,13 +273,6 @@
             divDiv.appendChild(runner);
             divDiv.appendChild(button);
             div.appendChild(divDiv)
-            // div.innerHTML = `
-            // <div>
-            //     <input class="input" list="runnerDatalist">
-            //     <button type="button" class="deleteButton material-icons" onClick="this.parentNode.remove()">delete_forever</button>
-            //     </div>
-            // ` + div.innerHTML;
-            //div.querySelector('input').value = value;
         }
     </script>
 </body>
