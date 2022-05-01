@@ -19,4 +19,17 @@ More specifically, I would like a front end developer to create the website page
 - Start the tracker. `npm start`
 
 # Simple Docs
+
+## Passwords
 When creating users or resetting their passwords, the default password is `password`. Each individual user is able to change their own password once they log in. For security reasons, a password from another user cannot be changed through the dashboard. To change another user's password, open the MongoDB database directly through a program (such as MongoDB Compass) or through the command line, find the user, delete the password field, then restart the dashboard. The affected user's password will be reset to the default once the dashboard restarts.
+
+## API Keys
+There are two ways to get API keys to access secured API routes.
+
+#### Use a system-generated key
+Every time a user logs into the dashboard, a unique key is generated to give API access to that user. That key is stored in your browser's cookies and on the server. Once the user logs out or closes their browser, this key is thrown away and can no longer be used. This is the system used for the admin and volunteer dashboards.
+
+#### Create a custom key
+In `config.json`, under `tracker`, add a string to the `tokens` array. When you make a secured API request, add this string to the bearer field in the authorization header. This key is to allow access to the API outside of the admin dashboard, such as for external applications like stream layout packages.
+
+WARNING: Do not share this string with anyone! This will give anyone who has it full control of the dashboard!
