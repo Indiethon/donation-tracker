@@ -3,16 +3,16 @@
 
 <head>
     <script src="/content/pages/dashboard/utils.js"></script>
-    <link rel="stylesheet" href="/content/pages/dashboard/admin/common.css" />
+    <link rel="stylesheet" href="/content/pages/dashboard/common.css" />
 </head>
 
 <body onLoad="load(false)">
     <script>let model = 'speedruns';</script>
     <datalist id='runnerDatalist'></datalist>
     <ul class="breadcrumb">
-        <li><a onClick="switchPage(`/content/pages/dashboard/admin/home.html`)">Home</a></li>
+        <li><a onClick="switchPage(`/content/pages/dashboard/admin/home/home.html`)">Home</a></li>
         <li><a
-                onClick="switchPage(`/content/pages/dashboard/admin/eventPages/${model}/${model}.html?event=${urlParams.get('event')}`)">Speedruns</a>
+                onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)">Speedruns</a>
         </li>
         <li><a onClick="location.reload()">Edit</a>
         </li>
@@ -20,7 +20,7 @@
     <div class="header">
         <div class="editHeader">
             <button class="editBack"
-                onClick="switchPage(`/content/pages/dashboard/admin/eventPages/${model}/${model}.html?event=${urlParams.get('event')}`)">&lt;</button>
+                onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)">&lt;</button>
             <h2 class="title"></h2>
         </div>
     </div>
@@ -119,12 +119,12 @@
                     case 'view': view(urlParams.get('id')); break;
                     default:
                         showToast('error', `Error opening page. Please contact the system administrator.`)
-                        switchPage(`/content/pages/dashboard/admin/eventPages/${model}/${model}.html?event=${urlParams.get('event')}`)
+                        switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)
                 }
             } catch (e) {
                 console.error(e)
                 showToast('error', `Error opening page. Please contact the system administrator.`)
-                switchPage(`/content/pages/dashboard/admin/eventPages/${model}/${model}.html?event=${urlParams.get('event')}`)
+                switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)
             }
         }
 
@@ -232,7 +232,7 @@
             POST(`speedruns${(urlParams.get('type') === 'create') ? '' : `/${urlParams.get('id')}`}`, options, (err, data) => {
                 if (!err) {
                     showToast('success', `Speedrun updated successfully.`)
-                    switchPage(`/content/pages/dashboard/admin/eventPages/${model}/${model}.html?event=${urlParams.get('event')}`)
+                    switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)
                     return;
                 }
 

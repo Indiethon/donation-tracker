@@ -3,16 +3,16 @@
 
 <head>
     <script src="/content/pages/dashboard/utils.js"></script>
-    <link rel="stylesheet" href="/content/pages/dashboard/admin/common.css" />
+    <link rel="stylesheet" href="/content/pages/dashboard/common.css" />
 </head>
 
 <body onLoad="load(false)">
-    <script>let model = 'incentives';</script>
-    <datalist id='runDatalist'></datalist>
+    <script>let model = 'prizes';</script>
+    <datalist id='donorDatalist'></datalist>
     <ul class="breadcrumb">
-        <li><a onClick="switchPage(`/content/pages/dashboard/admin/home.html`)">Home</a></li>
+        <li><a onClick="switchPage(`/content/pages/dashboard/admin/home/home.html`)">Home</a></li>
         <li><a
-                onClick="switchPage(`/content/pages/dashboard/admin/eventPages/${model}/${model}.html?event=${urlParams.get('event')}`)">Incentives</a>
+                onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)">Prizes</a>
         </li>
         <li><a onClick="location.reload()">Edit</a>
         </li>
@@ -20,7 +20,7 @@
     <div class="header">
         <div class="editHeader">
             <button class="editBack"
-                onClick="switchPage(`/content/pages/dashboard/admin/eventPages/${model}/${model}.html?event=${urlParams.get('event')}`)">&lt;</button>
+                onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)">&lt;</button>
             <h2 class="title"></h2>
         </div>
     </div>
@@ -48,49 +48,26 @@
                 <input class="input">
                 <span class="errorText"></span>
             </div>
-            <div id="runId" class="inputDiv">
-                <label class="label">Speedrun</label>
-                <input class="input" list="runDatalist">
-                <span class="errorText"></span>
-            </div>
             <div id="type" class="inputDiv">
                 <label class="label">Type</label>
-                <select class="select" onChange="changeType(this.value)">
-                    <option value="target" selected>Target</option>
-                    <option value="bidwar">Bid War</option>
+                <select class="select">
+                    <option value="physical" selected>Physical</option>
+                    <option value="digital">Digital</option>
                 </select>
                 <span class="errorText"></span>
             </div>
-            <div id="options" class="arrayInputDiv">
-                <label class="label">Options</label>
-                <div class="arrayInputContainer">
-                    <div class="arrayInput">
-
-                    </div>
-                    <button type="button" class="arrayAddButton"
-                        onClick="addArrayElement(document.querySelector(`#options .arrayInput`), '', '', '', false)">Add
-                        New
-                        Item</button>
-                </div>
-                <span class="errorText"></span>
-            </div>
-            <div id="allowUserOptions" class="inputDiv">
-                <label class="label">Allow User Options</label>
-                <input class="input" type="checkbox">
-                <span class="errorText"></span>
-            </div>
-            <div id="userOptionMaxLength" class="inputDiv">
-                <label class="label">User Option Max Length</label>
+            <div id="minDonation" class="inputDiv">
+                <label class="label">Minimum Donation</label>
                 <input class="input" type="number">
                 <span class="errorText"></span>
             </div>
-            <div id="goal" class="inputDiv">
-                <label class="label">Goal</label>
+            <div id="numWinners" class="inputDiv">
+                <label class="label">Number Of Winners</label>
                 <input class="input" type="number">
                 <span class="errorText"></span>
             </div>
-            <div id="total" class="inputDiv">
-                <label class="label">Total</label>
+            <div id="value" class="inputDiv">
+                <label class="label">Value</label>
                 <input class="input" type="number">
                 <span class="errorText"></span>
             </div>
@@ -104,8 +81,18 @@
                 <input class="input" type="datetime-local">
                 <span class="errorText"></span>
             </div>
-            <div id="notes" class="inputDiv">
-                <label class="label">Notes</label>
+            <div id="image" class="inputDiv">
+                <label class="label">Image</label>
+                <input class="input">
+                <span class="errorText"></span>
+            </div>
+            <div id="altImage" class="inputDiv">
+                <label class="label">Alt Image</label>
+                <input class="input">
+                <span class="errorText"></span>
+            </div>
+            <div id="donator" class="inputDiv">
+                <label class="label">Donator</label>
                 <input class="input">
                 <span class="errorText"></span>
             </div>
@@ -119,9 +106,27 @@
                 <input class="input" type="checkbox">
                 <span class="errorText"></span>
             </div>
-            <div id="completed" class="inputDiv">
-                <label class="label">Completed</label>
+            <div id="drawn" class="inputDiv">
+                <label class="label">Drawn</label>
                 <input class="input" type="checkbox">
+                <span class="errorText"></span>
+            </div>
+            <div id="winners" class="arrayInputDiv">
+                <label class="label">Winners</label>
+                <div class="arrayInputContainer">
+                    <div class="arrayInput">
+
+                    </div>
+                    <button type="button" class="arrayAddButton"
+                        onClick="addArrayElement(document.querySelector(`#winners .arrayInput`), '')">Add
+                        New
+                        Item</button>
+                </div>
+                <span class="errorText"></span>
+            </div>
+            <div id="notes" class="inputDiv">
+                <label class="label">Notes</label>
+                <input class="input">
                 <span class="errorText"></span>
             </div>
         </form>
@@ -135,8 +140,7 @@
 
         function pageLoaded() {
             showBody();
-            fetchRuns();
-            changeType('target');
+            fetchDonors();
             try {
                 switch (urlParams.get('type')) {
                     case 'create': create(); break;
@@ -144,52 +148,52 @@
                     case 'view': view(urlParams.get('id')); break;
                     default:
                         showToast('error', `Error opening page. Please contact the system administrator.`)
-                        switchPage(`/content/pages/dashboard/admin/eventPages/${model}/${model}.html?event=${urlParams.get('event')}`)
+                        switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)
                 }
             } catch (e) {
                 console.error(e)
                 showToast('error', `Error opening page. Please contact the system administrator.`)
-                switchPage(`/content/pages/dashboard/admin/eventPages/${model}/${model}.html?event=${urlParams.get('event')}`)
+                switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)
             }
         }
 
-        function fetchRuns() {
-            GET(`speedruns/event/${urlParams.get('event')}`, (err, data) => {
+        function fetchDonors() {
+            GET(`donors`, (err, data) => {
                 if (err) return;
-                runList = data.data;
-                let runDatalist = document.getElementById('runDatalist');
+                donorList = data.data;
+                let donorDatalist = document.getElementById('donorDatalist');
                 if (data.data.length <= 0) {
-                    showToast('error', `There are no saved speedruns. Please add a speedrun before continuing.`)
+                    showToast('error', `There are no saved donors. Please add a donor before continuing.`)
                     switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)
                     return;
                 }
-                for (const run of data.data) {
-                    runDatalist.innerHTML += `<option run="${run.id}" value="${run.game} ${run.category}">ID: ${run._id}</option>`;
+                for (const donor of data.data) {
+                    donorDatalist.innerHTML += `<option donor="${donor.id}" value="${donor.email}">ID: ${donor._id}</option>`;
                 }
             })
         }
 
         function fetchData(incentive, callback) {
-            GET(`incentives/${urlParams.get('id')}`, (err, data) => {
+            GET(`prizes/${urlParams.get('id')}`, (err, data) => {
                 if (err) return;
                 document.querySelector('#id input').value = data.data.id;
                 document.querySelector('#name input').value = data.data.name;
-                try { document.querySelector('#runId input').value = data.data.run.game + ' ' + data.data.run.category; } catch { document.querySelector('#runId input').value = ''; }
                 document.querySelector('#description input').value = data.data.description;
                 document.querySelector('#type select').value = data.data.type;
-                document.querySelector('#goal input').value = data.data.goal;
-                document.querySelector('#total input').value = data.data.total;
-                document.querySelector('#allowUserOptions input').value = data.data.allowUserOptions;
-                document.querySelector('#userOptionMaxLength input').value = data.data.userOptionMaxLength;
+                document.querySelector('#minDonation input').value = data.data.minDonation;
+                document.querySelector('#numWinners input').value = data.data.numWinners;
+                document.querySelector('#value input').value = data.data.value;
                 document.querySelector('#startTime input').value = data.data.startTime.split('.')[0];
                 document.querySelector('#endTime input').value = data.data.endTime.split('.')[0];
+                document.querySelector('#image input').value = data.data.image;
+                document.querySelector('#altImage input').value = data.data.altImage;
+                document.querySelector('#donator input').value = data.data.donator;
                 document.querySelector('#visible input').checked = data.data.visible;
                 document.querySelector('#active input').checked = data.data.active;
-                document.querySelector('#completed input').checked = data.data.completed;
+                document.querySelector('#drawn input').checked = data.data.drawn;
                 document.querySelector('#notes input').value = data.data.notes;
-                if (data.data.type === 'bidwar') changeType('bidwar');
-                for (const option of data.data.options) {
-                   addArrayElement(document.querySelector(`#options .arrayInput`), option.name, option.total, option._id, option.userOption)
+                for (const winner of data.data.winners) {
+                    addArrayElement(document.querySelector(`#runners .arrayInput`), winner.email)
                 }
                 callback();
             })
@@ -197,40 +201,41 @@
 
         function create() {
             document.querySelector('#id').style.display = 'none';
-            document.querySelector('.title').innerHTML = 'Create Incentive';
+            document.querySelector('.title').innerHTML = 'Create Prize';
             document.getElementById('submit').innerHTML = 'Create';
             showContent();
         }
 
         function edit(incentive) {
             fetchData(incentive, () => {
-                document.querySelector('.title').innerHTML = 'Edit Incentive';
+                document.querySelector('.title').innerHTML = 'Edit Prize';
                 document.getElementById('submit').innerHTML = 'Save';
                 showContent();
             })
         }
         function view(incentive) {
             fetchData(incentive, () => {
+                document.querySelector('#id input').disabled = true;
                 document.querySelector('#name input').disabled = true;
-                document.querySelector('#runId input').disabled = true;
                 document.querySelector('#description input').disabled = true;
                 document.querySelector('#type select').disabled = true;
-                document.querySelector('#goal input').disabled = true;
-                document.querySelector('#total input').disabled = true;
-                document.querySelector('#allowUserOptions input').disabled = true;
-                document.querySelector('#userOptionMaxLength input').disabled = true;
+                document.querySelector('#minDonation input').disabled = true;
+                document.querySelector('#numWinners input').disabled = true;
+                document.querySelector('#value input').disabled = true;
                 document.querySelector('#startTime input').disabled = true;
                 document.querySelector('#endTime input').disabled = true;
+                document.querySelector('#image input').disabled = true;
+                document.querySelector('#altImage input').disabled = true;
+                document.querySelector('#donator input').disabled = true;
                 document.querySelector('#visible input').disabled = true;
                 document.querySelector('#active input').disabled = true;
-                document.querySelector('#completed input').disabled = true;
+                document.querySelector('#drawn input').disabled = true;
                 document.querySelector('#notes input').disabled = true;
                 document.getElementById('submit').style.display = 'none';
                 document.querySelector('.title').innerHTML = 'View Incentive';
-                for (const option of document.querySelectorAll('.arrayInput div:not(.arrayInputDivChild)')) {
-                   option.querySelectorAll('.arrayInputDivChild input')[0].disabled = true;
-                    option.querySelectorAll('.arrayInputDivChild input')[1].disabled = true;
-                    option.querySelector('button').style.display = 'none'
+                for (const input of document.querySelectorAll('.arrayInput div')) {
+                    input.querySelector('input').disabled = true;
+                    try { input.querySelector('button').style.display = 'none' } catch {}
                 }
                 document.querySelector('.arrayAddButton').style.display = 'none'
                 showContent();
@@ -244,31 +249,25 @@
             try { endTime = new Date(document.querySelector('#endTime input').value).toISOString() } catch { endTime = document.querySelector('#endTime input').value }
             try { runId = runList.find(el => (el.game + ' ' + el.category) === document.querySelector('#runId input').value)._id; } catch { runId = "" };
             options.eventId = urlParams.get('event');
-            options.runId = runId;
             options.name = document.querySelector('#name input').value;
             options.description = document.querySelector('#description input').value;
             options.type = document.querySelector('#type select').value;
-            options.goal = document.querySelector('#goal input').value;
-            options.total = document.querySelector('#total input').value;
-            options.allowUserOptions = document.querySelector('#allowUserOptions input').checked;
-            options.userOptionMaxLength = document.querySelector('#userOptionMaxLength input').checked;
+            options.minDonation = document.querySelector('#minDonation input').value;
+            options.numWinners = document.querySelector('#numWinners input').value;
+            options.value = document.querySelector('#value input').value;
             options.startTime = startTime;
             options.endTime = endTime;
+            options.image = document.querySelector('#image input').value;
+            options.altImage = document.querySelector('#altImage input').value;
+            options.donator = document.querySelector('#donator input').value;
             options.visible = document.querySelector('#visible input').checked;
             options.active = document.querySelector('#active input').checked;
-            options.completed = document.querySelector('#completed input').checked;
+            options.drawn = document.querySelector('#drawn input').checked;
             options.notes = document.querySelector('#notes input').value;
-            options.options = [];
-            for (const option of document.querySelectorAll('.arrayInput div:not(.arrayInputDivChild)')) {
-                let bidwarOption = {};
-                console.log(option)
-                if (option.getAttribute('optionId') !== '') bidwarOption._id = option.getAttribute('optionId');
-                bidwarOption.name = option.querySelectorAll('.arrayInputDivChild input')[0].value;
-                bidwarOption.total = option.querySelectorAll('.arrayInputDivChild input')[1].value;
-                bidwarOption.userOption = option.getAttribute('userOption')
-                options.options.push(bidwarOption);
+            options.winners = [];
+            for (const input of document.querySelectorAll('.arrayInputDivChild')) {
+                try { options.runners.push(runnerList.find(el => el.name === input.querySelector('input').value)._id); } catch { options.runners.push('') };
             }
-
             let elementList = document.querySelectorAll('.inputDiv');
             [...elementList].forEach(element => {
                 let el = document.querySelector(`#${element.id} span`)
@@ -276,10 +275,10 @@
                 el.style.visibility = 'hidden';
             });
 
-            POST(`incentives${(urlParams.get('type') === 'create') ? '' : `/${urlParams.get('id')}`}`, options, (err, data) => {
+            POST(`prizes${(urlParams.get('type') === 'create') ? '' : `/${urlParams.get('id')}`}`, options, (err, data) => {
                 if (!err) {
-                    showToast('success', `Incentive ${options.name} updated successfully.`)
-                    switchPage(`/content/pages/dashboard/admin/eventPages/${model}/${model}.html?event=${urlParams.get('event')}`)
+                    showToast('success', `Prize ${options.name} updated successfully.`)
+                    switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)
                     return;
                 }
 
@@ -292,36 +291,22 @@
             })
         }
 
-        function addArrayElement(div, value, totalRaised, optionId, userOption) {
+        function addArrayElement(div, value) {
 
-            let name = document.createElement('div');
-            name.setAttribute('class', 'arrayInputDivChild')
+            let runner = document.createElement('div');
+            runner.setAttribute('class', 'arrayInputDivChild')
 
             let label = document.createElement('label');
             label.setAttribute('class', 'label')
-            label.innerHTML = 'Name';
+            label.innerHTML = 'Donor';
 
             let input = document.createElement('input');
             input.setAttribute('class', 'input');
+            input.setAttribute('list', 'donorDatalist')
             input.value = value;
 
-            name.appendChild(label);
-            name.appendChild(input)
-
-            let total = document.createElement('div');
-            total.setAttribute('class', 'arrayInputDivChild')
-
-            let label2 = document.createElement('label');
-            label2.setAttribute('class', 'label')
-            label2.innerHTML = 'Total';
-
-            let input2 = document.createElement('input');
-            input2.setAttribute('class', 'input');
-            input2.setAttribute('type', 'number');
-            input2.value = totalRaised;
-
-            total.appendChild(label2);
-            total.appendChild(input2);
+            runner.appendChild(label);
+            runner.appendChild(input)
 
             let button = document.createElement('button');
             button.setAttribute('type', 'button');
@@ -330,29 +315,10 @@
             button.innerHTML = 'delete_forever';
 
             let divDiv = document.createElement('div');
-            divDiv.setAttribute('style', 'width: 100%')
-            divDiv.setAttribute('optionId', optionId)
-            divDiv.setAttribute('userOption', userOption)
 
-            divDiv.appendChild(name);
-            divDiv.appendChild(total);
+            divDiv.appendChild(runner);
             divDiv.appendChild(button);
             div.appendChild(divDiv)
-        }
-
-        function changeType(value) {
-            if (value === 'target') {
-                document.getElementById('goal').style.display = 'inherit';
-                document.getElementById('options').style.display = 'none';
-                document.getElementById('allowUserOptions').style.display = 'none';
-                document.getElementById('userOptionMaxLength').style.display = 'none';
-            }
-            else if (value === 'bidwar') {
-                document.getElementById('goal').style.display = 'none';
-                document.getElementById('options').style.display = 'inherit';
-                document.getElementById('allowUserOptions').style.display = 'inherit';
-                document.getElementById('userOptionMaxLength').style.display = 'inherit';
-            }
         }
     </script>
 </body>

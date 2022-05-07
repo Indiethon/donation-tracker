@@ -40,7 +40,9 @@ function login() {
             button.disabled = false; return
         }
         createCookie(result.data.username, result.data.id, result.data.token)
-        setTimeout(() => location.href = '/admin/dashboard', 250)
+        if (result.data.superuser) setTimeout(() => location.href = '/admin/dashboard', 250);
+        else if (result.data.volunteer) setTimeout(() => location.href = '/volunteer/dashboard', 250);
+        else setTimeout(() => location.href = '/login', 250);
     })
 }
 function logout() {

@@ -1,62 +1,61 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 @import "https://fonts.googleapis.com/icon?family=Material+Icons";
 
-html, body {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    margin: 0;
-    overflow-y: hidden;
-    font-family: 'Roboto', sans-serif;
-}
-
 body {
+    width: calc(100% - 48px);
+    height: 100%;
     margin: 0;
+    padding: 24px;
     background-color: rgb(246, 247, 251);
+    font-family: 'Roboto', sans-serif;
     visibility: hidden;
+    margin-bottom: 64px;
 }
 
-#contentDiv {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: auto;
-    width: 398px;
-    padding: 48px;
-    background-color: #FFFFFF;
-    box-shadow: 0 15px 24px 0 rgb(137 138 154 / 15%);
-    flex-wrap: wrap;
-}
-
-#logo {
+/* Breadcrumb */
+ul.breadcrumb {
     width: 100%;
-    height: 96px;
-    margin-bottom: 16px;
-    object-fit: contain;
-}
-
-img {
-    width: 100%;
-    height: 96px;
-    object-fit: contain;
-}
-
-input {
-    width: calc(100% - 16px);
-    height: 26px;
-    padding: 4px 8px;
-    margin: 5px 0;
+    height: 16px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
     font-size: 14px;
-    border: 1px solid rgb(192, 192, 202);
-    outline: none;
 }
 
-input:hover {
-    border-color: rgb(68, 107, 246);
+ul.breadcrumb li {
+    display: inline;
 }
 
-input:focus {
-    border-color: rgb(68, 107, 246);
+ul.breadcrumb li+li:before {
+    padding: 0 6px;
+    color: rgb(192, 192, 202);
+    content: "/\00a0";
+}
+
+ul.breadcrumb li a {
+    color: rgb(192, 192, 202);
+    text-decoration: none;
+}
+
+ul.breadcrumb li a:hover {
+    color: rgb(66, 104, 246);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Header */
+div.header {
+    width: 100%;
+    height: 40px;
+    display: flex;
+    justify-content: space-between;
+    padding: 24px 0;
+}
+
+h2.title {
+    font-size: 32px;
+    vertical-align: middle;
+    font-weight: 300;
+    margin: 0;
 }
 
 button {
@@ -66,8 +65,6 @@ button {
     color: rgb(255, 255, 255);
     border: none;
     transition-duration: 0.2s;
-    justify-content: center;
-    margin-top: 16px;
 }
 
 button:hover {
@@ -75,16 +72,422 @@ button:hover {
     cursor: pointer;
 }
 
-#invalid {
+div.editHeader {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+button.editBack {
+    background-color: #FFFFFF;
+    color: rgb(66, 104, 246);
+    border: 1px solid rgb(66, 104, 246);
+    border-radius: 100%;
+    width: 34px;
+    padding: 0;
+    padding-top: 2px;
+    padding-right: 1px;
+    margin-right: 16px;
+}
+
+button.editBack:hover {
+    color: #ffffff;
+    background-color: rgb(83, 91, 142);
+    border-color: rgb(83, 91, 142);
+    cursor: pointer;
+    transition-duration: 0.2s;
+}
+
+/* Loading animation */
+div.loadingContent {
+    background-color: #FFFFFF;
+    padding: 24px;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+div.loadingAnimation {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+  }
+  div.loadingAnimation div {
+    display: inline-block;
+    position: absolute;
+    left: 8px;
+    width: 16px;
+    background: rgb(66, 104, 246);
+    animation: loadingAnimation 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+  }
+  div.loadingAnimation div:nth-child(1) {
+    left: 8px;
+    animation-delay: -0.24s;
+  }
+  div.loadingAnimation div:nth-child(2) {
+    left: 32px;
+    animation-delay: -0.12s;
+  }
+  div.loadingAnimation div:nth-child(3) {
+    left: 56px;
+    animation-delay: 0;
+  }
+  @keyframes loadingAnimation {
+    0% {
+      top: 8px;
+      height: 64px;
+    }
+    50%, 100% {
+      top: 24px;
+      height: 32px;
+    }
+  }
+
+/* No page content */ 
+div.noContent {
+    background-color: #FFFFFF;
+    padding: 24px;
+    height: 200px;
+    display: inherit;
+}
+
+/* Page content */
+div.content {
+    background-color: #FFFFFF;
+    padding: 24px;
+    height: 100%;
+    visibility: hidden;
+}
+
+table {
+    width: 100%;
+    border: none;
+    border-collapse: none;
+    border-spacing: 0;
+    column-width: auto;
+}
+
+table thead {
+    background-color: rgb(246, 247, 251);
+    color: rgb(137, 138, 154);
+    font-weight: 400;
+    font-size: 14px;
+    text-align: left;
+}
+
+table tbody td {
+    padding: 10px;
+    margin: 0;
+    height: 24px;
+    font-size: 14px;
+    border-bottom: 2px solid rgb(246, 247, 251);
+}
+
+thead th {
+    margin: 0;
+    padding: 10px;
+}
+
+table tr {
+    height: 40px;
+    padding: 10px;
+}
+
+table input[type=checkbox] {
+    border: 1px solid black;
+    outline: none;
+    width: 24px;
+    height: 24px;
+}
+
+.tableButton {
+    width: 34px;
+    height: 34px;
+    background-color: rgb(255, 255, 255);
+    color: black;
+    border: 1px solid rgb(192, 192, 202);
+}
+
+.tableButton:hover {
+    background-color: rgb(137, 138, 154);
+}
+
+/* Table hover buttons */
+.tableDropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.tableDropdownContent {
+    display: none;
+    position: absolute;
+    top: 34px;
+    right: 0;
+    min-width: 160px;
+    z-index: 10;
+    background-color: #F2F2F2;
+    padding: 5px;
+}
+
+.tableButton:hover {
+    color: white;
+}
+
+.tableButton:hover~.tableDropdownContent {
+    color: white;
+    display: block;
+}
+
+.tableDropdownContent:hover {
+    display: block;
+}
+
+/* Edit form */
+form {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+form .inputDiv {
+    display: block;
+    width: calc(100% - 24px);
+    height: 100%;
+    padding-bottom: 10px;
+}
+
+.inputDiv .label {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.inputDiv input {
+    width: 100%;
+    height: 26px;
+    padding: 4px 8px;
+    margin: 5px 0;
+    font-size: 14px;
+    border: 1px solid rgb(192, 192, 202);
+    outline: none;
+}
+
+.inputDiv input:hover {
+    border-color: rgb(68, 107, 246);
+}
+
+.inputDiv input:focus {
+    border-color: rgb(68, 107, 246);
+}
+
+.inputDiv select {
+    width: 100%;
+    height: 36px;
+    padding: 4px 8px;
+    margin: 5px 0;
+    font-size: 14px;
+    border: 1px solid rgb(192, 192, 202);
+    outline: none;
+}
+
+.inputDiv select:hover {
+    border-color: rgb(68, 107, 246);
+}
+
+.inputDiv select:focus {
+    border-color: rgb(68, 107, 246);
+}
+
+.inputDiv .errorText {
     font-size: 14px;
     color: red;
+    visibility: hidden;
 }
 
-label {
+.inputDiv input:disabled {
+    opacity: 0.8;
+    background-color: rgb(240, 240, 240);
+}
+
+.inputDiv input:disabled:hover {
+    opacity: 0.8;
+    border-color: rgb(192, 192, 202);
+    background-color: rgb(240, 240, 240);
+}
+
+.inputDiv input:disabled:focus {
+    opacity: 0.8;
+    border-color: rgb(192, 192, 202);
+    background-color: rgb(240, 240, 240);
+}
+
+input[type=checkbox] {
+    display: block;
+    width: 26px;
+    
+}
+
+.arrayInputDiv {
+    margin-bottom: 10px;
+}
+
+.arrayInputDiv .label {
     font-size: 14px;
-    margin-top: 16px;
 }
 
-#username {
-    margin-bottom: 16px;
+.arrayInputDiv .errorText {
+    font-size: 14px;
+    color: red;
+    visibility: hidden;
+}
+
+.arrayInput input {
+    width: 100%;
+    height: 26px;
+    padding: 4px 8px;
+    margin: 5px 0;
+    font-size: 14px;
+    border: 1px solid rgb(192, 192, 202);
+    outline: none;
+}
+
+.arrayInput input:hover {
+    border-color: rgb(68, 107, 246);
+}
+
+.arrayInput input:focus {
+    border-color: rgb(68, 107, 246);
+}
+
+.arrayInput input:disabled {
+    opacity: 0.8;
+    background-color: rgb(240, 240, 240);
+}
+
+.arrayInput input:disabled:hover {
+    opacity: 0.8;
+    border-color: rgb(192, 192, 202);
+    background-color: rgb(240, 240, 240);
+}
+
+.arrayInput input:disabled:focus {
+    opacity: 0.8;
+    border-color: rgb(192, 192, 202);
+    background-color: rgb(240, 240, 240);
+}
+
+.arrayInput select {
+    width: 100%;
+    height: 36px;
+    padding: 4px 8px;
+    margin: 5px 0;
+    font-size: 14px;
+    border: 1px solid rgb(192, 192, 202);
+    outline: none;
+}
+
+.arrayInput select:hover {
+    border-color: rgb(68, 107, 246);
+}
+
+.arrayInput select:focus {
+    border-color: rgb(68, 107, 246);
+}
+
+.arrayInput select:disabled {
+    opacity: 0.8;
+    background-color: rgb(240, 240, 240);
+}
+
+.arrayInput select:disabled:hover {
+    opacity: 0.8;
+    border-color: rgb(192, 192, 202);
+    background-color: rgb(240, 240, 240);
+}
+
+.arrayInput select:disabled:focus {
+    opacity: 0.8;
+    border-color: rgb(192, 192, 202);
+    background-color: rgb(240, 240, 240);
+}
+
+.deleteButton {
+    text-align: center;
+    width: 36px;
+    height: 36px;
+    background-color: #FF4567;
+    border-radius: 100%;
+    margin-left: 15px;
+    margin-top: 11px;
+    transition-duration: 0.2s;
+}
+
+.deleteButton:hover {
+    background-color: #DE405D;
+    transition-duration: 0.2s;
+}
+
+.arrayInput div {
+    display: flex;
+    align-items: center;
+    padding-bottom: 5px;
+}
+
+.arrayInputContainer {
+    border-width: 1px 1px 1px 8px;
+    border-style: dotted dotted dotted solid;
+    border-color: rgb(203, 213, 253);
+    padding: 30px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.arrayAddButton {
+    background-color: #FFFFFF;
+    color: rgb(66, 104, 246);
+    border: 1px solid rgb(66, 104, 246);
+    border-radius: 20px;
+    transition-duration: 0.2s;
+}
+
+.arrayAddButton:hover {
+    color: #FFFFFF;
+    background-color: #535B8E;
+    transition-duration: 0.2s;
+    border-color: #535B8E;
+}
+
+.arrayInputDivChild {
+    flex-wrap: wrap;
+    flex-grow: 1;
+    height: 100%;
+    margin: 0 5px;
+    padding: 0;
+}
+
+.arrayInputDivChild label {
+    font-size: 14px;
+    text-align: left;
+}
+
+.inputDiv select:disabled {
+    opacity: 0.8;
+    background-color: rgb(240, 240, 240);
+}
+
+.inputDiv select:disabled:hover {
+    opacity: 0.8;
+    border-color: rgb(192, 192, 202);
+    background-color: rgb(240, 240, 240);
+}
+
+.inputDiv select:disabled:focus {
+    opacity: 0.8;
+    border-color: rgb(192, 192, 202);
+    background-color: rgb(240, 240, 240);
+}
+
+.longTableText {
+    text-overflow: ellipsis;
 }

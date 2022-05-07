@@ -1,0 +1,90 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+@import "https://fonts.googleapis.com/icon?family=Material+Icons";
+
+html, body {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    margin: 0;
+    overflow-y: hidden;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    margin: 0;
+    background-color: rgb(246, 247, 251);
+    visibility: hidden;
+}
+
+#contentDiv {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    width: 398px;
+    padding: 48px;
+    background-color: #FFFFFF;
+    box-shadow: 0 15px 24px 0 rgb(137 138 154 / 15%);
+    flex-wrap: wrap;
+}
+
+#logo {
+    width: 100%;
+    height: 96px;
+    margin-bottom: 16px;
+    object-fit: contain;
+}
+
+img {
+    width: 100%;
+    height: 96px;
+    object-fit: contain;
+}
+
+input {
+    width: calc(100% - 16px);
+    height: 26px;
+    padding: 4px 8px;
+    margin: 5px 0;
+    font-size: 14px;
+    border: 1px solid rgb(192, 192, 202);
+    outline: none;
+}
+
+input:hover {
+    border-color: rgb(68, 107, 246);
+}
+
+input:focus {
+    border-color: rgb(68, 107, 246);
+}
+
+button {
+    width: 160px;
+    height: 34px;
+    background-color: rgb(66, 104, 246);
+    color: rgb(255, 255, 255);
+    border: none;
+    transition-duration: 0.2s;
+    justify-content: center;
+    margin-top: 16px;
+}
+
+button:hover {
+    background-color: rgb(83, 91, 142);
+    cursor: pointer;
+}
+
+#invalid {
+    font-size: 14px;
+    color: red;
+}
+
+label {
+    font-size: 14px;
+    margin-top: 16px;
+}
+
+#username {
+    margin-bottom: 16px;
+}

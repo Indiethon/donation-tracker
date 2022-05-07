@@ -3,14 +3,14 @@
 
 <head>
     <script src="/content/pages/dashboard/utils.js"></script>
-    <link rel="stylesheet" href="/content/pages/dashboard/admin/common.css" />
+    <link rel="stylesheet" href="/content/pages/dashboard/common.css" />
 </head>
 
 <body onLoad="load(false)">
     <script>let model = 'events';</script>
     <datalist id='charityDatalist'></datalist>
     <ul class="breadcrumb">
-        <li><a onClick="switchPage(`/content/pages/dashboard/admin/home.html`)">Home</a></li>
+        <li><a onClick="switchPage(`/content/pages/dashboard/admin/home/home.html`)">Home</a></li>
         <li><a onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)">Events</a></li>
         <li><a onClick="location.reload()">Edit</a>
         </li>
@@ -241,12 +241,17 @@
             options.visible = document.querySelector('#visible input').checked;
             options.active = document.querySelector('#active input').checked;
             options.customFields = [];
-            for (const input of document.querySelectorAll('.arrayInputDiv')) {
+            for (const input of document.querySelectorAll('.arrayInput > div')) {
+                console.log(input)
+                console.log(input.querySelector('.arrayInputDivChild select').value)
+                console.log(input.querySelector('.arrayInputDivChild input').value)
                 options.customFields.push({
                     type: input.querySelector('.arrayInputDivChild select').value,
                     name: input.querySelector('.arrayInputDivChild input').value,
                 })
             }
+
+            console.log(options.customFields)
 
             let elementList = document.querySelectorAll('.inputDiv');
             [...elementList].forEach(element => {

@@ -3,7 +3,7 @@
 
 <head>
     <script src="/content/pages/dashboard/utils.js"></script>
-    <link rel="stylesheet" href="/content/pages/dashboard/admin/common.css" />
+    <link rel="stylesheet" href="/content/pages/dashboard/common.css" />
 </head>
 
 <body onLoad="load(false)">
@@ -12,15 +12,15 @@
         const urlParams = new URLSearchParams(window.location.search);
     </script>
     <ul class="breadcrumb">
-        <li><a onClick="switchPage('/content/pages/dashboard/admin/home.html')">Home</a></li>
-        <li><a onClick="switchPage(`/content/pages/dashboard/admin/eventPages/${model}/${model}.html?event=${urlParams.get('event')}`)">Speedruns</a>
+        <li><a onClick="switchPage('/content/pages/dashboard/admin/home/home.html')">Home</a></li>
+        <li><a onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)">Speedruns</a>
         </li>
     </ul>
     <div class="header">
         <h2 class="title">Speedruns</h2>
         <div id="headerButtonDiv">
             <button
-                onClick="switchPage(`/content/pages/dashboard/admin/eventPages/${model}/edit.html?type=create&event=${urlParams.get('event')}`)">Create
+                onClick="switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=create&event=${urlParams.get('event')}`)">Create
                 New</button>
         </div>
     </div>
@@ -99,8 +99,8 @@
 
         function dropdownSwitchPage(page, speedrun) {
             switch (page) {
-                case 'view': switchPage(`/content/pages/dashboard/admin/eventPages/${model}/edit.html?type=view&id=${speedrun}&event=${urlParams.get('event')}`); break;
-                case 'edit': switchPage(`/content/pages/dashboard/admin/eventPages/${model}/edit.html?type=edit&id=${speedrun}&event=${urlParams.get('event')}`); break;
+                case 'view': switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=view&id=${speedrun}&event=${urlParams.get('event')}`); break;
+                case 'edit': switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=edit&id=${speedrun}&event=${urlParams.get('event')}`); break;
             }
         }
 

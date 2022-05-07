@@ -1,6 +1,19 @@
 const blockedShorts = ['all', 'active', 'tracker', 'create', 'edit', 'view', 'delete']
 
 module.exports.schema = (mongoose, database) => {
+    let optionsSchema = mongoose.Schema({
+        type: {
+            type: String,
+            enum: ['input', 'checkbox'],
+            required: [true, 'Type is required.']
+        },
+        name: {
+            type: String,
+            maxLength: [60, 'Name is too long.'],
+            required: [true, 'Name is required.']
+        }
+    }, { toJSON: { virtuals: true } }, { toObject: { virtuals: true } });
+
     let schema = mongoose.Schema({
         name: {
             type: String,
@@ -86,18 +99,7 @@ module.exports.schema = (mongoose, database) => {
                 message: () => 'There is already an active event.'
             }
         },
-        customFields: [{
-            type: {
-                type: String,
-                enum: ['input', 'checkbox'],
-                required: [true, 'Type is required.']
-            },
-            name: {
-                type: String,
-                maxLength: [60, 'Name is too long.'],
-                required: [true, 'Name is required.']
-            }
-        }]
+        customFields: [optionsSchema]
     }, { toJSON: { virtuals: true } }, { toObject: { virtuals: true }});
     
     schema.virtual('charity', {

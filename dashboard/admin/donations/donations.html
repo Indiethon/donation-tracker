@@ -3,7 +3,7 @@
 
 <head>
     <script src="/content/pages/dashboard/utils.js"></script>
-    <link rel="stylesheet" href="/content/pages/dashboard/admin/common.css" />
+    <link rel="stylesheet" href="/content/pages/dashboard/common.css" />
 </head>
 
 <body onLoad="load(false)">
@@ -12,15 +12,15 @@
         const urlParams = new URLSearchParams(window.location.search);
     </script>
     <ul class="breadcrumb">
-        <li><a onClick="switchPage('/content/pages/dashboard/admin/home.html')">Home</a></li>
-        <li><a onClick="switchPage(`/content/pages/dashboard/admin/eventPages/${model}/${model}.html?event=${urlParams.get('event')}`)">Donations</a>
+        <li><a onClick="switchPage('/content/pages/dashboard/admin/home/home.html')">Home</a></li>
+        <li><a onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)">Donations</a>
         </li>
     </ul>
     <div class="header">
         <h2 class="title">Donations</h2>
         <div id="headerButtonDiv">
             <button
-                onClick="switchPage(`/content/pages/dashboard/admin/eventPages/${model}/edit.html?type=create&event=${urlParams.get('event')}`)">Create
+                onClick="switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=create&event=${urlParams.get('event')}`)">Create
                 New</button>
         </div>
     </div>
@@ -43,6 +43,7 @@
                     <th>Completed</th>
                     <th>Verified</th>
                     <th>Visible</th>
+                    <th>Read</th>
                     <th></th>
                 </tr>
             </thead>
@@ -81,6 +82,7 @@
                     row.insertCell().innerHTML = `<p class="tableText">${donation.completed}</p>`;
                     row.insertCell().innerHTML = `<p class="tableText">${donation.verified}</p>`;
                     row.insertCell().innerHTML = `<p class="tableText">${donation.visible}</p>`;
+                    row.insertCell().innerHTML = `<p class="tableText">${donation.read}</p>`;
                     row.insertCell().innerHTML = `
                 <div class="tableDropdown">
                     <button class="tableButton">...</button>
@@ -97,8 +99,8 @@
 
         function dropdownSwitchPage(page, donation) {
             switch (page) {
-                case 'view': switchPage(`/content/pages/dashboard/admin/eventPages/${model}/edit.html?type=view&id=${donation}&event=${urlParams.get('event')}`); break;
-                case 'edit': switchPage(`/content/pages/dashboard/admin/eventPages/${model}/edit.html?type=edit&id=${donation}&event=${urlParams.get('event')}`); break;
+                case 'view': switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=view&id=${donation}&event=${urlParams.get('event')}`); break;
+                case 'edit': switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=edit&id=${donation}&event=${urlParams.get('event')}`); break;
             }
         }
 

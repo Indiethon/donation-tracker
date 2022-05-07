@@ -15,12 +15,12 @@ function updateNav() {
                     <span class="material-icons-outlined button-expand">expand_more</span>
             </button>
             <div class="navDropdownDiv" id="eventNav" event="${event._id}">
-            <button onClick="switchPage('/content/pages/dashboard/admin/eventPages/overview.html?event=${event._id}')">Overview</button>
-            <button onClick="switchPage('/content/pages/dashboard/admin/eventPages/speedruns/speedruns.html?event=${event._id}')">Speedruns</button>
-            <button onClick="switchPage('/content/pages/dashboard/admin/eventPages/donations/donations.html?event=${event._id}')">Donations</button>
-            <button onClick="switchPage('/content/pages/dashboard/admin/eventPages/incentives/incentives.html?event=${event._id}')">Incentives</button>
-            <button onClick="switchPage('/content/pages/dashboard/admin/eventPages/prizes/prizes.html?event=${event._id}')">Prizes</button>
-            <button onClick="switchPage('/content/pages/dashboard/admin/eventPages/ads/ads.html?event=${event._id}')">Ads</button>
+            <button onClick="switchPage('/content/pages/dashboard/admin/overview/overview.html?event=${event._id}')">Overview</button>
+            <button onClick="switchPage('/content/pages/dashboard/admin/speedruns/speedruns.html?event=${event._id}')">Speedruns</button>
+            <button onClick="switchPage('/content/pages/dashboard/admin/donations/donations.html?event=${event._id}')">Donations</button>
+            <button onClick="switchPage('/content/pages/dashboard/admin/incentives/incentives.html?event=${event._id}')">Incentives</button>
+            <button onClick="switchPage('/content/pages/dashboard/admin/prizes/prizes.html?event=${event._id}')">Prizes</button>
+            <button onClick="switchPage('/content/pages/dashboard/admin/ads/ads.html?event=${event._id}')">Ads</button>
             </div>
             `
         }

@@ -3,13 +3,13 @@
 
 <head>
     <script src="/content/pages/dashboard/utils.js"></script>
-    <link rel="stylesheet" href="/content/pages/dashboard/admin/common.css" />
+    <link rel="stylesheet" href="/content/pages/dashboard/common.css" />
 </head>
 
 <body onLoad="load(false)">
     <script>let model = 'donors';</script>
     <ul class="breadcrumb">
-        <li><a onClick="switchPage(`/content/pages/dashboard/admin/home.html`)">Home</a></li>
+        <li><a onClick="switchPage(`/content/pages/dashboard/admin/home/home.html`)">Home</a></li>
         <li><a onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)">Donors</a></li>
         <li><a onClick="location.reload()">Edit</a>
         </li>

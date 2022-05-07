@@ -17,12 +17,13 @@ module.exports.schema = (mongoose, database) => {
             type: Date,
             default: Date.now
         },
-        isSuperuser: {
+        superuser: {
             type: Boolean,
             default: false,
         },
-        groupName: {
-            type: String,
+        volunteer: {
+            type: Boolean,
+            default: false,
         },
         groupId: {
             type: String,

@@ -8,12 +8,8 @@ module.exports.schema = (mongoose, database) => {
             type: Boolean,
             default: false,
         },
-        total: {
-            type: Number,
-            required: [true, 'Total is required.']
-        },
     }, { toJSON: { virtuals: true } }, { toObject: { virtuals: true } });
-    
+
     let schema = mongoose.Schema({
         eventId: {
             type: mongoose.Schema.Types.ObjectId,
@@ -34,7 +30,7 @@ module.exports.schema = (mongoose, database) => {
         },
         type: {
             type: String,
-            enum : ['target','bidwar'],
+            enum: ['target', 'bidwar'],
             required: [true, 'Incentive type is required.']
         },
         goal: {
@@ -48,14 +44,10 @@ module.exports.schema = (mongoose, database) => {
                 message: () => `Goal is required.`
             },
         },
-        total: {
-            type: Number,
-            default: 0,
-            required: [true, 'Total is required.']
-        },
         options: [optionsSchema],
         allowUserOptions: {
             type: Boolean,
+            default: false,
             required: [true, 'Allow user options is required.']
         },
         userOptionMaxLength: {
@@ -97,5 +89,25 @@ module.exports.schema = (mongoose, database) => {
         foreignField: '_id',
         justOne: true,
     });
+    schema.method('getStats', async function (callback) {
+        let total = 0;
+        const donations = await database.models['donation'].find({ completed: true, 'incentives.incentiveId': this._id });
+        for (const donation of donations) {
+            for (const incentive of donation.incentives) {
+                if (incentive.incentiveId.equals(this._id)) total += incentive.amount;
+            }
+        }
+        callback(total)
+    });
+    optionsSchema.method('getStats', async function (callback) {
+        let total = 0;
+        const donations = await database.models['donation'].find({ completed: true, 'incentives.option': this._id });
+        for (const donation of donations) {
+            for (const incentive of donation.incentives) {
+                if (incentive.option !== undefined && incentive.option.equals(this._id)) total += incentive.amount;
+            }
+        }
+        callback(total);
+    })
     return schema;
 }

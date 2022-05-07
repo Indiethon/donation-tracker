@@ -3,13 +3,13 @@
 
 <head>
     <script src="/content/pages/dashboard/utils.js"></script>
-    <link rel="stylesheet" href="/content/pages/dashboard/admin/common.css" />
+    <link rel="stylesheet" href="/content/pages/dashboard/common.css" />
 </head>
 
 <body onLoad="load(false)">
     <script>let model = 'users';</script>
     <ul class="breadcrumb">
-        <li><a onClick="switchPage('/content/pages/dashboard/admin/home.html')">Home</a></li>
+        <li><a onClick="switchPage('/content/pages/dashboard/admin/home/home.html')">Home</a></li>
         <li><a onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)">Users</a></li>
     </ul>
     <div class="header">
@@ -34,8 +34,9 @@
                     <th>Username</th>
                     <th>First Name</th>
                     <th>Last Name</th>
-                    <th>Superuser</th>
                     <th>Group</th>
+                    <th>Superuser</th>
+                    <th>Volunteer</th>
                     <th>Last Login</th>
                     <th></th>
                 </tr>
@@ -68,8 +69,9 @@
                     row.insertCell().innerHTML = `<p class="tableText">${user.username}</p>`;
                     row.insertCell().innerHTML = `<p class="tableText">${user.firstName}</p>`;
                     row.insertCell().innerHTML = `<p class="tableText">${user.lastName}</p>`;
-                    row.insertCell().innerHTML = `<p class="tableText">${user.isSuperuser}</p>`;
-                    row.insertCell().innerHTML = `<p class="tableText">${user.groupName}</p>`;
+                    row.insertCell().innerHTML = `<p class="tableText"></p>`; // Group name here.
+                    row.insertCell().innerHTML = `<p class="tableText">${user.superuser}</p>`;
+                    row.insertCell().innerHTML = `<p class="tableText">${user.volunteer}</p>`;
                     row.insertCell().innerHTML = `<p class="tableText">${lastLogin}</p>`;
                     row.insertCell().innerHTML = `
                 <div class="tableDropdown">

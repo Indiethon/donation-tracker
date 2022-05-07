@@ -34,7 +34,7 @@ module.exports.schema = (mongoose, database) => {
             type: String
         },
         incentives: [{
-            id: {
+            incentiveId: {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'incentive',
                 required: [true, 'Incentive id is required.'],
@@ -48,7 +48,14 @@ module.exports.schema = (mongoose, database) => {
                 required: [true, 'Incentive amount is required.'],
             },
         }],
-        custom: [],
+        custom: [{
+            customId: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'event.customFields',
+                required: [true, 'Custom id is required.'],
+            },
+            value: {}
+        }],
         timestamp: {
             type: Date,
             default: Date.now
@@ -68,6 +75,11 @@ module.exports.schema = (mongoose, database) => {
             default: false,
             required: [true, 'Visible is required.']
         },
+        read: {
+            type: Boolean,
+            default: false,
+            required: [true, 'Read is required.']
+        }
     }, { toJSON: { virtuals: true } }, { toObject: { virtuals: true } });
     schema.virtual('event', {
         ref: 'event',

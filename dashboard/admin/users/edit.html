@@ -3,13 +3,13 @@
 
 <head>
     <script src="/content/pages/dashboard/utils.js"></script>
-    <link rel="stylesheet" href="/content/pages/dashboard/admin/common.css" />
+    <link rel="stylesheet" href="/content/pages/dashboard/common.css" />
 </head>
 
 <body onLoad="load(false)">
     <script>let model = 'users';</script>
     <ul class="breadcrumb">
-        <li><a onClick="switchPage(`/content/pages/dashboard/admin/home.html`)">Home</a></li>
+        <li><a onClick="switchPage(`/content/pages/dashboard/admin/home/home.html`)">Home</a></li>
         <li><a onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)">Users</a></li>
         <li><a onClick="location.reload()">Edit</a>
         </li>
@@ -54,8 +54,13 @@
                 <input class="input">
                 <span class="errorText"></span>
             </div>
-            <div id="isSuperuser" class="inputDiv">
+            <div id="superuser" class="inputDiv">
                 <label class="label">Superuser</label>
+                <input class="input" type="checkbox">
+                <span class="errorText"></span>
+            </div>
+            <div id="volunteer" class="inputDiv">
+                <label class="label">Volunteer</label>
                 <input class="input" type="checkbox">
                 <span class="errorText"></span>
             </div>
@@ -98,7 +103,8 @@
                 document.querySelector('#firstName input').value = data.data.firstName;
                 document.querySelector('#lastName input').value = data.data.lastName;
                 document.querySelector('#email input').value = data.data.email;
-                document.querySelector('#isSuperuser input').checked = data.data.isSuperuser;
+                document.querySelector('#superuser input').checked = data.data.superuser;
+                document.querySelector('#volunteer input').checked = data.data.volunteer;
                 //document.querySelector('#group input').value = data.data.groupName;
                 callback();
             })
@@ -124,7 +130,8 @@
                 document.querySelector('#firstName input').disabled = true;
                 document.querySelector('#lastName input').disabled = true;
                 document.querySelector('#email input').disabled = true;
-                document.querySelector('#isSuperuser input').disabled = true;
+                document.querySelector('#superuser input').disabled = true;
+                document.querySelector('#volunteer input').disabled = true;
                 //document.querySelector('#group input').disabled = true;
                 document.getElementById('submit').style.display = 'none';
                 document.querySelector('.title').innerHTML = 'View User';
@@ -138,7 +145,8 @@
             options.firstName = document.querySelector('#firstName input').value;
             options.lastName = document.querySelector('#lastName input').value;
             options.email = document.querySelector('#email input').value;
-            options.isSuperuser = document.querySelector('#isSuperuser input').checked;
+            options.superuser = document.querySelector('#superuser input').checked;
+            options.volunteer = document.querySelector('#volunteer input').checked;
             //options.group = document.querySelector('#group input').value;
 
             let elementList = document.querySelectorAll('.inputDiv');

@@ -7,15 +7,20 @@
 </head>
 
 <body onLoad="load(false)">
-    <script>let model = 'donors';</script>
+    <script>
+        let model = 'ads';
+        const urlParams = new URLSearchParams(window.location.search);
+    </script>
     <ul class="breadcrumb">
         <li><a onClick="switchPage('/content/pages/dashboard/admin/home/home.html')">Home</a></li>
-        <li><a onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)">Donors</a></li>
+        <li><a onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)">Ads</a>
+        </li>
     </ul>
     <div class="header">
-        <h2 class="title">Donors</h2>
+        <h2 class="title">Ads</h2>
         <div id="headerButtonDiv">
-            <button onClick="switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=create`)">Create
+            <button
+                onClick="switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=create&event=${urlParams.get('event')}`)">Create
                 New</button>
         </div>
     </div>
@@ -31,9 +36,8 @@
             <thead>
                 <tr>
                     <th><input type="checkbox" item="all" /></th>
-                    <th>Email</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
+                    <th>Name</th>
+                    <th>Text</th>
                     <th></th>
                 </tr>
             </thead>
@@ -49,23 +53,26 @@
     </div>
     <script>
         function pageLoaded() {
+            const urlParams = new URLSearchParams(window.location.search);
+
             showBody();
-            GET('donors', (err, data) => {
+
+            GET(`ads/event/${urlParams.get('event')}`, (err, data) => {
                 if (err) return;
                 let table = document.querySelector('tbody');
-                for (const donor of data.data) {
+                for (const ad of data.data) {
+
                     let row = table.insertRow();
-                    row.insertCell().innerHTML = `<input type="checkbox" item="${donor.id}" />`;
-                    row.insertCell().innerHTML = `<p class="tableText">${donor.email}</p>`;
-                    row.insertCell().innerHTML = `<p class="tableText">${donor.firstName}</p>`;
-                    row.insertCell().innerHTML = `<p class="tableText">${donor.lastName}</p>`;
+                    row.insertCell().innerHTML = `<input type="checkbox" item="${ad._id}" />`;
+                    row.insertCell().innerHTML = `<p class="tableText">${ad.name}</p>`;
+                    row.insertCell().innerHTML = `<p class="tableText longTableText">${ad.text}</p>`;
                     row.insertCell().innerHTML = `
                 <div class="tableDropdown">
                     <button class="tableButton">...</button>
                     <div class="tableDropdownContent">
-                        <button class="tableDropdownButton" onClick="dropdownSwitchPage('view', '${donor.id}')">View</button>
-                        <button class="tableDropdownButton" onClick="dropdownSwitchPage('edit', '${donor.id}')">Edit</button>
-                        <button class="tableDropdownButton" onClick="deleteItem('${donor.id}', '${donor.email}')">Delete</button>
+                        <button class="tableDropdownButton" onClick="dropdownSwitchPage('view', '${ad._id}')">View</button>
+                        <button class="tableDropdownButton" onClick="dropdownSwitchPage('edit', '${ad._id}')">Edit</button>
+                        <button class="tableDropdownButton" onClick="deleteItem('${ad._id}', '${ad.name}')">Delete</button>
                     </div>
                 </div>`;
                 }
@@ -73,18 +80,18 @@
             });
         }
 
-        function dropdownSwitchPage(page, donor) {
+        function dropdownSwitchPage(page, ad) {
             switch (page) {
-                case 'view': switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=view&id=${donor}`); break;
-                case 'edit': switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=edit&id=${donor}`); break;
+                case 'view': switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=view&id=${ad}&event=${urlParams.get('event')}`); break;
+                case 'edit': switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=edit&id=${ad}&event=${urlParams.get('event')}`); break;
             }
         }
 
         function deleteItem(id, name) {
             showDialog({
-                model: 'donor',
+                model: 'ad',
                 name: name,
-                endpoint: `donors/${id}`,
+                endpoint: `ads/${id}`,
             })
         }
 
