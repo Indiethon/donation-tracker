@@ -18,6 +18,8 @@ More specifically, I would like a front end developer to create the website page
 - Open `config.json` and change desired settings. Make sure to save!
 - Start the tracker. `npm start`
 
+If a page can't load in the dashboard, try disabling your ad blocker.
+
 # Simple Docs
 
 ## Passwords
