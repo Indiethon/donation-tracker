@@ -1,5 +1,5 @@
 # donation-tracker
-A easy to use and open source donation tracker for speedrunning marathons. Inspired by the GDQ donation tracker but runs in Node. Currently, the tracker is able to collect donations and display them in the console. Work is beginning on the API and backend database. Progress can be tracked on our [projects page](https://github.com/Indiethon/donation-tracker/projects/1). IF you have any suggestions or bugs, please post them in the issue tracker. Thanks!
+A easy to use and open source donation tracker for speedrunning marathons. Inspired by the GDQ donation tracker but runs in Node. Currently, the tracker admin dashboard is nearing completion with a volunteer dashboard starting soon. API is *almost* complete, in the phase of testing things. Progress can be tracked on our [projects page](https://github.com/Indiethon/donation-tracker/projects/1). IF you have any suggestions or bugs, please post them in the issue tracker. Thanks!
 
 **This tracker is NOT ready for production yet! It currently is in early development.**
 
