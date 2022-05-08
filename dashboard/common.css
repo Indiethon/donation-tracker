@@ -491,3 +491,18 @@ input[type=checkbox] {
 .longTableText {
     text-overflow: ellipsis;
 }
+
+.oengusImport {
+    background-color: #FFFFFF;
+    color: rgb(66, 104, 246);
+    border: 1px solid rgb(66, 104, 246);
+    margin-right: 10px;
+}
+
+.oengusImport:hover {
+    color: #ffffff;
+    background-color: rgb(83, 91, 142);
+    border-color: rgb(83, 91, 142);
+    cursor: pointer;
+    transition-duration: 0.2s;
+}

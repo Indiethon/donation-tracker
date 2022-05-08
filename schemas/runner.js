@@ -7,6 +7,7 @@ module.exports.schema = (mongoose, database) => {
         },
         email: {
             type: String,
+            default: '',
             validate: {
                 validator: function (v) {
                     return (v.includes('@') && v.includes('.')) || v === undefined || v === '';
@@ -27,6 +28,20 @@ module.exports.schema = (mongoose, database) => {
             default: '',
         },
         youtube: {
+            type: String,
+            default: '',
+        },
+        discord: {
+            type: String,
+            default: '',
+            validate: {
+                validator: function (v) {
+                    return v.includes('#') || v === undefined || v === '';
+                },
+                message: () => `Discord username must have tag. Example: username#1234.`
+            },
+        },
+        src: {
             type: String,
             default: '',
         },

@@ -7,12 +7,12 @@
 </head>
 
 <body onLoad="load(false)">
-    <script>let model = 'speedruns';</script>
+    <script>let model = 'ads';</script>
     <datalist id='runnerDatalist'></datalist>
     <ul class="breadcrumb">
         <li><a onClick="switchPage(`/content/pages/dashboard/admin/home/home.html`)">Home</a></li>
         <li><a
-                onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)">Speedruns</a>
+                onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)">Ads</a>
         </li>
         <li><a onClick="location.reload()">Edit</a>
         </li>
@@ -64,7 +64,6 @@
 
         function pageLoaded() {
             showBody();
-            fetchRunners();
             try {
                 switch (urlParams.get('type')) {
                     case 'create': create(); break;
@@ -81,72 +80,38 @@
             }
         }
 
-        function fetchRunners() {
-            GET('runners', (err, data) => {
-                if (err) return;
-                runnerList = data.data;
-                let runnerDatalist = document.getElementById('runnerDatalist');
-                if (data.data.length <= 0) {
-                    showToast('error', `There are no saved runners. Please add a runner before continuing.`)
-                    switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)
-                    return;
-                }
-                for (const runner of data.data) {
-                    runnerDatalist.innerHTML += `<option runner="${runner.id}" value="${runner.name}">ID: ${runner._id}</option>`;
-                }
-            })
-        }
-
         function fetchData(event, callback) {
-            GET(`speedruns/${urlParams.get('id')}`, (err, data) => {
+            GET(`ads/${urlParams.get('id')}`, (err, data) => {
                 if (err) return;
                 document.querySelector('#id input').value = data.data.id;
-                document.querySelector('#game input').value = data.data.game;
-                document.querySelector('#category input').value = data.data.category;
-                document.querySelector('#description input').value = data.data.description;
-                document.querySelector('#startTime input').value = data.data.startTime.split('.')[0];
-                document.querySelector('#estimate input').value = data.data.estimate;
-                document.querySelector('#finalTime input').value = data.data.finalTime;
-                document.querySelector('#finalSetupTime input').value = data.data.finalSetupTime;
-                document.querySelector('#releaseYear input').value = data.data.releaseYear;
-                document.querySelector('#console input').value = data.data.console;
+                document.querySelector('#name input').value = data.data.name;
+                document.querySelector('#text input').value = data.data.text;
                 document.querySelector('#notes input').value = data.data.notes;
-                for (const runner of data.data.runners) {
-                    addArrayElement(document.querySelector(`#runners .arrayInput`), runner.name)
-                }
                 callback();
             })
         }
 
         function create() {
             document.querySelector('#id').style.display = 'none';
-            document.querySelector('.title').innerHTML = 'Create Speedrun';
+            document.querySelector('.title').innerHTML = 'Create Ad';
             document.getElementById('submit').innerHTML = 'Create';
             showContent();
         }
 
-        function edit(speedrun) {
-            fetchData(speedrun, () => {
-                document.querySelector('.title').innerHTML = 'Edit Speedrun';
+        function edit(ad) {
+            fetchData(ad, () => {
+                document.querySelector('.title').innerHTML = 'Edit Ad';
                 document.getElementById('submit').innerHTML = 'Save';
                 showContent();
             })
         }
-        function view(speedrun) {
-            fetchData(speedrun, () => {
-                document.querySelector('#game input').disabled = true;
-                document.querySelector('#category input').disabled = true;
-                document.querySelector('#runners input').disabled = true;
-                document.querySelector('#description input').disabled = true;
-                document.querySelector('#startTime input').disabled = true;
-                document.querySelector('#estimate input').disabled = true;
-                document.querySelector('#finalTime input').disabled = true;
-                document.querySelector('#finalSetupTime input').disabled = true;
-                document.querySelector('#releaseYear input').disabled = true;
-                document.querySelector('#console input').disabled = true;
+        function view(ad) {
+            fetchData(ad, () => {
+                document.querySelector('#id input').disabled = true;
+                document.querySelector('#name input').disabled = true;
+                document.querySelector('#text input').disabled = true;
                 document.querySelector('#notes input').disabled = true;
-                document.getElementById('submit').style.display = 'none';
-                document.querySelector('.title').innerHTML = 'View Speedrun';
+                document.querySelector('.title').innerHTML = 'View Ad';
                 for (const input of document.querySelectorAll('.arrayInput div')) {
                     input.querySelector('input').disabled = true;
                     try { input.querySelector('button').style.display = 'none' } catch {}
@@ -159,21 +124,9 @@
         function submit() {
             let options = {};
             options.eventId = urlParams.get('event');
-            options.game = document.querySelector('#game input').value;
-            options.category = document.querySelector('#category input').value;
-            options.description = document.querySelector('#description input').value;
-            options.startTime = document.querySelector('#startTime input').value;
-            options.estimate = document.querySelector('#estimate input').value;
-            options.finalTime = document.querySelector('#finalTime input').value;
-            options.finalSetupTime = document.querySelector('#finalSetupTime input').value;
-            options.releaseYear = document.querySelector('#releaseYear input').value;
-            options.console = document.querySelector('#console input').value;
+            options.name = document.querySelector('#name input').value;
+            options.text = document.querySelector('#text input').value;
             options.notes = document.querySelector('#notes input').value;
-            options.runners = [];
-            for (const input of document.querySelectorAll('.arrayInputDivChild')) {
-                try { options.runners.push(runnerList.find(el => el.name === input.querySelector('input').value)._id); } catch { options.runners.push('') };
-            }
-            if (options.runners.length > 1) options.multiplayer = true;
 
             let elementList = document.querySelectorAll('.inputDiv');
             [...elementList].forEach(element => {
@@ -182,9 +135,9 @@
                 el.style.visibility = 'hidden';
             });
 
-            POST(`speedruns${(urlParams.get('type') === 'create') ? '' : `/${urlParams.get('id')}`}`, options, (err, data) => {
+            POST(`ads${(urlParams.get('type') === 'create') ? '' : `/${urlParams.get('id')}`}`, options, (err, data) => {
                 if (!err) {
-                    showToast('success', `Speedrun updated successfully.`)
+                    showToast('success', `Ad updated successfully.`)
                     switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)
                     return;
                 }
@@ -196,36 +149,6 @@
                 })
                 showToast('error', `Validation errors found, please resolve them.`)
             })
-        }
-
-        function addArrayElement(div, value) {
-
-            let runner = document.createElement('div');
-            runner.setAttribute('class', 'arrayInputDivChild')
-
-            let label = document.createElement('label');
-            label.setAttribute('class', 'label')
-            label.innerHTML = 'Runner';
-
-            let input = document.createElement('input');
-            input.setAttribute('class', 'input');
-            input.setAttribute('list', 'runnerDatalist')
-            input.value = value;
-
-            runner.appendChild(label);
-            runner.appendChild(input)
-
-            let button = document.createElement('button');
-            button.setAttribute('type', 'button');
-            button.setAttribute('class', 'deleteButton material-icons');
-            button.setAttribute('onClick', 'this.parentNode.remove()');
-            button.innerHTML = 'delete_forever';
-
-            let divDiv = document.createElement('div');
-
-            divDiv.appendChild(runner);
-            divDiv.appendChild(button);
-            div.appendChild(divDiv)
         }
     </script>
 </body>

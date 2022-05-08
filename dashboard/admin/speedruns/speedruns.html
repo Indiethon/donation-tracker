@@ -19,6 +19,8 @@
     <div class="header">
         <h2 class="title">Speedruns</h2>
         <div id="headerButtonDiv">
+            <button class="oengusImport"
+                onClick="switchPage(`/content/pages/dashboard/admin/${model}/import.html?event=${urlParams.get('event')}`)">Import From Oengus</button>
             <button
                 onClick="switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=create&event=${urlParams.get('event')}`)">Create
                 New</button>
