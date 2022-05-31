@@ -16,7 +16,7 @@
         },
         "tracker": {
             "name": "Donation Tracker",
-            "databaseURL": "mongodb://localhost:27017",
+            "databaseURL": "mongodb://localhost:27017/donation-tracker",
             "homepage": "https://google.com",
             "logoPath": "",
             "passwordHash": "",
