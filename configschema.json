@@ -3,34 +3,32 @@
     "$id": "http://example.com/example.json",
     "type": "object",
     "default": {
-        "": {
-            "baseURL": "localhost",
-            "port": 8080,
-            "ssl": {
-                "enabled": false,
-                "keyPath": "",
-                "certPath": ""
-            },
-            "paypal": {
-                "useSandbox": false,
-                "currency": "USD"
-            },
-            "tracker": {
-                "name": "Donation Tracker",
-                "databaseURL": "mongodb://localhost:27017",
-                "homepage": "https://google.com",
-                "logoPath": "",
-                "passwordHash": "",
-                "tokens": []
-            },
-            "legal": {
-                "privacyPolicy": "",
-                "sweepstakesRules": ""
-            },
-            "frontend": {
-                "useDefault": true,
-                "donationSuccessMessage": "Thanks for donating! Enjoy the event!"
-            }
+        "baseURL": "localhost",
+        "port": 8080,
+        "ssl": {
+            "enabled": false,
+            "keyPath": "",
+            "certPath": ""
+        },
+        "paypal": {
+            "useSandbox": false,
+            "currency": "USD"
+        },
+        "tracker": {
+            "name": "Donation Tracker",
+            "databaseURL": "mongodb://localhost:27017",
+            "homepage": "https://google.com",
+            "logoPath": "",
+            "passwordHash": "",
+            "tokens": []
+        },
+        "legal": {
+            "privacyPolicy": "",
+            "sweepstakesRules": ""
+        },
+        "frontend": {
+            "useDefault": true,
+            "donationSuccessMessage": "Thanks for donating! Enjoy the event!"
         }
     },
     "title": "Root Schema",
@@ -95,11 +93,13 @@
                     ]
                 }
             },
-            "examples": [{
-                "enabled": false,
-                "keyPath": "",
-                "certPath": ""
-            }]
+            "examples": [
+                {
+                    "enabled": false,
+                    "keyPath": "",
+                    "certPath": ""
+                }
+            ]
         },
         "paypal": {
             "type": "object",
@@ -127,10 +127,12 @@
                     ]
                 }
             },
-            "examples": [{
-                "useSandbox": false,
-                "currency": "USD"
-            }]
+            "examples": [
+                {
+                    "useSandbox": false,
+                    "currency": "USD"
+                }
+            ]
         },
         "tracker": {
             "type": "object",
@@ -195,14 +197,16 @@
                     ]
                 }
             },
-            "examples": [{
-                "name": "Donation Tracker",
-                "databaseURL": "mongodb://localhost:27017",
-                "homepage": "https://google.com",
-                "logoPath": "",
-                "passwordHash": "",
-                "tokens": []
-            }]
+            "examples": [
+                {
+                    "name": "Donation Tracker",
+                    "databaseURL": "mongodb://localhost:27017",
+                    "homepage": "https://google.com",
+                    "logoPath": "",
+                    "passwordHash": "",
+                    "tokens": []
+                }
+            ]
         },
         "legal": {
             "type": "object",
@@ -230,10 +234,12 @@
                     ]
                 }
             },
-            "examples": [{
-                "privacyPolicy": "",
-                "sweepstakesRules": ""
-            }]
+            "examples": [
+                {
+                    "privacyPolicy": "",
+                    "sweepstakesRules": ""
+                }
+            ]
         },
         "frontend": {
             "type": "object",
@@ -261,39 +267,43 @@
                     ]
                 }
             },
-            "examples": [{
-                "useDefault": true,
-                "donationSuccessMessage": "Thanks for donating! Enjoy the event!"
-            }]
+            "examples": [
+                {
+                    "useDefault": true,
+                    "donationSuccessMessage": "Thanks for donating! Enjoy the event!"
+                }
+            ]
         }
     },
-    "examples": [{
-        "baseURL": "localhost",
-        "port": 8080,
-        "ssl": {
-            "enabled": false,
-            "keyPath": "",
-            "certPath": ""
-        },
-        "paypal": {
-            "useSandbox": false,
-            "currency": "USD"
-        },
-        "tracker": {
-            "name": "Donation Tracker",
-            "databaseURL": "mongodb://localhost:27017",
-            "homepage": "https://google.com",
-            "logoPath": "",
-            "passwordHash": "",
-            "tokens": []
-        },
-        "legal": {
-            "privacyPolicy": "",
-            "sweepstakesRules": ""
-        },
-        "frontend": {
-            "useDefault": true,
-            "donationSuccessMessage": "Thanks for donating! Enjoy the event!"
+    "examples": [
+        {
+            "baseURL": "localhost",
+            "port": 8080,
+            "ssl": {
+                "enabled": false,
+                "keyPath": "",
+                "certPath": ""
+            },
+            "paypal": {
+                "useSandbox": false,
+                "currency": "USD"
+            },
+            "tracker": {
+                "name": "Donation Tracker",
+                "databaseURL": "mongodb://localhost:27017",
+                "homepage": "https://google.com",
+                "logoPath": "",
+                "passwordHash": "",
+                "tokens": []
+            },
+            "legal": {
+                "privacyPolicy": "",
+                "sweepstakesRules": ""
+            },
+            "frontend": {
+                "useDefault": true,
+                "donationSuccessMessage": "Thanks for donating! Enjoy the event!"
+            }
         }
-    }]
+    ]
 }
