@@ -27,8 +27,8 @@ function start(tracker, database) {
 
   // Set up SSL (if enabled)
   if (tracker.config.ssl.enabled) https.createServer({
-    key: fs.readFile(tracker.config.ssl.keyPath, 'utf8'),
-    cert: fs.readFile(tracker.config.ssl.certPath, 'utf8')
+    key: fs.readFileSync(tracker.config.ssl.keyPath, 'utf8'),
+    cert: fs.readFileSync(tracker.config.ssl.certPath, 'utf8')
   }, tracker.server).listen(tracker.config.port, () => console.info(`Donation tracker is running at ${tracker.url}`));
   else http.createServer(tracker.server).listen(tracker.config.port, () => console.info(`Donation tracker is running at ${tracker.url}`));
 }
