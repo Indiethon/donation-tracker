@@ -18,11 +18,7 @@
   },
   "homepage": "https://github.com/indiethon/donation-tracker#readme",
   "dependencies": {
-    "@adminjs/design-system": "^2.0.4",
-    "@adminjs/express": "^4.0.1",
-    "@adminjs/mongoose": "^2.0.0",
-    "adminjs": "^5.5.1",
-    "bcrypt": "^5.0.1",
+    "bcrypt-nodejs": "^0.0.3",
     "better-logging": "^4.6.0",
     "ejs": "^3.1.6",
     "express": "^4.17.2",
@@ -34,7 +30,6 @@
     "mongoose-unique-validator": "github:trading-peter/mongoose-unique-validator",
     "node-fetch": "^2.6.7",
     "node-localstorage": "^2.2.1",
-    "react": "^16.13.1",
     "tzdata": "^1.0.30",
     "uuid": "^8.3.2"
   }
