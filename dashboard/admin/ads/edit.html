@@ -6,11 +6,16 @@
     <link rel="stylesheet" href="/content/pages/dashboard/common.css" />
 </head>
 
-<body onLoad="load(false)">
-    <script>let model = 'ads';</script>
-    <datalist id='runnerDatalist'></datalist>
+<body>
+    <script>
+        let model = 'ads';
+        const urlParams = new URLSearchParams(window.location.search);
+    </script>
     <ul class="breadcrumb">
         <li><a onClick="switchPage(`/content/pages/dashboard/admin/home/home.html`)">Home</a></li>
+        <li id="eventBreadcrumb"><a
+                onClick="switchPage(`/content/pages/dashboard/admin/overview/overview.html?event=${urlParams.get('event')}`)"></a>
+        </li>
         <li><a
                 onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)">Ads</a>
         </li>
@@ -32,123 +37,61 @@
         </div>
     </div>
     <div class="content">
-        <form>
-            <div id="id" class="inputDiv">
-                <label class="label">ID</label>
-                <input class="input" disabled>
-                <span class="errorText"></span>
-            </div>
-            <div id="name" class="inputDiv">
-                <label class="label">Name</label>
-                <input class="input">
-                <span class="errorText"></span>
-            </div>
-            <div id="text" class="inputDiv">
-                <label class="label">Text</label>
-                <input class="input">
-                <span class="errorText"></span>
-            </div>
-            <div id="notes" class="inputDiv">
-                <label class="label">Notes</label>
-                <input class="input">
-                <span class="errorText"></span>
-            </div>
-        </form>
-        <button id="submit" onClick="submit()"></button>
-        <div></div>
     </div>
 
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        let runnerList;
-
-        function pageLoaded() {
-            showBody();
-            try {
-                switch (urlParams.get('type')) {
-                    case 'create': create(); break;
-                    case 'edit': edit(urlParams.get('id')); break;
-                    case 'view': view(urlParams.get('id')); break;
-                    default:
-                        showToast('error', `Error opening page. Please contact the system administrator.`)
-                        switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)
-                }
-            } catch (e) {
-                console.error(e)
-                showToast('error', `Error opening page. Please contact the system administrator.`)
-                switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)
-            }
+        switch (urlParams.get('type')) {
+            case 'create': load(false, { model: 'ad', level: 'full' }); break;
+            case 'edit': load(false, { model: 'ad', level: 'modify' }); break;
+            case 'view': load(false, { model: 'ad', level: 'read' }); break;
         }
 
-        function fetchData(event, callback) {
-            GET(`ads/${urlParams.get('id')}`, (err, data) => {
-                if (err) return;
-                document.querySelector('#id input').value = data.data.id;
-                document.querySelector('#name input').value = data.data.name;
-                document.querySelector('#text input').value = data.data.text;
-                document.querySelector('#notes input').value = data.data.notes;
-                callback();
-            })
-        }
+        setBreadcrumb(urlParams.get('event'));
 
-        function create() {
-            document.querySelector('#id').style.display = 'none';
-            document.querySelector('.title').innerHTML = 'Create Ad';
-            document.getElementById('submit').innerHTML = 'Create';
-            showContent();
-        }
-
-        function edit(ad) {
-            fetchData(ad, () => {
-                document.querySelector('.title').innerHTML = 'Edit Ad';
-                document.getElementById('submit').innerHTML = 'Save';
-                showContent();
-            })
-        }
-        function view(ad) {
-            fetchData(ad, () => {
-                document.querySelector('#id input').disabled = true;
-                document.querySelector('#name input').disabled = true;
-                document.querySelector('#text input').disabled = true;
-                document.querySelector('#notes input').disabled = true;
-                document.querySelector('.title').innerHTML = 'View Ad';
-                for (const input of document.querySelectorAll('.arrayInput div')) {
-                    input.querySelector('input').disabled = true;
-                    try { input.querySelector('button').style.display = 'none' } catch {}
-                }
-                document.querySelector('.arrayAddButton').style.display = 'none'
-                showContent();
-            })
-        }
-
-        function submit() {
-            let options = {};
-            options.eventId = urlParams.get('event');
-            options.name = document.querySelector('#name input').value;
-            options.text = document.querySelector('#text input').value;
-            options.notes = document.querySelector('#notes input').value;
-
-            let elementList = document.querySelectorAll('.inputDiv');
-            [...elementList].forEach(element => {
-                let el = document.querySelector(`#${element.id} span`)
-                el.innerHTML = '';
-                el.style.visibility = 'hidden';
+        async function pageLoaded() {
+            await generateForm({
+                name: 'Ad',
+                model: 'ads',
+                type: urlParams.get('type'),
+                endpoint: (urlParams.get('id') !== undefined && urlParams.get('id') !== null) ? `${model}/${urlParams.get('id')}` : model,
+                event: urlParams.get('event'),
+                form: [{
+                    name: 'Name',
+                    type: 'input',
+                    data: 'name',
+                    required: true,
+                    submit: (value) => {
+                        return value;
+                    },
+                }, {
+                    name: 'Text',
+                    type: 'input',
+                    data: 'text',
+                    submit: (value) => {
+                        return value;
+                    },
+                }, {
+                    name: 'Notes',
+                    type: 'input',
+                    data: 'notes',
+                    submit: (value) => {
+                        return value;
+                    },
+                }, {
+                    name: 'Active',
+                    type: 'checkbox',
+                    data: 'active',
+                    submit: (value) => {
+                        return value;
+                    },
+                }],
+                other: [{
+                    data: 'eventId',
+                    submit: (value) => {
+                        return urlParams.get('event');
+                    },
+                }]
             });
-
-            POST(`ads${(urlParams.get('type') === 'create') ? '' : `/${urlParams.get('id')}`}`, options, (err, data) => {
-                if (!err) {
-                    showToast('success', `Ad updated successfully.`)
-                    switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)
-                    return;
-                }
-
-                data.data.errorCodes.forEach(error => {
-                    let element = document.querySelector(`#${error.item.split('.')[0]} span`);
-                    element.innerHTML = error.code;
-                    element.style.visibility = 'inherit';
-                })
-                showToast('error', `Validation errors found, please resolve them.`)
-            })
         }
     </script>
 </body>

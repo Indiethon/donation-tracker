@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="/content/pages/dashboard/utils.js"></script>
+    <link rel="stylesheet" href="/content/pages/dashboard/common.css" />
+    <link rel="stylesheet" href="/content/pages/dashboard/volunteer/volunteer.css" />
+
+</head>
+
+<body>
+    <script>
+        let model = 'incentives';
+        const urlParams = new URLSearchParams(window.location.search);
+    </script>
+    <ul class="breadcrumb">
+        <li><a onClick="switchPage('/content/pages/dashboard/volunteer/home/home.html')">Home</a></li>
+        <li><a
+                onClick="switchPage(`/content/pages/dashboard/volunteer/${model}/${model}.html?event=${urlParams.get('event')}`)">Incentives</a>
+        </li>
+    </ul>
+    <div class="header">
+        <h2 class="title">Incentives</h2>
+        <div id="headerButtonDiv">
+            <button class="selected" visibility="active" onClick="setRowVisibility(this)">Active</button>
+            <button visibility="completed" onClick="setRowVisibility(this)">Completed</button>
+            <button visibility="all" onClick="setRowVisibility(this)">All</button>
+        </div>
+    </div>
+    <div class="loadingContent">
+        <div class="loadingAnimation">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <div class="content">
+    </div>
+    <script>
+        load(false, { model: null });
+        let options;
+        let details;
+
+        let donationListener = new EventSource('/api/eventSource')
+        donationListener.addEventListener('message', (event) => updateTable(JSON.parse(event.data)));
+
+        async function pageLoaded() {
+            details = await GET('details');
+            if (details.data === undefined || details.data.eventShort === undefined) return;
+            else {
+                document.body.style.visibility = 'visible';
+                options = {
+                    name: 'incentive',
+                    model: model,
+                    endpoint: `incentives/event/${details.data.eventShort}`,
+                    volunteer: true,
+                    table: [{
+                        name: 'Name',
+                        data: 'name'
+                    }, {
+                        name: 'Run',
+                        textFunction: (value) => {
+                            return value.run.game;
+                        }
+                    }, {
+                        name: 'Total',
+                        textFunction: (value) => {
+                            return `${details.data.currencySymbol}${value.total.toFixed(2)}`
+                        }
+                    }, {
+                        name: 'Goal',
+                        textFunction: (value) => {
+                            if (value.type === 'bidwar') return '(None)';
+                            return `${details.data.currencySymbol}${value.goal.toFixed(2)}`
+                        }
+                    }],
+                    rowAttribute: (value) => {
+                        return value.active;
+                    },
+                    // rowFunction: (value) => {
+                    //     return value._id;
+                    // }
+                }
+                await generateTable(options);
+                setRowVisibility(document.querySelector('#headerButtonDiv button.selected'))
+            }
+        }
+
+        async function updateTable() {
+            document.querySelector('.loadingContent').style.display = 'flex';
+            for (const content of document.querySelectorAll('.content')) {
+                content.style.visibility = 'hidden';
+            }
+            document.querySelector('table').remove();
+            await generateTable(options);
+            setRowVisibility(document.querySelector('#headerButtonDiv button.selected'))
+        }
+
+        function setRowVisibility(element) {
+            let buttons = document.querySelectorAll('#headerButtonDiv button');
+            for (let button of buttons) {
+                button.classList.remove('selected');
+            }
+            element.classList.add('selected');
+
+            let rows = document.querySelectorAll('table tbody tr');
+            for (let row of rows) {
+                if (element.getAttribute('visibility') === 'completed') {
+                    if (row.getAttribute('rowAttr') === 'false') row.style.display = 'table-row';
+                    else row.style.display = 'none';
+                }
+                else if (element.getAttribute('visibility') === 'active') {
+                    if (row.getAttribute('rowAttr') === 'true') row.style.display = 'table-row';
+                    else row.style.display = 'none';
+                }
+                else {
+                    row.style.display = 'table-row'
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

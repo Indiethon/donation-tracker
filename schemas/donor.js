@@ -3,6 +3,7 @@ module.exports.schema = (mongoose, database) => {
         alias: [{
             type: String,
             required: [true, 'Alias is required.'],
+            maxLength: [32, 'Alias is too long.'],
         }],
         email: {
             type: String,
@@ -25,29 +26,37 @@ module.exports.schema = (mongoose, database) => {
         },
         address: {
             name: {
-                type: String
+                type: String,
+                default: '',
             },
             street: {
-                type: String
+                type: String,
+                default: '',
             },
             apt: {
-                type: String
+                type: String,
+                default: '',
             },
             city: {
-                type: String
+                type: String,
+                default: '',
             },
             state: {
-                type: String
+                type: String,
+                default: '',
             },
             postalCode: {
-                type: String
+                type: String,
+                default: '',
             },
             country: {
-                type: String
+                type: String,
+                default: '',
             },
         },
         paypalEmail: {
-            type: String
+            type: String,
+            default: '',
         },
         donations: [{
             type: mongoose.Schema.Types.ObjectId,

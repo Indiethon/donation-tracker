@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="/content/pages/dashboard/common.css" />
 </head>
 
-<body onLoad="load(false)">
+<body>
     <script>let model = 'donors';</script>
     <ul class="breadcrumb">
         <li><a onClick="switchPage(`/content/pages/dashboard/admin/home/home.html`)">Home</a></li>
@@ -29,237 +29,120 @@
         </div>
     </div>
     <div class="content">
-        <form>
-            <div id="id" class="inputDiv">
-                <label class="label">ID</label>
-                <input class="input" disabled>
-                <span class="errorText"></span>
-            </div>
-            <div id="email" class="inputDiv">
-                <label class="label">Email</label>
-                <input class="input">
-                <span class="errorText"></span>
-            </div>
-            <div id="paypalEmail" class="inputDiv">
-                <label class="label">Paypal Email</label>
-                <input class="input">
-                <span class="errorText"></span>
-            </div>
-            <div id="firstName" class="inputDiv">
-                <label class="label">First Name</label>
-                <input class="input">
-                <span class="errorText"></span>
-            </div>
-            <div id="lastName" class="inputDiv">
-                <label class="label">Last Name</label>
-                <input class="input">
-                <span class="errorText"></span>
-            </div>
-
-            <div id="alias" class="arrayInputDiv">
-                <label class="label">Aliases</label>
-                <div class="arrayInputContainer">
-                    <div class="arrayInput">
-                    </div>
-                    <button type="button" class="arrayAddButton"
-                        onClick="addArrayElement(document.querySelector(`#alias .arrayInput`), '')">Add
-                        New
-                        Item</button>
-                </div>
-                <span class="errorText"></span>
-            </div>
-            <div id="address_name" class="inputDiv">
-                <label class="label">Address Name</label>
-                <input class="input">
-                <span class="errorText"></span>
-            </div>
-            <div id="address_street" class="inputDiv">
-                <label class="label">Address Street</label>
-                <input class="input">
-                <span class="errorText"></span>
-            </div>
-            <div id="address_apt" class="inputDiv">
-                <label class="label">Address Apartment</label>
-                <input class="input">
-                <span class="errorText"></span>
-            </div>
-            <div id="address_city" class="inputDiv">
-                <label class="label">Address City</label>
-                <input class="input">
-                <span class="errorText"></span>
-            </div>
-            <div id="address_state" class="inputDiv">
-                <label class="label">Address State</label>
-                <input class="input">
-                <span class="errorText"></span>
-            </div>
-            <div id="address_postalCode" class="inputDiv">
-                <label class="label">Postal Code</label>
-                <input class="input">
-                <span class="errorText"></span>
-            </div>
-            <div id="address_country" class="inputDiv">
-                <label class="label">Address Country</label>
-                <input class="input">
-                <span class="errorText"></span>
-            </div>
-        </form>
-        <button id="submit" onClick="submit()"></button>
-        <div></div>
     </div>
 
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
+        const urlParams = new URLSearchParams(window.location.search);''
 
-        function pageLoaded() {
-            showBody();
-            try {
-                switch (urlParams.get('type')) {
-                    case 'create': create(); break;
-                    case 'edit': edit(urlParams.get('id')); break;
-                    case 'view': view(urlParams.get('id')); break;
-                    default:
-                        showToast('error', `Error opening page. Please contact the system administrator.`)
-                        switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)
-                }
-            } catch {
-                showToast('error', `Error opening page. Please contact the system administrator.`)
-                switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)
-            }
+        switch (urlParams.get('type')) {
+            case 'create': load(false, { model: 'donor', level: 'full' }); break;
+            case 'edit': load(false, { model: 'donor', level: 'modify' }); break;
+            case 'view': load(false, { model: 'donor', level: 'read' }); break;
         }
 
-        function fetchData(event, callback) {
-            GET(`donors/${urlParams.get('id')}`, (err, data) => {
-                if (err) return;
-                document.querySelector('#id input').value = data.data.id;
-                document.querySelector('#email input').value = data.data.email;
-                if (data.data.paypalEmail !== undefined) document.querySelector('#paypalEmail input').value = data.data.paypalEmail;
-                document.querySelector('#firstName input').value = data.data.firstName;
-                document.querySelector('#lastName input').value = data.data.lastName;
-                if (data.data.address.name !== undefined) document.querySelector('#address_name input').value = data.data.address.name;
-                if (data.data.address.street !== undefined) document.querySelector('#address_street input').value = data.data.address.street;
-                if (data.data.address.apt !== undefined) document.querySelector('#address_apt input').value = data.data.address.apt;
-                if (data.data.address.city !== undefined) document.querySelector('#address_city input').value = data.data.address.city;
-                if (data.data.address.state !== undefined) document.querySelector('#address_state input').value = data.data.address.state;
-                if (data.data.address.postalCode !== undefined) document.querySelector('#address_postalCode input').value = data.data.address.postalCode;
-                if (data.data.address.country !== undefined) document.querySelector('#address_country input').value = data.data.address.country;
-                for (const alias of data.data.alias) {
-                    addArrayElement(document.querySelector(`#alias .arrayInput`), alias)
-                }
-                callback();
-            })
-        }
-
-        function create() {
-            document.querySelector('#id').style.display = 'none';
-            document.querySelector('.title').innerHTML = 'Create Donor';
-            document.getElementById('submit').innerHTML = 'Create';
-            showContent();
-        }
-
-        function edit(charity) {
-            fetchData(charity, () => {
-                document.querySelector('.title').innerHTML = 'Edit Donor';
-                document.getElementById('submit').innerHTML = 'Save';
-                showContent();
-            })
-        }
-        function view(charity) {
-            fetchData(charity, () => {
-                document.querySelector('#id input').disabled = true;
-                document.querySelector('#email input').disabled = true;
-                document.querySelector('#paypalEmail input').disabled = true;
-                document.querySelector('#firstName input').disabled = true;
-                document.querySelector('#lastName input').disabled = true;
-                document.querySelector('#address_name input').disabled = true;
-                document.querySelector('#address_street input').disabled = true;
-                document.querySelector('#address_apt input').disabled = true;
-                document.querySelector('#address_city input').disabled = true;
-                document.querySelector('#address_state input').disabled = true;
-                document.querySelector('#address_postalCode input').disabled = true;
-                document.querySelector('#address_country input').disabled = true;
-                document.getElementById('submit').style.display = 'none';
-                document.querySelector('.title').innerHTML = 'View Event';
-                for (const input of document.querySelectorAll('.arrayInput div')) {
-                    input.querySelector('input').disabled = true;
-                    try { input.querySelector('button').style.display = 'none' } catch { }
-                }
-                document.querySelector('.arrayAddButton').style.display = 'none'
-                showContent();
-            })
-        }
-
-        function submit() {
-            let options = {};
-            options.email = document.querySelector('#email input').value;
-            options.paypalEmail = document.querySelector('#paypalEmail input').value;
-            options.firstName = document.querySelector('#firstName input').value;
-            options.lastName = document.querySelector('#lastName input').value;
-            options.address = {};
-            options.address.name = document.querySelector('#address_name input').value;
-            options.address.street = document.querySelector('#address_street input').value;
-            options.address.apt = document.querySelector('#address_apt input').value;
-            options.address.city = document.querySelector('#address_city input').value;
-            options.address.state = document.querySelector('#address_state input').value;
-            options.address.postalCode = document.querySelector('#address_postalCode input').value;
-            options.address.country = document.querySelector('#address_country input').value;
-            options.alias = [];
-
-            for (const input of document.querySelectorAll('.arrayInputDivChild')) {
-               options.alias.push(input.querySelector('input').value)
-            }
-
-            let elementList = document.querySelectorAll('.inputDiv');
-            [...elementList].forEach(element => {
-                let el = document.querySelector(`#${element.id} span`)
-                el.innerHTML = '';
-                el.style.visibility = 'hidden';
+        async function pageLoaded() {
+            generateForm({
+                name: 'Donor',
+                model: model,
+                type: urlParams.get('type'),
+                endpoint: (urlParams.get('id') !== undefined && urlParams.get('id') !== null) ? `${model}/${urlParams.get('id')}` : model,
+                form: [{
+                    name: 'Email',
+                    type: 'input',
+                    data: 'email',
+                    required: true,
+                    submit: (value) => {
+                        return value;
+                    },
+                }, {
+                    name: 'Paypal Email',
+                    type: 'input',
+                    data: 'paypalEmail',
+                    submit: (value) => {
+                        return value;
+                    },
+                }, {
+                    name: 'First Name',
+                    type: 'input',
+                    data: 'firstName',
+                    submit: (value) => {
+                        return value;
+                    },
+                }, {
+                    name: 'Last Name',
+                    type: 'input',
+                    data: 'lastName',
+                    submit: (value) => {
+                        return value;
+                    },
+                }, {
+                    name: 'Aliases',
+                    type: 'array',
+                    data: 'alias',
+                    array: [{
+                        name: 'Alias',
+                        type: 'input',
+                    }],
+                    required: true,
+                    submit: (value) => {
+                        let fields = value.querySelectorAll('.array.childDiv');
+                        let data = [];
+                        for (const field of fields) {
+                            data.push(field.querySelector('input').value)
+                        }
+                        return data;
+                    },
+                }, {
+                    name: 'Address Name',
+                    type: 'input',
+                    data: 'address.name',
+                    submit: (value) => {
+                        return value;
+                    },
+                },{
+                    name: 'Address Street',
+                    type: 'input',
+                    data: 'address.street',
+                    submit: (value) => {
+                        return value;
+                    },
+                },{
+                    name: 'Address Apartment',
+                    type: 'input',
+                    data: 'address.apt',
+                    submit: (value) => {
+                        return value;
+                    },
+                },{
+                    name: 'Address City',
+                    type: 'input',
+                    data: 'address.city',
+                    submit: (value) => {
+                        return value;
+                    },
+                }, {
+                    name: 'Address State',
+                    type: 'input',
+                    data: 'address.state',
+                    submit: (value) => {
+                        return value;
+                    },
+                }, {
+                    name: 'Address Postal Code',
+                    type: 'input',
+                    data: 'address.postalCode',
+                    submit: (value) => {
+                        return value;
+                    },
+                }, {
+                    name: 'Address Country',
+                    type: 'input',
+                    data: 'address.country',
+                    submit: (value) => {
+                        return value;
+                    },
+                }],
             });
-
-            POST(`donors${(urlParams.get('type') === 'create') ? '' : `/${urlParams.get('id')}`}`, options, (err, data) => {
-                console.log(data)
-                if (!err) {
-                    showToast('success', `Donor updated successfully.`)
-                    switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)
-                    return;
-                }
-
-                data.data.errorCodes.forEach(error => {
-                    let element = document.querySelector(`#${error.item} span`);
-                    element.innerHTML = error.code;
-                    element.style.visibility = 'inherit';
-                })
-                showToast('error', `Validation errors found, please resolve them.`)
-            })
-        }
-
-        function addArrayElement(div, value) {
-
-            let runner = document.createElement('div');
-            runner.setAttribute('class', 'arrayInputDivChild')
-
-            let label = document.createElement('label');
-            label.setAttribute('class', 'label')
-            label.innerHTML = 'Alias';
-
-            let input = document.createElement('input');
-            input.setAttribute('class', 'input');
-            input.value = value;
-
-            runner.appendChild(label);
-            runner.appendChild(input)
-
-            let button = document.createElement('button');
-            button.setAttribute('type', 'button');
-            button.setAttribute('class', 'deleteButton material-icons');
-            button.setAttribute('onClick', 'this.parentNode.remove()');
-            button.innerHTML = 'delete_forever';
-
-            let divDiv = document.createElement('div');
-
-            divDiv.appendChild(runner);
-            divDiv.appendChild(button);
-            div.appendChild(divDiv)
         }
     </script>
 </body>

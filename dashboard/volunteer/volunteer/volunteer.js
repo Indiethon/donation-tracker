@@ -1,3 +1,5 @@
+load(false, { model: null });
+
 function pageLoaded() {
     GET(`users/${user.id}`, (err, data) => {
         if (data.data.superuser) document.querySelector('#adminView').style.display = 'inherit';

@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="/content/pages/dashboard/common.css" />
 </head>
 
-<body onLoad="load(false)">
+<body>
     <script>let model = 'charities';</script>
     <ul class="breadcrumb">
         <li><a onClick="switchPage(`/content/pages/dashboard/admin/home/home.html`)">Home</a></li>
@@ -16,7 +16,8 @@
     </ul>
     <div class="header">
         <div class="editHeader">
-            <button class="editBack" onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)">&lt;</button>
+            <button class="editBack"
+                onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)">&lt;</button>
             <h2 class="title"></h2>
         </div>
     </div>
@@ -28,124 +29,58 @@
         </div>
     </div>
     <div class="content">
-        <form>
-            <div id="id" class="inputDiv">
-                <label class="label">ID</label>
-                <input class="input" disabled>
-                <span class="errorText"></span>
-            </div>
-            <div id="name" class="inputDiv">
-                <label class="label">Name</label>
-                <input class="input">
-                <span class="errorText"></span>
-            </div>
-            <div id="description" class="inputDiv">
-                <label class="label">Description</label>
-                <input class="input">
-                <span class="errorText"></span>
-            </div>
-            <div id="payee" class="inputDiv">
-                <label class="label">Payee</label>
-                <input class="input">
-                <span class="errorText"></span>
-            </div>
-            <div id="logoUrl" class="inputDiv">
-                <label class="label">Logo URL</label>
-                <input class="input">
-                <span class="errorText"></span>
-            </div>
-        </form>
-        <button id="submit" onClick="submit()"></button>
-        <div></div>
     </div>
 
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
+        const urlParams = new URLSearchParams(window.location.search);''
 
-        function pageLoaded() {
-            showBody();
-            try {
-                switch (urlParams.get('type')) {
-                    case 'create': create(); break;
-                    case 'edit': edit(urlParams.get('id')); break;
-                    case 'view': view(urlParams.get('id')); break;
-                    default:
-                        showToast('error', `Error opening page. Please contact the system administrator.`)
-                        switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)
-                }
-            } catch {
-                showToast('error', `Error opening page. Please contact the system administrator.`)
-                switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)
-            }
+        switch (urlParams.get('type')) {
+            case 'create': load(false, { model: 'charity', level: 'full' }); break;
+            case 'edit': load(false, { model: 'charity', level: 'modify' }); break;
+            case 'view': load(false, { model: 'charity', level: 'read' }); break;
         }
 
-        function fetchData(event, callback) {
-            GET(`charities/${urlParams.get('id')}`, (err, data) => {
-                if (err) return;
-                document.querySelector('#id input').value = data.data._id;
-                document.querySelector('#name input').value = data.data.name;
-                document.querySelector('#description input').value = data.data.description;
-                document.querySelector('#payee input').value = data.data.payee;
-                document.querySelector('#logoUrl input').value = data.data.logoUrl;
-                callback();
-            })
-        }
-
-        function create() {
-            document.querySelector('#id').style.display = 'none';
-            document.querySelector('.title').innerHTML = 'Create Charity';
-            document.getElementById('submit').innerHTML = 'Create';
-            showContent();
-        }
-
-        function edit(charity) {
-            fetchData(charity, () => {
-                document.querySelector('.title').innerHTML = 'Edit Charity';
-                document.getElementById('submit').innerHTML = 'Save';
-                showContent();
-            })
-        }
-        function view(charity) {
-            fetchData(charity, () => {
-                document.querySelector('#name input').disabled = true;
-                document.querySelector('#description input').disabled = true;
-                document.querySelector('#payee input').disabled = true;
-                document.querySelector('#logoUrl input').disabled = true;
-                document.getElementById('submit').style.display = 'none';
-                document.querySelector('.title').innerHTML = 'View Event';
-                showContent();
-            })
-        }
-
-        function submit() {
-            let options = {};
-            options.name = document.querySelector('#name input').value;
-            options.description = document.querySelector('#description input').value;
-            options.payee = document.querySelector('#payee input').value;
-            options.logoUrl = document.querySelector('#logoUrl input').value;
-
-            let elementList = document.querySelectorAll('.inputDiv');
-            [...elementList].forEach(element => {
-                let el = document.querySelector(`#${element.id} span`)
-                el.innerHTML = '';
-                el.style.visibility = 'hidden';
+        async function pageLoaded() {
+            generateForm({
+                name: 'Charity',
+                model: model,
+                type: urlParams.get('type'),
+                endpoint: (urlParams.get('id') !== undefined && urlParams.get('id') !== null) ? `${model}/${urlParams.get('id')}` : model,
+                form: [{
+                    name: 'Name',
+                    type: 'input',
+                    data: 'name',
+                    required: true,
+                    attributes: {
+                        maxLength: 60,
+                    },
+                    submit: (value) => {
+                        return value;
+                    },
+                }, {
+                    name: 'Description',
+                    type: 'input',
+                    data: 'description',
+                    submit: (value) => {
+                        return value;
+                    },
+                },{
+                    name: 'Payee',
+                    type: 'input',
+                    data: 'payee',
+                    required: true,
+                    submit: (value) => {
+                        return value;
+                    },
+                }, {
+                    name: 'Logo URL',
+                    type: 'input',
+                    data: 'logoUrl',
+                    submit: (value) => {
+                        return value;
+                    },
+                }],
             });
-
-            POST(`charities${(urlParams.get('type') === 'create') ? '' : `/${urlParams.get('id')}`}`, options, (err, data) => {
-                console.log(data)
-                if (!err) {
-                    showToast('success', `Charity ${options.name} updated successfully.`)
-                    switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)
-                    return;
-                }
-
-                data.data.errorCodes.forEach(error => {
-                    let element = document.querySelector(`#${error.item} span`);
-                    element.innerHTML = error.code;
-                    element.style.visibility = 'inherit';
-                })
-                showToast('error', `Validation errors found, please resolve them.`)
-            })
         }
     </script>
 </body>

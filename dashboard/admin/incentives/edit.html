@@ -6,11 +6,16 @@
     <link rel="stylesheet" href="/content/pages/dashboard/common.css" />
 </head>
 
-<body onLoad="load(false)">
-    <script>let model = 'incentives';</script>
-    <datalist id='runDatalist'></datalist>
+<body>
+    <script>
+        let model = 'incentives';
+        const urlParams = new URLSearchParams(window.location.search);
+    </script>
     <ul class="breadcrumb">
         <li><a onClick="switchPage(`/content/pages/dashboard/admin/home/home.html`)">Home</a></li>
+        <li id="eventBreadcrumb"><a
+                onClick="switchPage(`/content/pages/dashboard/admin/overview/overview.html?event=${urlParams.get('event')}`)"></a>
+        </li>
         <li><a
                 onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)">Incentives</a>
         </li>
@@ -32,292 +37,203 @@
         </div>
     </div>
     <div class="content">
-        <form>
-            <div id="id" class="inputDiv">
-                <label class="label">ID</label>
-                <input class="input" disabled>
-                <span class="errorText"></span>
-            </div>
-            <div id="name" class="inputDiv">
-                <label class="label">Name</label>
-                <input class="input">
-                <span class="errorText"></span>
-            </div>
-            <div id="description" class="inputDiv">
-                <label class="label">Description</label>
-                <input class="input">
-                <span class="errorText"></span>
-            </div>
-            <div id="runId" class="inputDiv">
-                <label class="label">Speedrun</label>
-                <input class="input" list="runDatalist">
-                <span class="errorText"></span>
-            </div>
-            <div id="type" class="inputDiv">
-                <label class="label">Type</label>
-                <select class="select" onChange="changeType(this.value)">
-                    <option value="target" selected>Target</option>
-                    <option value="bidwar">Bid War</option>
-                </select>
-                <span class="errorText"></span>
-            </div>
-            <div id="options" class="arrayInputDiv">
-                <label class="label">Options</label>
-                <div class="arrayInputContainer">
-                    <div class="arrayInput">
-
-                    </div>
-                    <button type="button" class="arrayAddButton"
-                        onClick="addArrayElement(document.querySelector(`#options .arrayInput`), '', '', false)">Add
-                        New
-                        Item</button>
-                </div>
-                <span class="errorText"></span>
-            </div>
-            <div id="allowUserOptions" class="inputDiv">
-                <label class="label">Allow User Options</label>
-                <input class="input" type="checkbox" onClick="showUserOptionMaxLength(this.checked)">
-                <span class="errorText"></span>
-            </div>
-            <div id="userOptionMaxLength" class="inputDiv">
-                <label class="label">User Option Max Length</label>
-                <input class="input" type="number">
-                <span class="errorText"></span>
-            </div>
-            <div id="goal" class="inputDiv">
-                <label class="label">Goal</label>
-                <input class="input" type="number">
-                <span class="errorText"></span>
-            </div>
-            <div id="startTime" class="inputDiv">
-                <label class="label">Start Time</label>
-                <input class="input" type="datetime-local">
-                <span class="errorText"></span>
-            </div>
-            <div id="endTime" class="inputDiv">
-                <label class="label">End Time</label>
-                <input class="input" type="datetime-local">
-                <span class="errorText"></span>
-            </div>
-            <div id="notes" class="inputDiv">
-                <label class="label">Notes</label>
-                <input class="input">
-                <span class="errorText"></span>
-            </div>
-            <div id="visible" class="inputDiv">
-                <label class="label">Visible</label>
-                <input class="input" type="checkbox">
-                <span class="errorText"></span>
-            </div>
-            <div id="active" class="inputDiv">
-                <label class="label">Active</label>
-                <input class="input" type="checkbox">
-                <span class="errorText"></span>
-            </div>
-            <div id="completed" class="inputDiv">
-                <label class="label">Completed</label>
-                <input class="input" type="checkbox">
-                <span class="errorText"></span>
-            </div>
-        </form>
-        <button id="submit" onClick="submit()"></button>
-        <div></div>
     </div>
 
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        let runList;
-
-        function pageLoaded() {
-            showBody();
-            fetchRuns();
-            changeType('target');
-            try {
-                switch (urlParams.get('type')) {
-                    case 'create': create(); break;
-                    case 'edit': edit(urlParams.get('id')); break;
-                    case 'view': view(urlParams.get('id')); break;
-                    default:
-                        showToast('error', `Error opening page. Please contact the system administrator.`)
-                        switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)
-                }
-            } catch (e) {
-                console.error(e)
-                showToast('error', `Error opening page. Please contact the system administrator.`)
-                switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)
-            }
+        switch (urlParams.get('type')) {
+            case 'create': load(false, { model: 'incentive', level: 'full' }); break;
+            case 'edit': load(false, { model: 'incentive', level: 'modify' }); break;
+            case 'view': load(false, { model: 'incentive', level: 'read' }); break;
         }
 
-        function fetchRuns() {
-            GET(`speedruns/event/${urlParams.get('event')}`, (err, data) => {
-                if (err) return;
-                runList = data.data;
-                let runDatalist = document.getElementById('runDatalist');
-                if (data.data.length <= 0) {
-                    showToast('error', `There are no saved speedruns. Please add a speedrun before continuing.`)
-                    switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)
-                    return;
-                }
-                for (const run of data.data) {
-                    runDatalist.innerHTML += `<option run="${run.id}" value="${run.game} ${run.category}">ID: ${run._id}</option>`;
-                }
-            })
-        }
+        setBreadcrumb(urlParams.get('event'));
 
-        function fetchData(incentive, callback) {
-            GET(`incentives/${urlParams.get('id')}`, (err, data) => {
-                if (err) return;
-                document.querySelector('#id input').value = data.data.id;
-                document.querySelector('#name input').value = data.data.name;
-                try { document.querySelector('#runId input').value = data.data.run.game + ' ' + data.data.run.category; } catch { document.querySelector('#runId input').value = ''; }
-                document.querySelector('#description input').value = data.data.description;
-                document.querySelector('#type select').value = data.data.type;
-                document.querySelector('#goal input').value = data.data.goal;
-                document.querySelector('#allowUserOptions input').value = data.data.allowUserOptions;
-                document.querySelector('#userOptionMaxLength input').value = data.data.userOptionMaxLength;
-                document.querySelector('#startTime input').value = data.data.startTime.split('.')[0];
-                document.querySelector('#endTime input').value = data.data.endTime.split('.')[0];
-                document.querySelector('#visible input').checked = data.data.visible;
-                document.querySelector('#active input').checked = data.data.active;
-                document.querySelector('#completed input').checked = data.data.completed;
-                document.querySelector('#notes input').value = data.data.notes;
-                if (data.data.type === 'bidwar') changeType('bidwar');
-                for (const option of data.data.options) {
-                   addArrayElement(document.querySelector(`#options .arrayInput`), option.name, option._id, option.userOption)
-                }
-                callback();
-            })
-        }
-
-        function create() {
-            document.querySelector('#id').style.display = 'none';
-            document.querySelector('.title').innerHTML = 'Create Incentive';
-            document.getElementById('submit').innerHTML = 'Create';
-            showContent();
-        }
-
-        function edit(incentive) {
-            fetchData(incentive, () => {
-                document.querySelector('.title').innerHTML = 'Edit Incentive';
-                document.getElementById('submit').innerHTML = 'Save';
-                showContent();
-            })
-        }
-        function view(incentive) {
-            fetchData(incentive, () => {
-                document.querySelector('#name input').disabled = true;
-                document.querySelector('#runId input').disabled = true;
-                document.querySelector('#description input').disabled = true;
-                document.querySelector('#type select').disabled = true;
-                document.querySelector('#goal input').disabled = true;
-                document.querySelector('#allowUserOptions input').disabled = true;
-                document.querySelector('#userOptionMaxLength input').disabled = true;
-                document.querySelector('#startTime input').disabled = true;
-                document.querySelector('#endTime input').disabled = true;
-                document.querySelector('#visible input').disabled = true;
-                document.querySelector('#active input').disabled = true;
-                document.querySelector('#completed input').disabled = true;
-                document.querySelector('#notes input').disabled = true;
-                document.getElementById('submit').style.display = 'none';
-                document.querySelector('.title').innerHTML = 'View Incentive';
-                for (const option of document.querySelectorAll('.arrayInput div:not(.arrayInputDivChild)')) {
-                   option.querySelectorAll('.arrayInputDivChild input')[0].disabled = true;
-                    option.querySelectorAll('.arrayInputDivChild input')[1].disabled = true;
-                    option.querySelector('button').style.display = 'none'
-                }
-                document.querySelector('.arrayAddButton').style.display = 'none'
-                showContent();
-            })
-        }
-
-        function submit() {
-            let options = {};
-            let startTime, endTime, runId;
-            try { startTime = new Date(document.querySelector('#startTime input').value).toISOString() } catch { startTime = document.querySelector('#startTime input').value }
-            try { endTime = new Date(document.querySelector('#endTime input').value).toISOString() } catch { endTime = document.querySelector('#endTime input').value }
-            try { runId = runList.find(el => (el.game + ' ' + el.category) === document.querySelector('#runId input').value)._id; } catch { runId = "" };
-            options.eventId = urlParams.get('event');
-            options.runId = runId;
-            options.name = document.querySelector('#name input').value;
-            options.description = document.querySelector('#description input').value;
-            options.type = document.querySelector('#type select').value;
-            options.goal = document.querySelector('#goal input').value;
-            options.allowUserOptions = document.querySelector('#allowUserOptions input').checked;
-            options.userOptionMaxLength = document.querySelector('#userOptionMaxLength input').checked;
-            options.startTime = startTime;
-            options.endTime = endTime;
-            options.visible = document.querySelector('#visible input').checked;
-            options.active = document.querySelector('#active input').checked;
-            options.completed = document.querySelector('#completed input').checked;
-            options.notes = document.querySelector('#notes input').value;
-            options.options = [];
-            for (const option of document.querySelectorAll('.arrayInput div:not(.arrayInputDivChild)')) {
-                let bidwarOption = {};
-                console.log(option)
-                if (option.getAttribute('optionId') !== '') bidwarOption._id = option.getAttribute('optionId');
-                bidwarOption.name = option.querySelectorAll('.arrayInputDivChild input')[0].value;
-                bidwarOption.userOption = option.getAttribute('userOption')
-                options.options.push(bidwarOption);
-            }
-
-            console.log(options)
-
-            let elementList = document.querySelectorAll('.inputDiv');
-            [...elementList].forEach(element => {
-                let el = document.querySelector(`#${element.id} span`)
-                el.innerHTML = '';
-                el.style.visibility = 'hidden';
+        async function pageLoaded() {
+            await generateForm({
+                name: 'Incentive',
+                model: 'incentives',
+                type: urlParams.get('type'),
+                endpoint: (urlParams.get('id') !== undefined && urlParams.get('id') !== null) ? `${model}/${urlParams.get('id')}` : model,
+                event: urlParams.get('event'),
+                datalist: {
+                    runDatalist: {
+                        endpoint: `speedruns/event/${urlParams.get('event')}`,
+                        textFunction: (value) => {
+                            return value.game + ' ' + value.category;
+                        },
+                    },
+                },
+                form: [{
+                    name: 'Name',
+                    type: 'input',
+                    data: 'name',
+                    required: true,
+                    submit: (value) => {
+                        return value;
+                    },
+                }, {
+                    name: 'Description',
+                    type: 'input',
+                    data: 'description',
+                    required: true,
+                    submit: (value) => {
+                        return value;
+                    },
+                }, {
+                    name: 'Speedrun',
+                    type: 'input',
+                    data: 'runId',
+                    attributes: {
+                        list: 'runDatalist',
+                    },
+                    textFunction: (value) => {
+                        if (value.run !== null) return value.run.game + ' ' + value.run.category;
+                        else return '';
+                    },
+                    submit: async (value) => {
+                        let runList = document.querySelectorAll('#runDatalist option');
+                        for (const option of runList) {
+                            if (option.getAttribute('value') === value) return option.getAttribute('dataId');
+                        }
+                        return null;
+                    },
+                }, {
+                    name: 'Type',
+                    type: 'select',
+                    data: 'type',
+                    options: {
+                        target: 'Target',
+                        bidwar: 'Bidwar',
+                    },
+                    attributes: {
+                        onClick: 'changeType()',
+                    },
+                    submit: (value) => {
+                        return value;
+                    },
+                }, {
+                    name: 'Options',
+                    type: 'array',
+                    data: 'options',
+                    array: [{
+                        name: 'Option',
+                        type: 'input',
+                        textFunction: (value, element) => {
+                            element.setAttribute('dataId', value._id)
+                            return value.name;
+                        },
+                    }],
+                    submit: (value) => {
+                        if (document.querySelector('#type select').value === 'target') return;
+                        let fields = value.querySelectorAll('.array.childDiv');
+                        let data = [];
+                        for (const field of fields) {
+                            if (field.querySelector('input').getAttribute('dataId') !== null) data.push({ _id: field.querySelector('input').getAttribute('dataId'), name: field.querySelector('input').value });
+                            else data.push({ name: field.querySelector('input').value });
+                        }
+                        return data;
+                    },
+                }, {
+                    name: 'Allow User Options',
+                    type: 'checkbox',
+                    data: 'allowUserOptions',
+                    submit: (value) => {
+                        return value;
+                    },
+                }, {
+                    name: 'User Option Max Length',
+                    type: 'number',
+                    data: 'userOptionMaxLength',
+                    attributes: {
+                        min: 1,
+                        step: 1,
+                    },
+                    submit: (value) => {
+                        return value;
+                    },
+                }, {
+                    name: 'Goal',
+                    type: 'number',
+                    data: 'goal',
+                    attributes: {
+                        min: 0.01,
+                        step: 0.01,
+                    },
+                    submit: (value) => {
+                        return value;
+                    },
+                }, {
+                    name: 'Start Time',
+                    type: 'datetime-local',
+                    data: 'startTime',
+                    textFunction: (eventData) => {
+                        let time = new Date(eventData.startTime)
+                        time.setMinutes(time.getMinutes() - time.getTimezoneOffset());
+                        return time.toISOString().slice(0, 16);
+                    },
+                    required: true,
+                    submit: (value) => {
+                        let time;
+                        try { time = new Date(value).toISOString() } catch { time = value }
+                        return time;
+                    },
+                }, {
+                    name: 'End Time',
+                    type: 'datetime-local',
+                    data: 'endTime',
+                    textFunction: (value) => {
+                        let time = new Date(value.endTime)
+                        time.setMinutes(time.getMinutes() - time.getTimezoneOffset());
+                        return time.toISOString().slice(0, 16);
+                    },
+                    required: true,
+                    submit: (value) => {
+                        let time;
+                        try { time = new Date(value).toISOString() } catch { time = value }
+                        return time;
+                    },
+                }, {
+                    name: 'Notes',
+                    type: 'input',
+                    data: 'notes',
+                    submit: (value) => {
+                        return value;
+                    },
+                }, {
+                    name: 'Visible',
+                    type: 'checkbox',
+                    data: 'visible',
+                    submit: (value) => {
+                        return value;
+                    },
+                }, {
+                    name: 'Active',
+                    type: 'checkbox',
+                    data: 'active',
+                    submit: (value) => {
+                        return value;
+                    },
+                }, {
+                    name: 'Completed',
+                    type: 'checkbox',
+                    data: 'completed',
+                    submit: (value) => {
+                        return value;
+                    },
+                }],
+                other: [{
+                    data: 'eventId',
+                    submit: (value) => {
+                        return urlParams.get('event');
+                    },
+                }]
             });
 
-            POST(`incentives${(urlParams.get('type') === 'create') ? '' : `/${urlParams.get('id')}`}`, options, (err, data) => {
-                if (!err) {
-                    showToast('success', `Incentive ${options.name} updated successfully.`)
-                    switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)
-                    return;
-                }
-
-                data.data.errorCodes.forEach(error => {
-                    let element = document.querySelector(`#${error.item.split('.')[0]} span`);
-                    element.innerHTML = error.code;
-                    element.style.visibility = 'inherit';
-                })
-                showToast('error', `Validation errors found, please resolve them.`)
-            })
+            changeType();
         }
 
-        function addArrayElement(div, value, optionId, userOption) {
-
-            let name = document.createElement('div');
-            name.setAttribute('class', 'arrayInputDivChild')
-
-            let label = document.createElement('label');
-            label.setAttribute('class', 'label')
-            label.innerHTML = 'Name';
-
-            let input = document.createElement('input');
-            input.setAttribute('class', 'input');
-            input.value = value;
-
-            name.appendChild(label);
-            name.appendChild(input)
-
-            let button = document.createElement('button');
-            button.setAttribute('type', 'button');
-            button.setAttribute('class', 'deleteButton material-icons');
-            button.setAttribute('onClick', 'this.parentNode.remove()');
-            button.innerHTML = 'delete_forever';
-
-            let divDiv = document.createElement('div');
-            divDiv.setAttribute('style', 'width: 100%')
-            divDiv.setAttribute('optionId', optionId)
-            divDiv.setAttribute('userOption', userOption)
-
-            divDiv.appendChild(name);
-            divDiv.appendChild(button);
-            div.appendChild(divDiv)
-        }
-
-        function changeType(value) {
+        function changeType() {
+            let value = document.querySelector('#type select').value;
             if (value === 'target') {
                 document.getElementById('goal').style.display = 'inherit';
                 document.getElementById('options').style.display = 'none';
@@ -329,14 +245,7 @@
                 document.getElementById('options').style.display = 'inherit';
                 document.getElementById('allowUserOptions').style.display = 'inherit';
                 if (document.getElementById('allowUserOptions').checked) document.getElementById('userOptionMaxLength').style.display = 'inherit';
-                else document.getElementById('userOptionMaxLength').style.display = 'none';
-            }
-        }
-
-        function showUserOptionMaxLength(checked) {
-            switch (checked) {
-                case true: document.getElementById('userOptionMaxLength').style.display = 'inherit'; break;
-                case false: document.getElementById('userOptionMaxLength').style.display = 'none'; break;
+                else document.getElementById('userOptionMaxLength').style.display = 'inherit';
             }
         }
     </script>

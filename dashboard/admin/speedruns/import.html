@@ -6,10 +6,16 @@
     <link rel="stylesheet" href="/content/pages/dashboard/common.css" />
 </head>
 
-<body onLoad="load(false)">
-    <script>let model = 'speedruns';</script>
+<body>
+    <script>
+        let model = 'speedruns';
+        const urlParams = new URLSearchParams(window.location.search);
+    </script>
     <ul class="breadcrumb">
         <li><a onClick="switchPage(`/content/pages/dashboard/admin/home/home.html`)">Home</a></li>
+        <li id="eventBreadcrumb"><a
+                onClick="switchPage(`/content/pages/dashboard/admin/overview/overview.html?event=${urlParams.get('event')}`)"></a>
+        </li>
         <li><a
                 onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)">Speedruns</a>
         </li>
@@ -37,13 +43,19 @@
                 <input class="input">
                 <span class="errorText"></span>
             </div>
+            <div id="schedule" class="inputDiv">
+                <label class="label">Import Schedule</label>
+                <input class="input" type="checkbox">
+                <span class="errorText"></span>
+            </div>
         </form>
         <button id="submit" onClick="submit()"></button>
         <div></div>
     </div>
 
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
+        load(false, { model: 'speedrun', level: 'full' });
+        setBreadcrumb(urlParams.get('event'));
 
         function pageLoaded() {
             showBody();
@@ -55,6 +67,7 @@
         function submit() {
             let options = {};
             options.short = document.querySelector('#short input').value;
+            options.schedule = document.querySelector('#schedule input').value;
 
             document.getElementById('submit').disabled = true;
             let elementList = document.querySelectorAll('.inputDiv');
@@ -63,6 +76,8 @@
                 el.innerHTML = '';
                 el.style.visibility = 'hidden';
             });
+
+            showToast('working', `Working, please wait...`)
 
             POST(`speedruns/import/${urlParams.get('event')}`, options, (err, data) => {
                 if (!err) {

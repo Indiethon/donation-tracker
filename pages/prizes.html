@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Prizes</title>
+    <link rel="shortcut icon" href="/content/logo">
+    <script src="/content/pages/pages/utils.js"></script>
+    <link rel="stylesheet" href="/content/pages/pages/common.css" />
+</head>
+
+<body>
+    <nav class="header">
+        <div class="topNav">
+            <div class="topNavImg"><img src="/content/logo"></div>
+            <button class="topNavButton" page="/home" onClick="switchPage(this)">Home</button>
+            <button class="topNavButton" page="/runs" onClick="switchPage(this)">Runs</button>
+            <button class="topNavButton" page="/incentives" onClick="switchPage(this)">Incentives</button>
+            <button class="topNavButton" page="/prizes" onClick="switchPage(this)">Prizes</button>
+            <button class="topNavButton" page="/donations" onClick="switchPage(this)">Donations</button>
+        </div>
+        <div class="eventDropdown">
+            <div class="eventDropdownText">All Events</div>
+            <div class="material-icons-outlined">
+                arrow_drop_down
+            </div>
+            <div class="eventDropdownContent">
+                <div class="eventDropdownButton" event="all" onClick="changeEvent(this)">All Events</div>
+                <div class="eventDropdownSpacer"></div>
+            </div>
+        </div>
+    </nav>
+    <div class="body">
+        <div class="content">
+            <div class="pageTitle">Prizes</div>
+            <div class="sweepstakesRules">No donation necessary for a chance to win. See <a
+                class="sweepstakesRulesLink link">sweepstakes rules</a> for details and instructions.</div>
+        </div>
+        <div class="footer">
+            <div class="timezoneText">All times converted to your local timezone. Detected timezone: </div>
+            <div>Donation tracker made by nicnacnic</div>
+            <div>Found an issue? Open it on <a class="link"
+                    href="https://github.com/Indiethon/donation-tracker">GitHub</a>!</div>
+        </div>
+    </div>
+</body>
+
+<script>
+    pageLoaded();
+
+    let event = window.location.pathname.split('/')[2];
+
+    generateTable({
+        name: 'prize',
+        model: 'prizes',
+        endpoint: `prizes/event/${event}`,
+        event: event,
+        table: [{
+            name: 'Name',
+            data: 'name',
+        }, {
+            name: 'Contributor',
+            data: 'contributor'
+        }, {
+            name: 'Minimum Donation',
+            data: 'minDonation'
+        }, {
+            name: 'Start Time',
+            textFunction: (value) => {
+                return new Date(value.startTime).toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit', seconds: undefined })
+            }
+        }, {
+            name: 'End Time',
+            textFunction: (value) => {
+                return new Date(value.endTime).toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit', seconds: undefined })
+            }
+        }, {
+            name: 'Type',
+            textFunction: (value) => {
+                return value.type.charAt(0).toUpperCase() + value.type.slice(1);
+            }
+        }, {
+            name: 'Winner',
+            textFunction: (value) => {
+                if (value.winner === '' || value.winner === undefined) return 'None';
+                return value.winner;
+            }
+        }],
+        clickFunction: (value) => {
+            return `location.href = '/prizes/${event}/${value.id}'`
+        }
+    })
+    document.querySelector('.content').style.visibility = 'visible';
+</script>
+
+</html>

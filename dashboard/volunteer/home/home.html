@@ -1,15 +1,168 @@
 <!DOCTYPE html>
-<html>
+<html style="height: 100%;">
 
 <head>
     <script src="/content/pages/dashboard/utils.js"></script>
+    <script src="/content/pages/dashboard/volunteer/home/home.js"></script>
     <link rel="stylesheet" href="/content/pages/dashboard/common.css" />
+    <link rel="stylesheet" href="/content/pages/dashboard/volunteer/volunteer.css" />
+
 </head>
 
-<body onLoad="load(false)">
-    <h1>Event Overview</h1>
+<body>
+    <ul class="breadcrumb">
+        <li><a onClick="switchPage('/content/pages/dashboard/volunteer/home/home.html')">Overview</a></li>
+    </ul>
+    <div class="header">
+        <h2 class="title">Overview</h2>
+        <!-- <div id="headerButtonDiv">
+            <button onClick="switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=create`)">Create
+                New</button>
+        </div> -->
+    </div>
+    <div class="loadingContent">
+        <div class="loadingAnimation">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <div id="volunteerFlexbox">
+        <div id="donationContainer" class="content"></div>
+        <div id="volunteerFlexboxRight">
+            <div id="incentiveContainer" class="content"></div>
+            <div id="adContainer" class="content"></div>
+        </div>
+    </div>
+    <!-- <div id="volunteerFlexbox">
+        <div id="donationContainer" class="content">
+
+        </div>
+        <div class="volunteerFlexboxRight">
+             <div id="incentiveContainer" class="content">
+
+            </div>
+            <div id="adContainer" class="content">
+
+            </div>
+        </div>
+    </div> -->
+
+
+    <!-- <div class="content">
+         <table id="table">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" item="all" /></th>
+                    <th>Name</th>
+                    <th>Payee</th>
+                    <th>Logo URL</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+        <div class="tableDropdownContent" id="test">
+            <button class="tableDropdownButton" onClick="dropdownSwitchPage(this)">View</button>
+            <button class="tableDropdownButton" onClick="dropdownSwitchPage(this)">Edit</button>
+            <button class="tableDropdownButton" onClick="dropdownSwitchPage(this)">Delete</button>
+        </div> 
+    </div>
+    <div class="content">
+        <p>Hi1</p>
+    </div> -->
     <script>
-        showBody()
+
+        load(false, { model: null });
+
+        function pageLoaded() {
+            showBody();
+            showContent();
+
+            // generateHomeTable({
+            //     name: 'donation',
+            //     model: 'donations',
+            //     endpoint: `donations/event/${event}`,
+            //     event: event,
+            //     table: [{
+            //         name: 'Alias',
+            //         data: 'alias',
+            //     }, {
+            //         name: 'Time Received',
+            //         textFunction: (value) => {
+            //             return new Date(value.timestamp).toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit', seconds: undefined })
+            //         }
+            //     }, {
+            //         name: 'Amount',
+            //         textFunction: (value, details) => {
+            //             return `${details.data.currencySymbol}${value.amount.toFixed(2)}`;
+            //         }
+            //     }, {
+            //         name: 'Comment',
+            //         textFunction: (value) => {
+            //             if (value.comment.length > 0) return 'Yes';
+            //             return 'No';
+            //         }
+            //     }],
+            //     rowFunction: (value) => {
+            //         if (value.completed && value.verified && value.visible) return true;
+            //         return false;
+            //     },
+            //     clickFunction: (value) => {
+            //         return `location.href = '/donations/${event}/${value.id}'`
+            //     }
+            // })
+        }
+
+        // function pageLoaded() {
+        //     showBody();
+        //     GET('charities', (err, data) => {
+        //         if (err) return;
+        //         let table = document.querySelector('tbody');
+        //         for (const charity of data.data) {
+        //             let row = table.insertRow();
+        //             row.insertCell().innerHTML = `<input type="checkbox" item="${charity.id}" />`;
+        //             row.insertCell().innerHTML = `<p class="tableText">${charity.name}</p>`;
+        //             row.insertCell().innerHTML = `<p class="tableText">${charity.payee}</p>`;
+        //             row.insertCell().innerHTML = `<p class="tableText">${charity.logoUrl}</p>`;
+        //             row.insertCell().innerHTML = `
+        //         <div class="tableDropdown">
+        //             <button class="tableButton">...</button>
+        //             <div class="tableDropdownContent">
+        //                 <button class="tableDropdownButton" onClick="dropdownSwitchPage('view', '${charity._id}')">View</button>
+        //                 <button class="tableDropdownButton" onClick="dropdownSwitchPage('edit', '${charity._id}')">Edit</button>
+        //                 <button class="tableDropdownButton" onClick="deleteItem('${charity._id}', '${charity.name}')">Delete</button>
+        //             </div>
+        //         </div>`;
+        //         }
+        //         showContent();
+        //     });
+        // }
+
+        // function dropdownSwitchPage(page, charity) {
+        //     switch (page) {
+        //         case 'view': switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=view&id=${charity}`); break;
+        //         case 'edit': switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=edit&id=${charity}`); break;
+        //     }
+        // }
+
+        // function deleteItem(id, name) {
+        //     showDialog({
+        //         model: 'charity',
+        //         name: name,
+        //         endpoint: `charities/${id}`,
+        //     })
+        // }
+
+        // Listen for events from parent.
+        window.addEventListener("message", (event) => {
+            if (event.origin !== window.location.origin) return;
+            switch (event.data.name) {
+                case 'reload': location.reload(); break;
+            }
+        }, false);
     </script>
 </body>
 

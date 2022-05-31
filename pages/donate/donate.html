@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Donate - Donation Tracker</title>
+    <link rel="shortcut icon" href="/content/logo">
+    <script src="/content/pages/pages/donate/donate.js"></script>
+    <script src="/content/pages/pages/utils.js"></script>
+    <link rel="stylesheet" href="/content/pages/pages/common.css" />
+    <link rel="stylesheet" href="/content/pages/pages/donate/donate.css" />
+</head>
+
+<body>
+    <nav class="header">
+        <div class="topNav">
+            <div class="topNavImg"><img src="/content/logo"></div>
+            <button class="topNavButton" page="/home" onClick="switchPage(this)">Home</button>
+            <button class="topNavButton" page="/runs" onClick="switchPage(this)">Runs</button>
+            <button class="topNavButton" page="/incentives" onClick="switchPage(this)">Incentives</button>
+            <button class="topNavButton" page="/prizes" onClick="switchPage(this)">Prizes</button>
+            <button class="topNavButton" page="/donations" onClick="switchPage(this)">Donations</button>
+        </div>
+        <div class="eventDropdown">
+            <div class="eventDropdownText">All Events</div>
+            <div class="material-icons-outlined">
+                arrow_drop_down
+            </div>
+            <div class="eventDropdownContent">
+                <div class="eventDropdownButton" event="all" onClick="changeEvent(this)">All Events</div>
+                <div class="eventDropdownSpacer"></div>
+            </div>
+        </div>
+    </nav>
+    <div class="body">
+        <div class="content">
+            <div class="pageTitle"></div>
+            <div class="pageSubtitle"></div>
+            <form>
+                <div id="alias" class="inputDiv">
+                    <label class="label">Alias</label>
+                    <input class="input" type="input" maxlength="32" onInput="updateAlias(this)">
+                    <div class="inputCount">
+                        <span class="inputCountCurrent">0</span>
+                        <span class="inputCountMax">&nbsp/&nbsp32</span>
+                    </div>
+                    <div class="inputSubtext"> Leave blank to donate anonymously.</div>
+                    <div class="errorText">Alias is invalid.</div>
+                </div>
+                <div id="email" class="inputDiv">
+                    <label class="label">Email Address</label>
+                    <input class="input" type="email" maxlength="160" onInput="updateEmail(this)"
+                        onChange="updateEmailErrorText(this)" onChange="checkStatus()">
+                    <div class="inputCount">
+                        <span class="inputCountCurrent">0</span>
+                        <span class="inputCountMax">&nbsp/&nbsp160</span>
+                    </div>
+                    <div class="inputSubtext">Our privacy policy can be found <a id="privacyPolicy" href="">here</a>.
+                    </div>
+                    <div class="errorText">Invalid email address.</div>
+                </div>
+                <div id="amount" class="inputDiv">
+                    <label class="label">Amount</label>
+                    <span class="inputUnit"></span>
+                    <input class="input" type="number" min="0" step="0.01" onInput="updateAmount(this)"
+                        onChange="updateAmountErrorText(this)">
+                    <div class="inputSubtext"></div>
+                    <div class="errorText">Amount is below the minimum donation.</div>
+                </div>
+                <div id="comment" class="inputDiv">
+                    <label class="label">Comment</label>
+                    <div class="textareaDiv">
+                        <textarea class="input" cols="3" maxLength="5000" onInput="updateComment(this)"></textarea>
+                        <div class="inputCount">
+                            <span class="inputCountCurrent">0</span>
+                            <span class="inputCountMax">&nbsp/&nbsp5000</span>
+                        </div>
+                    </div>
+                    <div class="inputSubtext">Please refrain from using inapporpiate and offensive words. All donation
+                        comments are screened.</div>
+                    <div class="errorText">Comment is invalid.</div>
+                </div>
+                <div id="custom">
+
+                </div>
+                <div id="incentives" class="inputDiv">
+                    <label class="label large">Incentives</label>
+                    <div id="intentiveSubtext" class="inputSubtext">Donation incentives are used to add runs to the
+                        schedule.</div>
+                    <div class="incentiveSelected"></div>
+                    <button type="button" id="incentiveAdd" class="incentiveAddButton" onClick="showIncentiveMenu(this)"
+                        disabled>Add Incentives</button>
+                    <div class="incentiveDiv">
+                        <div class="incentiveList"></div>
+                        <div class="incentiveInfo">
+                            <div class="incentiveGame"></div>
+                            <div class="incentiveName"></div>
+                            <div class="incentiveDescription"></div>
+                            <div class="incentiveTotal">
+                                <div class="incentiveTotalProgress">
+                                    <div class="incentiveTotalProgressBar"></div>
+                                </div>
+                                <div class="incentiveTotalText"></div>
+                            </div>
+                            <label class="label">Amount to put towards incentive</label>
+                            <span class="inputUnit"></span>
+                            <input id="incentiveAmount" class="input" type="number" min="0" step="0.01"
+                                oninput="addIncentiveAmount(this)" onchange="checkIncentiveAmount(this)">
+                            <div class="inputSubtext">You have $ remaining</div>
+                            <div class="incentiveOptions"></div>
+                            <button type="button" id="incentiveAddConfirm" class="incentiveAddButton"
+                                onClick="addIncentive()" disabled>Add</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="prizesLabel">Prizes</div>
+                <div id="prizes" class="inputDiv">
+                    <div class="prizeText">
+                        <div>Donations can enter you to win prizes!</div>
+                        <div><a id="sweepstakesRules" href="">Official Rules</a></div>
+                        <div>No donation necessary for a chance to win. See sweepstakes rules for details and
+                            instructions.</div>
+                    </div>
+                    <div class="prizeList">
+
+                    </div>
+                </div>
+            </form>
+            <button class="donateButton" onClick="donateForm()" disabled>
+                Donate
+                <span class="donateButtonAmount"></span>
+            </button>
+        </div>
+    </div>
+</body>
+
+<script>
+    pageLoaded();
+</script>
+
+</html>

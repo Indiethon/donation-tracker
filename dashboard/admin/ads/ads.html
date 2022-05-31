@@ -6,14 +6,16 @@
     <link rel="stylesheet" href="/content/pages/dashboard/common.css" />
 </head>
 
-<body onLoad="load(false)">
+<body>
     <script>
         let model = 'ads';
         const urlParams = new URLSearchParams(window.location.search);
     </script>
     <ul class="breadcrumb">
         <li><a onClick="switchPage('/content/pages/dashboard/admin/home/home.html')">Home</a></li>
-        <li><a onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)">Ads</a>
+        <li id="eventBreadcrumb"><a onClick="switchPage(`/content/pages/dashboard/admin/overview/overview.html?event=${urlParams.get('event')}`)"></a></li>
+        <li><a
+                onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)">Ads</a>
         </li>
     </ul>
     <div class="header">
@@ -32,76 +34,30 @@
         </div>
     </div>
     <div class="content">
-        <table id="table">
-            <thead>
-                <tr>
-                    <th><input type="checkbox" item="all" /></th>
-                    <th>Name</th>
-                    <th>Text</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-
-            </tbody>
-        </table>
-        <div class="tableDropdownContent" id="test">
-            <button class="tableDropdownButton" onClick="dropdownSwitchPage(this)">View</button>
-            <button class="tableDropdownButton" onClick="dropdownSwitchPage(this)">Edit</button>
-            <button class="tableDropdownButton" onClick="dropdownSwitchPage(this)">Delete</button>
-        </div>
     </div>
     <script>
+        load(false, { model: 'ad', level: 'access' });
+        setBreadcrumb(urlParams.get('event'));
+
         function pageLoaded() {
-            const urlParams = new URLSearchParams(window.location.search);
-
-            showBody();
-
-            GET(`ads/event/${urlParams.get('event')}`, (err, data) => {
-                if (err) return;
-                let table = document.querySelector('tbody');
-                for (const ad of data.data) {
-
-                    let row = table.insertRow();
-                    row.insertCell().innerHTML = `<input type="checkbox" item="${ad._id}" />`;
-                    row.insertCell().innerHTML = `<p class="tableText">${ad.name}</p>`;
-                    row.insertCell().innerHTML = `<p class="tableText longTableText">${ad.text}</p>`;
-                    row.insertCell().innerHTML = `
-                <div class="tableDropdown">
-                    <button class="tableButton">...</button>
-                    <div class="tableDropdownContent">
-                        <button class="tableDropdownButton" onClick="dropdownSwitchPage('view', '${ad._id}')">View</button>
-                        <button class="tableDropdownButton" onClick="dropdownSwitchPage('edit', '${ad._id}')">Edit</button>
-                        <button class="tableDropdownButton" onClick="deleteItem('${ad._id}', '${ad.name}')">Delete</button>
-                    </div>
-                </div>`;
-                }
-                showContent();
-            });
-        }
-
-        function dropdownSwitchPage(page, ad) {
-            switch (page) {
-                case 'view': switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=view&id=${ad}&event=${urlParams.get('event')}`); break;
-                case 'edit': switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=edit&id=${ad}&event=${urlParams.get('event')}`); break;
-            }
-        }
-
-        function deleteItem(id, name) {
-            showDialog({
-                model: 'ad',
-                name: name,
-                endpoint: `ads/${id}`,
+            document.body.style.visibility = 'visible';
+            generateTable({
+                name: 'ad',
+                model: model,
+                endpoint: `ads/event/${urlParams.get('event')}`,
+                event: urlParams.get('event'),
+                table: [{
+                    name: 'Name',   
+                    data: 'name'
+                }, {
+                    name: 'Text',
+                    data: 'text',
+                }, {
+                    name: 'Active',
+                    data: 'active',
+                }]
             })
         }
-
-        // Listen for events from parent.
-        window.addEventListener("message", (event) => {
-            if (event.origin !== window.location.origin) return;
-            switch (event.data.name) {
-                case 'reload': location.reload(); break;
-            }
-        }, false);
     </script>
 </body>
 

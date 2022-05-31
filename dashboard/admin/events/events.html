@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="/content/pages/dashboard/common.css" />
 </head>
 
-<body onLoad="load(false)">
+<body>
     <script>let model = 'events';</script>
     <ul class="breadcrumb">
         <li><a onClick="switchPage('/content/pages/dashboard/admin/home/home.html')">Home</a></li>
@@ -27,94 +27,55 @@
         </div>
     </div>
     <div class="content">
-        <table id="table">
-            <thead>
-                <tr>
-                    <th><input type="checkbox" item="all" /></th>
-                    <th>Name</th>
-                    <th>Short</th>
-                    <th>Charity</th>
-                    <th>Target</th>
-                    <th>Start Time</th>
-                    <th>End Time</th>
-                    <th>Visible</th>
-                    <th>Active</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-
-            </tbody>
-        </table>
         <div class="tableDropdownContent" id="test">
             <button class="tableDropdownButton" onClick="dropdownSwitchPage(this)">View</button>
             <button class="tableDropdownButton" onClick="dropdownSwitchPage(this)">Edit</button>
             <button class="tableDropdownButton" onClick="dropdownSwitchPage(this)">Delete</button>
         </div>
+
     </div>
     <script>
+        load(false, { model: 'event', level: 'access' });
+
         function pageLoaded() {
-            showBody();
-            GET('events', (err, data) => {
-                if (err) return;
-                let table = document.querySelector('tbody');
-                for (const event of data.data) {
-                    let startTime = new Date(event.startTime);
-                    startTimeHours = (startTime.getHours() < 10) ? '0' + startTime.getHours() : '' + startTime.getHours();
-                    startTimeMins = (startTime.getMinutes() < 10) ? '0' + startTime.getMinutes() : '' + startTime.getMinutes();
-                    startTime = `${startTime.getMonth() + 1}/${startTime.getDate()}/${startTime.getFullYear()} ${startTimeHours}:${startTimeMins}`
-
-                    let endTime = new Date(event.endTime);
-                    endTimeHours = (endTime.getHours() < 10) ? '0' + endTime.getHours() : '' + endTime.getHours();
-                    endTimeMins = (endTime.getMinutes() < 10) ? '0' + endTime.getMinutes() : '' + endTime.getMinutes();
-                    endTime = `${endTime.getMonth() + 1}/${endTime.getDate()}/${endTime.getFullYear()} ${endTimeHours}:${endTimeMins} `
-
-                    let row = table.insertRow();
-                    row.insertCell().innerHTML = `<input type="checkbox" item="${event.id}" />`;
-                    row.insertCell().innerHTML = `<p class="tableText">${event.name}</p>`;
-                    row.insertCell().innerHTML = `<p class="tableText">${event.short}</p>`;
-                    try { row.insertCell().innerHTML = `<p class="tableText">${event.charity.name}</p>`; } catch { row.insertCell().innerHTML = `<p class="tableText"></p>`; }
-                    row.insertCell().innerHTML = `<p class="tableText">${event.targetAmount}</p>`;
-                    row.insertCell().innerHTML = `<p class="tableText">${startTime}</p>`;
-                    row.insertCell().innerHTML = `<p class="tableText">${endTime}</p>`;
-                    row.insertCell().innerHTML = `<p class="tableText">${event.visible}</p>`;
-                    row.insertCell().innerHTML = `<p class="tableText">${event.active}</p>`;
-                    row.insertCell().innerHTML = `
-                <div class="tableDropdown">
-                    <button class="tableButton">...</button>
-                    <div class="tableDropdownContent">
-                        <button class="tableDropdownButton" onClick="dropdownSwitchPage('view', '${event._id}')">View</button>
-                        <button class="tableDropdownButton" onClick="dropdownSwitchPage('edit', '${event._id}')">Edit</button>
-                        <button class="tableDropdownButton" onClick="deleteItem('${event._id}', '${event.name}')">Delete</button>
-                    </div>
-                </div>`;
-                }
-                showContent();
-            });
-        }
-
-        function dropdownSwitchPage(page, event) {
-            switch (page) {
-                case 'view': switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=view&id=${event}`); break;
-                case 'edit': switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=edit&id=${event}`); break;
-            }
-        }
-
-        function deleteItem(id, name) {
-            showDialog({
-                model: 'event',
-                name: name,
-                endpoint: `events/${id}`,
+            document.body.style.visibility = 'visible';
+            generateTable({
+                name: 'event',
+                model: 'events',
+                endpoint: 'events',
+                table: [{
+                    name: 'Name',
+                    data: 'name',
+                }, {
+                    name: 'Short',
+                    data: 'short'
+                }, {
+                    name: 'Charity',
+                    textFunction: (eventData) => {
+                        return eventData.charity.name
+                    }
+                }, {
+                    name: 'Target',
+                    data: 'targetAmount'
+                }, {
+                    name: 'Start Time',
+                    textFunction: (eventData) => {
+                        return new Date(eventData.startTime).toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit', seconds: undefined })
+                    }
+                }, {
+                    name: 'End Time',
+                    textFunction: (eventData) => {
+                        return new Date(eventData.endTime).toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit', seconds: undefined })
+                    }
+                }, {
+                    name: 'Visible',
+                    data: 'visible'
+                }, {
+                    name: 'Active',
+                    data: 'active'
+                }]
             })
         }
-
-        // Listen for events from parent.
-        window.addEventListener("message", (event) => {
-            if (event.origin !== window.location.origin) return;
-            switch (event.data.name) {
-                case 'reload': location.reload(); break;
-            }
-        }, false);
     </script>
 </body>
 

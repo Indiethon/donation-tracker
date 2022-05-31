@@ -4,12 +4,12 @@
 <head>
     <title>Admin - Donation Tracker</title>
     <link rel="shortcut icon" href="/content/logo">
-    <script defer src="/content/pages/dashboard/utils.js"></script>
-    <script defer src="/content/pages/dashboard/admin/admin/admin.js"></script>
+    <script src="/content/pages/dashboard/utils.js"></script>
+    <script src="/content/pages/dashboard/admin/admin/admin.js"></script>
     <link rel="stylesheet" href="/content/pages/dashboard/admin/admin/admin.css" />
 </head>
 
-<body onload="load(false)">
+<body>
     <div id="sidebar">
         <div id="iconDiv">
             <img id="icon" src="/content/logo">
@@ -23,9 +23,9 @@
                     <span class="material-icons-outlined button-expand">expand_more</span>
                 </button>
                 <div class="navDropdownDiv" id="administrationNav">
-                    <button>Audit Log</button>
+                    <button onClick="switchPage('/content/pages/dashboard/admin/auditLog/auditLog.html')">Audit Log</button>
                     <button onClick="switchPage('/content/pages/dashboard/admin/users/users.html')">Users</button>
-                    <button>Groups</button>
+                    <button onClick="switchPage(`/content/pages/dashboard/admin/groups/groups.html`)">Groups</button>
                 </div>
                 <button class="mainNavButton" onClick="expand('trackerNav', this)">
                     <span class="material-icons-outlined">storage</span>
@@ -38,7 +38,6 @@
                         onClick="switchPage('/content/pages/dashboard/admin/charities/charities.html')">Charities</button>
                     <button onClick="switchPage('/content/pages/dashboard/admin/wordFilters/wordFilters.html')">Word
                         Filters</button>
-                    <button>Settings</button>
                 </div>
                 <button class="mainNavButton" onClick="expand('peopleNav', this)">
                     <span class="material-icons-outlined">group</span>
@@ -76,12 +75,14 @@
         <div id="header">
             <div id="welcomeText"></div>
             <button id="volunteerView"
-                onClick="location.href = '/content/pages/dashboard/volunteer/volunteer/volunteer.html'">Switch To
+                onClick="location.href = '/volunteer/dashboard'">Switch To
                 Volunteer View</button>
-            <button id="logout" onClick="logout()">Logout</button>
+            <button id="logout" onClick="logout()">
+                <span class="material-icons-outlined">logout</span>
+                <div class="buttonText">Logout</div></button>
         </div>
         <div id="content">
-            <iframe id="pageFrame" src="/content/pages/dashboard/admin/home/home.html"></iframe>
+            <iframe id="pageFrame" src="/content/pages/dashboard/admin/home/home.html" srcOld="/content/pages/dashboard/admin/home/home.html"></iframe>
         </div>
     </div>
     <div id="toast">

@@ -17,6 +17,10 @@ module.exports.schema = (mongoose, database) => {
             type: Date,
             default: Date.now
         },
+        admin: {
+            type: Boolean,
+            default: false,
+        },
         superuser: {
             type: Boolean,
             default: false,
@@ -26,7 +30,8 @@ module.exports.schema = (mongoose, database) => {
             default: false,
         },
         groupId: {
-            type: String,
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'group',
         },
         firstName: {
             type: String,
@@ -42,5 +47,13 @@ module.exports.schema = (mongoose, database) => {
             default: Date.now,
         }
     }, { toJSON: { virtuals: true } }, { toObject: { virtuals: true } });
+
+    schema.virtual('group', {
+        ref: 'group',
+        localField: 'groupId',
+        foreignField: '_id',
+        justOne: true,
+    });
+
     return schema;
 }

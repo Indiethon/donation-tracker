@@ -1,15 +1,76 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Donate!</title>
+    <title>Runs</title>
+    <link rel="shortcut icon" href="/content/logo">
+    <script src="/content/pages/pages/utils.js"></script>
+    <link rel="stylesheet" href="/content/pages/pages/common.css" />
 </head>
 
-
 <body>
-    <div>Donation successful!</div>
+    <nav class="header">
+        <div class="topNav">
+            <div class="topNavImg"><img src="/content/logo"></div>
+            <button class="topNavButton" page="/home" onClick="switchPage(this)">Home</button>
+            <button class="topNavButton" page="/runs" onClick="switchPage(this)">Runs</button>
+            <button class="topNavButton" page="/incentives" onClick="switchPage(this)">Incentives</button>
+            <button class="topNavButton" page="/prizes" onClick="switchPage(this)">Prizes</button>
+            <button class="topNavButton" page="/donations" onClick="switchPage(this)">Donations</button>
+        </div>
+        <div class="eventDropdown">
+            <div class="eventDropdownText">All Events</div>
+            <div class="material-icons-outlined">
+                arrow_drop_down
+            </div>
+            <div class="eventDropdownContent">
+                <div class="eventDropdownButton" event="all" onClick="changeEvent(this)">All Events</div>
+                <div class="eventDropdownSpacer"></div>
+            </div>
+        </div>
+    </nav>
+    <div class="body">
+        <div class="content">
+            <div class="checkmarkDiv">
+                <div class="checkmark wrapper"> <svg class="checkmark" xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 52 52">
+                        <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none" />
+                        <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+                    </svg>
+                </div>
+                <div class="successText">Your donation was successful!</div>
+                <div class="successMessage"></div>
+            </div>
+        </div>
+    </div>
 </body>
+
+<style>
+    html {
+        height: 100%;
+    }
+   .body {
+        height: calc(100vh - 385px);
+    }
+    .content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+    }
+</style>
+
+<script>
+    pageLoaded();
+
+    let event = window.location.pathname.split('/')[2];
+
+    setTimeout(() =>{
+        document.querySelector('.successText').style.opacity = '1';
+        setTimeout(() => document.querySelector('.successMessage').style.opacity = '1', 1250);
+    }, 2000)
+
+    document.querySelector('.content').style.visibility = 'visible';
+</script>
 
 </html>

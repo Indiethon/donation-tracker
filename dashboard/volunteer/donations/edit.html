@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="/content/pages/dashboard/utils.js"></script>
+    <link rel="stylesheet" href="/content/pages/dashboard/common.css" />
+</head>
+
+<body>
+    <script>
+        let model = 'donations';
+        const urlParams = new URLSearchParams(window.location.search);
+    </script>
+    <ul class="breadcrumb">
+        <li><a onClick="switchPage(`/content/pages/dashboard/volunteer/home/home.html`)">Home</a></li>
+        <li><a onClick="switchPage(`/content/pages/dashboard/volunteer/${model}/${model}.html`)">Donations</a>
+        </li>
+        <li><a onClick="location.reload()">View</a>
+        </li>
+    </ul>
+    <div class="header">
+        <div class="editHeader">
+            <button class="editBack"
+                onClick="switchPage(`/content/pages/dashboard/volunteer/${model}/${model}.html`)">&lt;</button>
+            <h2 class="title"></h2>
+        </div>
+    </div>
+    <div class="loadingContent">
+        <div class="loadingAnimation">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <div class="content">
+    </div>
+
+    <script>
+        load(false, { model: null });
+
+        async function pageLoaded() {
+            let details = await GET('details');
+            if (details.data === undefined || details.data.eventShort === undefined) return;
+            else {
+                document.body.style.visibility = 'visible';
+                await generateForm({
+                    name: 'Donation',
+                    model: 'donations',
+                    type: undefined,
+                    endpoint: (urlParams.get('id') !== undefined && urlParams.get('id') !== null) ? `${model}/${urlParams.get('id')}` : model,
+                    event: details.data.eventShort,
+                    volunteer: true,
+                    datalist: {
+                        donorDatalist: {
+                            endpoint: 'donors',
+                            textFunction: (value) => {
+                                return value.email;
+                            },
+                        },
+                        incentiveDatalist: {
+                            endpoint: `incentives/event/${details.data.eventShort}`,
+                            textFunction: (value) => {
+                                return value.name;
+                            },
+                        },
+                    },
+                    form: [{
+                        name: 'Donor',
+                        type: 'input',
+                        data: 'donorId',
+                        textFunction: (value) => {
+                            return value.donor.email
+                        },
+                        attributes: {
+                            list: 'donorDatalist',
+                            disabled: true,
+                        },
+                    }, {
+                        name: 'Alias',
+                        type: 'input',
+                        data: 'alias',
+                        attributes: {
+                            disabled: true,
+                        },
+                    },  {
+                        name: 'Comment',
+                        type: 'textarea',
+                        data: 'comment',
+                        attributes: {
+                            cols: "3",
+                            disabled: true,
+                        },
+                    }, {
+                        name: 'Incentives',
+                        type: 'array',
+                        data: 'incentives',
+                        array: [{
+                            name: 'Incentive',
+                            type: 'input',
+                            data: 'incentiveId',
+                            textFunction: async (value) => {
+                                let incentive = await GET(`incentives/${value.incentiveId}`)
+                                return incentive.data.name;
+                            },
+                            attributes: {
+                                list: 'incentiveDatalist',
+                                disabled: true,
+                            }
+                        }, {
+                            name: 'Option',
+                            type: 'input',
+                            data: 'option',
+                            textFunction: async (value) => {
+                                let incentive = await GET(`incentives/${value.incentiveId}`)
+                                if (value.option === undefined) return '';
+                                let option = incentive.data.options.find(x => x._id === value.option);
+                                return option.name;
+                            },
+                            attributes: {
+                                disabled: true,
+                            },
+                        }, {
+                            name: 'Amount',
+                            type: 'number',
+                            textFunction: async (value) => {
+                                return value.amount;
+                            },
+                            attributes: {
+                                min: 0.01,
+                                step: 0.01,
+                                disabled: true,
+                            },
+                        }],
+                    }, {
+                        name: 'Timestamp',
+                        type: 'datetime-local',
+                        data: 'startTime',
+                        textFunction: (value) => {
+                            let time = new Date(value.timestamp)
+                            time.setMinutes(time.getMinutes() - time.getTimezoneOffset());
+                            return time.toISOString().slice(0, 16);
+                        },
+                        attributes: {
+                            disabled: true,
+                        },
+                    }, {
+                        name: 'Completed',
+                        type: 'checkbox',
+                        data: 'completed',
+                        attributes: {
+                            disabled: true,
+                        },
+                    }, {
+                        name: 'Verified',
+                        type: 'checkbox',
+                        data: 'verified',
+                        required: false,
+                        submit: (value) => {
+                            return value;
+                        },
+                    }, {
+                        name: 'Visible',
+                        type: 'checkbox',
+                        data: 'visible',
+                        required: false,
+                        submit: (value) => {
+                            return value;
+                        },
+                    }, {
+                        name: 'Read',
+                        type: 'checkbox',
+                        data: 'read',
+                        required: false,
+                        submit: (value) => {
+                            return value;
+                        },
+                    }],
+                    other: [{
+                        data: 'eventId',
+                        submit: (value) => {
+                            return details.data.eventID;
+                        },
+                    }]
+                });
+                try {
+                    let buttons = document.querySelectorAll('.deleteButton');
+                    for (let button of buttons) {
+                        button.style.display = 'none';
+                    }
+                } catch { }
+                document.querySelector('.addButton').style.display = 'none'
+
+            }
+        }
+    </script>
+</body>
+
+</html>

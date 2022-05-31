@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="/content/pages/dashboard/common.css" />
 </head>
 
-<body onLoad="load(false)">
+<body>
     <script>let model = 'wordFilters';</script>
     <ul class="breadcrumb">
         <li><a onClick="switchPage(`/content/pages/dashboard/admin/home/home.html`)">Home</a></li>
@@ -16,7 +16,8 @@
     </ul>
     <div class="header">
         <div class="editHeader">
-            <button class="editBack" onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)">&lt;</button>
+            <button class="editBack"
+                onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)">&lt;</button>
             <h2 class="title"></h2>
         </div>
     </div>
@@ -28,116 +29,47 @@
         </div>
     </div>
     <div class="content">
-        <form>
-            <div id="id" class="inputDiv">
-                <label class="label">ID</label>
-                <input class="input" disabled>
-                <span class="errorText"></span>
-            </div>
-            <div id="word" class="inputDiv">
-                <label class="label">Word or Phrase</label>
-                <input class="input">
-                <span class="errorText"></span>
-            </div>
-            <div id="blocked" class="inputDiv">
-                <label class="label">Blocked</label>
-                <input class="input" type="checkbox">
-                <span class="errorText"></span>
-            </div>
-            <div id="allowed" class="inputDiv">
-                <label class="label">Allowed</label>
-                <input class="input" type="checkbox">
-                <span class="errorText"></span>
-            </div>
-        </form>
-        <button id="submit" onClick="submit()"></button>
-        <div></div>
     </div>
 
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
+        const urlParams = new URLSearchParams(window.location.search);''
 
-        function pageLoaded() {
-            showBody();
-            try {
-                switch (urlParams.get('type')) {
-                    case 'create': create(); break;
-                    case 'edit': edit(urlParams.get('id')); break;
-                    case 'view': view(urlParams.get('id')); break;
-                    default:
-                        showToast('error', `Error opening page. Please contact the system administrator.`)
-                        switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)
-                }
-            } catch {
-                showToast('error', `Error opening page. Please contact the system administrator.`)
-                switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)
-            }
+        switch (urlParams.get('type')) {
+            case 'create': load(false, { model: 'wordFilter', level: 'full' }); break;
+            case 'edit': load(false, { model: 'wordFilter', level: 'modify' }); break;
+            case 'view': load(false, { model: 'wordFilter', level: 'read' }); break;
         }
 
-        function fetchData(event, callback) {
-            GET(`wordFilters/${urlParams.get('id')}`, (err, data) => {
-                if (err) return;
-                document.querySelector('#id input').value = data.data._id;
-                document.querySelector('#word input').value = data.data.word;
-                document.querySelector('#blocked input').checked = data.data.blocked;
-                document.querySelector('#allowed input').checked = data.data.allowed;
-                callback();
-            })
-        }
-
-        function create() {
-            document.querySelector('#id').style.display = 'none';
-            document.querySelector('.title').innerHTML = 'Create Word Filter';
-            document.getElementById('submit').innerHTML = 'Create';
-            showContent();
-        }
-
-        function edit(wordFilter) {
-            fetchData(wordFilter, () => {
-                document.querySelector('.title').innerHTML = 'Edit Word Filter';
-                document.getElementById('submit').innerHTML = 'Save';
-                showContent();
-            })
-        }
-        function view(wordFilter) {
-            fetchData(wordFilter, () => {
-                document.querySelector('#word input').disabled = true;
-                document.querySelector('#blocked input').disabled = true;
-                document.querySelector('#allowed input').disabled = true;
-                document.getElementById('submit').style.display = 'none';
-                document.querySelector('.title').innerHTML = 'View Word Filter';
-                showContent();
-            })
-        }
-
-        function submit() {
-            let options = {};
-            options.word = document.querySelector('#word input').value;
-            options.blocked = document.querySelector('#blocked input').checked;
-            options.allowed = document.querySelector('#allowed input').checked;
-
-            let elementList = document.querySelectorAll('.inputDiv');
-            [...elementList].forEach(element => {
-                let el = document.querySelector(`#${element.id} span`)
-                el.innerHTML = '';
-                el.style.visibility = 'hidden';
+        async function pageLoaded() {
+            generateForm({
+                name: 'Word Filter',
+                model: model,
+                type: urlParams.get('type'),
+                endpoint: (urlParams.get('id') !== undefined && urlParams.get('id') !== null) ? `${model}/${urlParams.get('id')}` : model,
+                form: [{
+                    name: 'Word Or Phrase',
+                    type: 'input',
+                    data: 'word',
+                    required: true,
+                    submit: (value) => {
+                        return value;
+                    },
+                }, {
+                    name: 'Allowed',
+                    type: 'checkbox',
+                    data: 'allowed',
+                    submit: (value) => {
+                        return value;
+                    },
+                },{
+                    name: 'Blocked',
+                    type: 'checkbox',
+                    data: 'blocked',
+                    submit: (value) => {
+                        return value;
+                    },
+                }],
             });
-
-            POST(`wordFilters${(urlParams.get('type') === 'create') ? '' : `/${urlParams.get('id')}`}`, options, (err, data) => {
-                console.log(data)
-                if (!err) {
-                    showToast('success', `Word filter updated successfully.`)
-                    switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)
-                    return;
-                }
-
-                data.data.errorCodes.forEach(error => {
-                    let element = document.querySelector(`#${error.item} span`);
-                    element.innerHTML = error.code;
-                    element.style.visibility = 'inherit';
-                })
-                showToast('error', `Validation errors found, please resolve them.`)
-            })
         }
     </script>
 </body>

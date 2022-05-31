@@ -52,9 +52,12 @@ module.exports.schema = (mongoose, database) => {
         altImage: {
             type: String,
         },
-        donator: {
+        contributor: {
             type: String,
-            required: [true, 'Prize donator is required.'],
+            required: [true, 'Contributor is required.'],
+        },
+        winner: {
+            type: String,
         },
         visible: {
             type: Boolean,
@@ -75,13 +78,8 @@ module.exports.schema = (mongoose, database) => {
                 message: () => 'A drawn prize cannot be activated.'
             }
         },
-        winners: [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'donor',
-            required: [true, 'Donor is required.'],
-        }],
         notes: {
-            tyoe: String,
+            type: String,
         },
     }, { toJSON: { virtuals: true } }, { toObject: { virtuals: true }});
 

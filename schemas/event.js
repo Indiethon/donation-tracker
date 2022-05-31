@@ -1,4 +1,4 @@
-const blockedShorts = ['all', 'active', 'tracker', 'create', 'edit', 'view', 'delete']
+const blockedShorts = ['all', 'active', 'tracker', 'create', 'edit', 'view', 'delete', 'donate', 'login', 'admin', 'volunteer']
 
 module.exports.schema = (mongoose, database) => {
     let optionsSchema = mongoose.Schema({
@@ -117,9 +117,10 @@ module.exports.schema = (mongoose, database) => {
             totalArray.push(donation.amount);
         }
         stats.total = totalArray.reduce(function(a, b){ return a + b }, 0);
+        stats.count = donations.length;
         stats.min = Math.min(...totalArray)
         stats.max = Math.max(...totalArray)
-        stats.avg = stats.total / totalArray.length;
+        stats.avg = (stats.total / totalArray.length).toFixed(2);
         totalArray = [...totalArray].sort((a, b) => a - b);
         stats.median = (totalArray[totalArray.length - 1 >> 1] + totalArray[totalArray.length >> 1]) / 2;
         callback(stats)   

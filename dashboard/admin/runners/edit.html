@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="/content/pages/dashboard/common.css" />
 </head>
 
-<body onLoad="load(false)">
+<body>
     <script>let model = 'runners';</script>
     <ul class="breadcrumb">
         <li><a onClick="switchPage(`/content/pages/dashboard/admin/home/home.html`)">Home</a></li>
@@ -16,7 +16,8 @@
     </ul>
     <div class="header">
         <div class="editHeader">
-            <button class="editBack" onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)">&lt;</button>
+            <button class="editBack"
+                onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)">&lt;</button>
             <h2 class="title"></h2>
         </div>
     </div>
@@ -28,148 +29,82 @@
         </div>
     </div>
     <div class="content">
-        <form>
-            <div id="id" class="inputDiv">
-                <label class="label">ID</label>
-                <input class="input" disabled>
-                <span class="errorText"></span>
-            </div>
-            <div id="name" class="inputDiv">
-                <label class="label">Name</label>
-                <input class="input">
-                <span class="errorText"></span>
-            </div>
-            <div id="email" class="inputDiv">
-                <label class="label">Email</label>
-                <input class="input">
-                <span class="errorText"></span>
-            </div>
-            <div id="pronouns" class="inputDiv">
-                <label class="label">Pronouns</label>
-                <input class="input">
-                <span class="errorText"></span>
-            </div>
-            <div id="twitch" class="inputDiv">
-                <label class="label">Twitch</label>
-                <input class="input">
-                <span class="errorText"></span>
-            </div>
-            <div id="twitter" class="inputDiv">
-                <label class="label">Twitter</label>
-                <input class="input">
-                <span class="errorText"></span>
-            </div>
-            <div id="youtube" class="inputDiv">
-                <label class="label">YouTube</label>
-                <input class="input">
-                <span class="errorText"></span>
-            </div>
-            <div id="notes" class="inputDiv">
-                <label class="label">Notes</label>
-                <input class="input">
-                <span class="errorText"></span>
-            </div>
-        </form>
-        <button id="submit" onClick="submit()"></button>
-        <div></div>
     </div>
 
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
+        const urlParams = new URLSearchParams(window.location.search);''
 
-        function pageLoaded() {
-            showBody();
-            try {
-                switch (urlParams.get('type')) {
-                    case 'create': create(); break;
-                    case 'edit': edit(urlParams.get('id')); break;
-                    case 'view': view(urlParams.get('id')); break;
-                    default:
-                        showToast('error', `Error opening page. Please contact the system administrator.`)
-                        switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)
-                }
-            } catch {
-                showToast('error', `Error opening page. Please contact the system administrator.`)
-                switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)
-            }
+        switch (urlParams.get('type')) {
+            case 'create': load(false, { model: 'runner', level: 'full' }); break;
+            case 'edit': load(false, { model: 'runner', level: 'modify' }); break;
+            case 'view': load(false, { model: 'runner', level: 'read' }); break;
         }
 
-        function fetchData(event, callback) {
-            GET(`runners/${urlParams.get('id')}`, (err, data) => {
-                if (err) return;
-                document.querySelector('#id input').value = data.data.id;
-                document.querySelector('#name input').value = data.data.name;
-                document.querySelector('#email input').value = data.data.email;
-                document.querySelector('#pronouns input').value = data.data.pronouns;
-                document.querySelector('#twitch input').value = data.data.twitch;
-                document.querySelector('#twitter input').value = data.data.twitter;
-                document.querySelector('#youtube input').value = data.data.youtube;
-                document.querySelector('#notes input').value = data.data.notes;
-                callback();
-            })
-        }
-
-        function create() {
-            document.querySelector('#id').style.display = 'none';
-            document.querySelector('.title').innerHTML = 'Create Runner';
-            document.getElementById('submit').innerHTML = 'Create';
-            showContent();
-        }
-
-        function edit(runner) {
-            fetchData(runner, () => {
-                document.querySelector('.title').innerHTML = 'Edit Runner';
-                document.getElementById('submit').innerHTML = 'Save';
-                showContent();
-            })
-        }
-        function view(runner) {
-            fetchData(runner, () => {
-                document.querySelector('#name input').disabled = true;
-                document.querySelector('#email input').disabled = true;
-                document.querySelector('#pronouns input').disabled = true;
-                document.querySelector('#twitch input').disabled = true;
-                document.querySelector('#twitter input').disabled = true;
-                document.querySelector('#youtube input').disabled = true;
-                document.querySelector('#notes input').disabled = true;
-                document.getElementById('submit').style.display = 'none';
-                document.querySelector('.title').innerHTML = 'View Event';
-                showContent();
-            })
-        }
-
-        function submit() {
-            let options = {};
-            options.name = document.querySelector('#name input').value;
-            options.email = document.querySelector('#email input').value;
-            options.pronouns = document.querySelector('#pronouns input').value;
-            options.twitch = document.querySelector('#twitch input').value;
-            options.twitter = document.querySelector('#twitter input').value;
-            options.youtube = document.querySelector('#youtube input').value;
-            options.notes = document.querySelector('#notes input').value;
-
-            let elementList = document.querySelectorAll('.inputDiv');
-            [...elementList].forEach(element => {
-                let el = document.querySelector(`#${element.id} span`)
-                el.innerHTML = '';
-                el.style.visibility = 'hidden';
+        async function pageLoaded() {
+            generateForm({
+                name: 'Runner',
+                model: model,
+                type: urlParams.get('type'),
+                endpoint: (urlParams.get('id') !== undefined && urlParams.get('id') !== null) ? `${model}/${urlParams.get('id')}` : model,
+                form: [{
+                    name: 'Name',
+                    type: 'input',
+                    data: 'name',
+                    required: true,
+                    submit: (value) => {
+                        return value;
+                    },
+                }, {
+                    name: 'Email',
+                    type: 'input',
+                    data: 'email',
+                    submit: (value) => {
+                        return value;
+                    },
+                }, {
+                    name: 'Pronouns',
+                    type: 'input',
+                    data: 'pronouns',
+                    submit: (value) => {
+                        return value;
+                    },
+                }, {
+                    name: 'Discord',
+                    type: 'input',
+                    data: 'discord',
+                    submit: (value) => {
+                        return value;
+                    },
+                }, {
+                    name: 'Twitch',
+                    type: 'input',
+                    data: 'twitch',
+                    submit: (value) => {
+                        return value;
+                    },
+                },{
+                    name: 'Twitter',
+                    type: 'input',
+                    data: 'twitter',
+                    submit: (value) => {
+                        return value;
+                    },
+                },{
+                    name: 'YouTube',
+                    type: 'input',
+                    data: 'youtube',
+                    submit: (value) => {
+                        return value;
+                    },
+                },{
+                    name: 'Notes',
+                    type: 'input',
+                    data: 'notes',
+                    submit: (value) => {
+                        return value;
+                    },
+                }],
             });
-
-            POST(`runners${(urlParams.get('type') === 'create') ? '' : `/${urlParams.get('id')}`}`, options, (err, data) => {
-                console.log(data)
-                if (!err) {
-                    showToast('success', `Runner ${options.name} updated successfully.`)
-                    switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)
-                    return;
-                }
-
-                data.data.errorCodes.forEach(error => {
-                    let element = document.querySelector(`#${error.item} span`);
-                    element.innerHTML = error.code;
-                    element.style.visibility = 'inherit';
-                })
-                showToast('error', `Validation errors found, please resolve them.`)
-            })
         }
     </script>
 </body>

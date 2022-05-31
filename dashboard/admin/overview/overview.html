@@ -6,10 +6,42 @@
     <link rel="stylesheet" href="/content/pages/dashboard/common.css" />
 </head>
 
-<body onLoad="load(false)">
-    <h1>Event Overview</h1>
+<body>
     <script>
-        showBody()
+        let model = 'overview';
+        const urlParams = new URLSearchParams(window.location.search);
+    </script>
+    <ul class="breadcrumb">
+        <li><a onClick="switchPage('/content/pages/dashboard/admin/home/home.html')">Home</a></li>
+        <li><a onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)">Charities</a></li>
+    </ul>
+    <div class="header">
+        <h2 class="title">Overview</h2>
+        <div id="headerButtonDiv">
+            <button onClick="switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=create`)">Create
+                New</button>
+        </div>
+    </div>
+    <div class="loadingContent">
+        <div class="loadingAnimation">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <div class="content">
+
+    </div>
+    <script>
+        load(false, { model: null, level: 'full' });
+        showBody();
+        getData();
+
+        async function getData() {
+            let data = await GET(`events/${urlParams.get('event')}`);
+            document.querySelector('.content').innerHTML = JSON.stringify(data.data.stats, null, 2);
+            showContent();
+        }
     </script>
 </body>
 

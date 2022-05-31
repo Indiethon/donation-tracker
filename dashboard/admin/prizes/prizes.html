@@ -6,14 +6,16 @@
     <link rel="stylesheet" href="/content/pages/dashboard/common.css" />
 </head>
 
-<body onLoad="load(false)">
+<body>
     <script>
         let model = 'prizes';
         const urlParams = new URLSearchParams(window.location.search);
     </script>
     <ul class="breadcrumb">
         <li><a onClick="switchPage('/content/pages/dashboard/admin/home/home.html')">Home</a></li>
-        <li><a onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)">Prizes</a>
+        <li id="eventBreadcrumb"><a onClick="switchPage(`/content/pages/dashboard/admin/overview/overview.html?event=${urlParams.get('event')}`)"></a></li>
+        <li><a
+                onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)">Prizes</a>
         </li>
     </ul>
     <div class="header">
@@ -32,98 +34,49 @@
         </div>
     </div>
     <div class="content">
-        <table id="table">
-            <thead>
-                <tr>
-                    <th><input type="checkbox" item="all" /></th>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Min Donation</th>
-                    <th>Start Time</th>
-                    <th>End Time</th>
-                    <th>Visible</th>
-                    <th>Active</th>
-                    <th>Drawn</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-
-            </tbody>
-        </table>
-        <div class="tableDropdownContent" id="test">
-            <button class="tableDropdownButton" onClick="dropdownSwitchPage(this)">View</button>
-            <button class="tableDropdownButton" onClick="dropdownSwitchPage(this)">Edit</button>
-            <button class="tableDropdownButton" onClick="dropdownSwitchPage(this)">Delete</button>
-        </div>
     </div>
     <script>
+        load(false, { model: 'prize', level: 'access' });
+        setBreadcrumb(urlParams.get('event'));
+
         function pageLoaded() {
-            const urlParams = new URLSearchParams(window.location.search);
-
-            showBody();
-
-            GET(`prizes/event/${urlParams.get('event')}`, (err, data) => {
-                if (err) return;
-                let table = document.querySelector('tbody');
-                for (const prize of data.data) {
-
-                    let startTime = new Date(prize.startTime);
-                    startTimeHours = (startTime.getHours() < 10) ? '0' + startTime.getHours() : '' + startTime.getHours();
-                    startTimeMins = (startTime.getMinutes() < 10) ? '0' + startTime.getMinutes() : '' + startTime.getMinutes();
-                    startTime = `${startTime.getMonth() + 1}/${startTime.getDate()}/${startTime.getFullYear()} ${startTimeHours}:${startTimeMins} `
-
-                    let endTime = new Date(prize.endTime);
-                    endTimeHours = (endTime.getHours() < 10) ? '0' + endTime.getHours() : '' + endTime.getHours();
-                    endTimeMins = (endTime.getMinutes() < 10) ? '0' + endTime.getMinutes() : '' + endTime.getMinutes();
-                    endTime = `${endTime.getMonth() + 1}/${endTime.getDate()}/${endTime.getFullYear()} ${endTimeHours}:${endTimeMins} `
-
-                    let row = table.insertRow();
-                    row.insertCell().innerHTML = `<input type="checkbox" item="${prize.id}" />`;
-                    row.insertCell().innerHTML = `<p class="tableText">${prize.name}</p>`;
-                    row.insertCell().innerHTML = `<p class="tableText">${prize.type}</p>`;
-                    row.insertCell().innerHTML = `<p class="tableText">${prize.minDonation}</p>`;
-                    row.insertCell().innerHTML = `<p class="tableText">${startTime}</p>`;
-                    row.insertCell().innerHTML = `<p class="tableText">${endTime}</p>`;
-                    row.insertCell().innerHTML = `<p class="tableText">${prize.visible}</p>`;
-                    row.insertCell().innerHTML = `<p class="tableText">${prize.active}</p>`;
-                    row.insertCell().innerHTML = `<p class="tableText">${prize.drawn}</p>`;
-                    row.insertCell().innerHTML = `
-                <div class="tableDropdown">
-                    <button class="tableButton">...</button>
-                    <div class="tableDropdownContent">
-                        <button class="tableDropdownButton" onClick="dropdownSwitchPage('view', '${prize._id}')">View</button>
-                        <button class="tableDropdownButton" onClick="dropdownSwitchPage('edit', '${prize._id}')">Edit</button>
-                        <button class="tableDropdownButton" onClick="deleteItem('${prize._id}', '${prize.name}')">Delete</button>
-                    </div>
-                </div>`;
-                }
-                showContent();
-            });
-        }
-
-        function dropdownSwitchPage(page, prize) {
-            switch (page) {
-                case 'view': switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=view&id=${prize}&event=${urlParams.get('event')}`); break;
-                case 'edit': switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=edit&id=${prize}&event=${urlParams.get('event')}`); break;
-            }
-        }
-
-        function deleteItem(id, name) {
-            showDialog({
-                model: 'prize',
-                name: name,
-                endpoint: `prizes/${id}`,
+            document.body.style.visibility = 'visible';
+            generateTable({
+                name: 'prize',
+                model: model,
+                endpoint: `prizes/event/${urlParams.get('event')}`,
+                event: urlParams.get('event'),
+                table: [{
+                    name: 'Name',   
+                    data: 'name'
+                }, {
+                    name: 'Type',
+                    data: 'type',
+                }, {
+                    name: 'Minimum Donation',
+                    data: 'minDonation',
+                }, {
+                    name: 'Start Time',
+                    textFunction: (eventData) => {
+                        return new Date(eventData.startTime).toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit', seconds: undefined })
+                    }
+                }, {
+                    name: 'End Time',
+                    textFunction: (eventData) => {
+                        return new Date(eventData.endTime).toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit', seconds: undefined })
+                    }
+                }, {
+                    name: 'Visible',
+                    data: 'visible'
+                }, {
+                    name: 'Active',
+                    data: 'active'
+                }, {
+                    name: 'Drawn',
+                    data: 'drawn'
+                }]
             })
         }
-
-        // Listen for events from parent.
-        window.addEventListener("message", (event) => {
-            if (event.origin !== window.location.origin) return;
-            switch (event.data.name) {
-                case 'reload': location.reload(); break;
-            }
-        }, false);
     </script>
 </body>
 

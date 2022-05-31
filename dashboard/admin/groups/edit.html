@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="/content/pages/dashboard/utils.js"></script>
+    <link rel="stylesheet" href="/content/pages/dashboard/common.css" />
+</head>
+
+<body>
+    <script>let model = 'groups';</script>
+    <ul class="breadcrumb">
+        <li><a onClick="switchPage(`/content/pages/dashboard/admin/home/home.html`)">Home</a></li>
+        <li><a onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)">Groups</a></li>
+        <li><a onClick="location.reload()">Edit</a>
+        </li>
+    </ul>
+    <div class="header">
+        <div class="editHeader">
+            <button class="editBack"
+                onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)">&lt;</button>
+            <h2 class="title"></h2>
+        </div>
+    </div>
+    <div class="loadingContent">
+        <div class="loadingAnimation">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <div class="content">
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);''
+
+        switch (urlParams.get('type')) {
+            case 'create': load(false, { model: 'group', level: 'full' }); break;
+            case 'edit': load(false, { model: 'group', level: 'modify' }); break;
+            case 'view': load(false, { model: 'group', level: 'read' }); break;
+        }
+
+        async function pageLoaded() {
+            generateForm({
+                name: 'Group',
+                model: 'groups',
+                type: urlParams.get('type'),
+                endpoint: (urlParams.get('id') !== undefined && urlParams.get('id') !== null) ? `groups/${urlParams.get('id')}` : 'groups',
+                form: [{
+                    name: 'Name',
+                    type: 'input',
+                    data: 'name',
+                    required: true,
+                    attributes: {
+                        maxLength: 60,
+                    },
+                    submit: (value) => {
+                        return value;
+                    },
+                }, {
+                    name: 'Permissions',
+                    type: 'array',
+                    data: 'permissions',
+                    array: [{
+                        name: 'Component',
+                        type: 'select',
+                        data: 'model',
+                        options: {
+                            ad: 'Ad',
+                            auditLog: 'Audit Log',
+                            charity: 'Charity',
+                            donation: 'Donation',
+                            donor: 'Donor',
+                            event: 'Event',
+                            group: 'Group',
+                            incentive: 'Incentive',
+                            prize: 'Prize',
+                            run: 'Run',
+                            runner: 'Runner',
+                            user: 'User',
+                            wordFilter: 'Word Filter',
+                        }
+                    }, {
+                        name: 'Access Level',
+                        type: 'select',
+                        data: 'level',
+                        options: {
+                            none: 'None',
+                            access: 'Basic',
+                            read: 'Read',
+                            modify: 'Modify',
+                            full: 'Full',
+                        }
+                    }],
+                    required: true,
+                    submit: (value) => {
+                        let fields = value.querySelectorAll('.array.childDiv');
+                        let data = [];
+                        for (const field of fields) {
+                            let inputs = field.querySelectorAll('select');
+                            data.push({
+                                model: inputs[0].value,
+                                level: inputs[1].value,
+                            })
+                        }
+                        return data;
+                    },
+                }],
+            });
+        }
+    </script>
+</body>
+
+</html>

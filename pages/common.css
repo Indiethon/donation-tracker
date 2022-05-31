@@ -1,0 +1,561 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+@import "https://fonts.googleapis.com/icon?family=Material+Icons+Outlined";
+
+:root {
+
+    /* Edit the below variables to customize the frontend pages! */
+
+    /* ----- Global styles ----- */
+    --global-font-family: 'Roboto', sans-serif;
+    --header-background-color: #222;
+    --body-background-color: #FFFFFF;
+    --link-color: #00aeef;
+    --link-hover-color: #0076a3;
+
+    /* Top Navigation Buttons */
+    --nav-button-foreground-color: #999999;
+    --nav-button-hover-foreground-color: white;
+    --nav-button-click-foreground-color: white;
+
+    /* Event Selector Dropdown */
+    --event-dropdown-font-family: 'Roboto', sans-serif;
+    --event-dropdown-foreground-color: black;
+    --event-dropdown-background-color: white;
+    --event-dropdown-separator-color: rgb(192, 192, 202);
+    --event-dropdown-hover-foreground-color: black;
+    --event-dropdown-hover-background-color: #f2f2f2;
+    --event-dropdown-click-foreground-color: black;
+    --event-dropdown-click-background-color: #f2f2f2;
+
+    /* ----- Donation Page Styles ----- */
+
+    /* General */
+    --donation-page-heading-color: black;
+    --donation-page-heading-font-family: 'Roboto', sans-serif;
+
+    /* Text Inputs */
+    --input-font-family: 'Roboto', sans-serif;
+    --input-foreground-color: black;
+    --input-background-color: white;
+    --input-border-color: rgb(192, 192, 202);
+    --input-border-radius: 5px;
+    --input-border-thickness: 1px;
+    --input-hover-foreground-color: black;
+    --input-hover-background-color: white;
+    --input-hover-border-color: rgb(68, 107, 246);
+    --input-focus-foreground-color: black;
+    --input-focus-background-color: white;
+    --input-focus-border-color: rgb(68, 107, 246);
+    --input-error-text-color: red;
+
+    /* Add Incentive Button */
+    --incentive-add-button-foreground-color: black;
+    --incentive-add-button-background-color: white;
+    --incentive-add-button-border-color: black;
+    --incentive-add-button-border-radius: 5px;
+    --incentive-add-button-border-thickness: 1px;
+    --incentive-add-button-hover-foreground-color: black;
+    --incentive-add-button-hover-background-color: #f2f2f2;
+    --incentive-add-button-hover-border-color: black;
+    --incentive-add-button-click-foreground-color: black;
+    --incentive-add-button-click-background-color: #f2f2f2;
+    --incentive-add-button-click-border-color: black;
+
+    /* Incentive Select Container */
+    --incentive-container-border-color: black;
+    --incentive-container-border-radius: 5px;
+    --incentive-container-border-thickness: 1px;
+
+    /* Incentive Select Window */
+    --incentive-select-background-color: white;
+    --incentive-select-game-color: black;
+    --incentive-select-name-color: black;
+    --incentive-select-border-color: rgb(192, 192, 202);
+    --incentive-select-border-thickness: 1px;
+    --incentive-select-hover-background-color: #f2f2f2;
+    --incentive-select-hover-game-color: black;
+    --incentive-select-hover-name-color: black;
+    --incentive-select-selected-background-color: #d9d9d9;
+    --incentive-select-selected-game-color: black;
+    --incentive-select-selected-name-color: black;
+
+    /* Incentive Info Window */
+    --incentive-info-foreground-color: black;
+    --incentive-info-background-color: #f2f2f2;
+    --incentive-info-game-color: black;
+    --incentive-info-name-color: black;
+    --incentive-info-progress-foreground-color: blue;
+    --incentive-info-progress-background-color: white;
+    --incentive-info-progress-border-color: rgb(192, 192, 202);
+    --incentive-info-progress-border-radius: 5px;
+    --incentive-info-progress-border-width: 1px;
+    --incentive-info-progress-height: 8px;
+    --incentive-info-input-font-family: 'Roboto', sans-serif;
+    --incentive-info-input-foreground-color: black;
+    --incentive-info-input-background-color: white;
+    --incentive-info-input-border-color: rgb(192, 192, 202);
+    --incentive-info-input-border-radius: 5px;
+    --incentive-info-input-border-thickness: 1px;
+    --incentive-info-input-hover-foreground-color: black;
+    --incentive-info-input-hover-background-color: white;
+    --incentive-info-input-hover-border-color: rgb(68, 107, 246);
+    --incentive-info-input-focus-foreground-color: black;
+    --incentive-info-input-focus-background-color: white;
+    --incentive-info-input-focus-border-color: rgb(68, 107, 246);
+    --incentive-info-input-error-text-color: red;
+    --incentive-info-option-hover-background-color: #d9d9d9;
+    --incentive-info-option-selected-background-color: #d9d9d9;
+
+    /* Incentive confirm button */
+    --incentive-confirm-button-foreground-color: white;
+    --incentive-confirm-button-background-color: black;
+    --incentive-confirm-button-border-color: black;
+    --incentive-confirm-button-border-radius: 5px;
+    --incentive-confirm-button-border-thickness: 1px;
+    --incentive-confirm-button-hover-foreground-color: white;
+    --incentive-confirm-button-hover-background-color: #404040;
+    --incentive-confirm-button-hover-border-color: #404040;
+    --incentive-confirm-button-click-foreground-color: white;
+    --incentive-confirm-button-click-background-color: #404040;
+    --incentive-confirm-button-click-border-color: #404040;
+
+    /* Selected Incentives List */
+    --incentive-selected-foreground: black;
+    --incentive-selected-background: white;
+    --incentive-selected-border-color: rgb(192, 192, 202);
+    --incentive-selected-border-width: 1px;
+    --incentive-selected-button-foreground-color: white;
+    --incentive-selected-button-background-color: black;
+    --incentive-selected-button-border-color: black;
+    --incentive-selected-button-border-radius: 5px;
+    --incentive-selected-button-border-thickness: 1px;
+    --incentive-selected-button-hover-foreground-color: white;
+    --incentive-selected-button-hover-background-color: #404040;
+    --incentive-selected-button-hover-border-color: #404040;
+    --incentive-selected-button-click-foreground-color: white;
+    --incentive-selected-button-click-background-color: #404040;
+    --incentive-selected-button-click-border-color: #404040;
+
+    /* Prize List Container */
+    --prize-list-foreground-color: black;
+    --prize-list-background-color: white;
+    --prize-list-border-radius: 5px;
+    --prize-list-border-color: black;
+    --prize-list-border-thickness: 1px;
+
+    /* Prize List Items */
+    --prize-list-item-foreground-color: black;
+    --prize-list-item-background-color: white;
+    --prize-list-item-border-color: rgb(192, 192, 202);
+    --prize-list-item-border-thickness: 1px;
+    --prize-list-item-hover-foreground-color: black;
+    --prize-list-item-hover-background-color: #f2f2f2;
+    --prize-list-item-click-foreground-color: black;
+    --prize-list-item-click-background-color: #d9d9d9;
+
+    /* Donate Button */
+    --donate-button-foreground-color: white;
+    --donate-button-background-color: black;
+    --donate-button-border-color: black;
+    --donate-button-border-radius: 5px;
+    --donate-button-border-thickness: 1px;
+    --donate-button-hover-foreground: white;
+    --donate-button-hover-background: #404040;
+    --donate-button-hover-border-color: #404040;
+    --donate-button-click-foreground: white;
+    --donate-button-click-background: #404040;
+    --donate-button-click-border-color: #404040;
+
+    /* ----- Info Pages ----- */
+
+    /* Donation Stats */
+    --donation-stats-font-family: 'Roboto', sans-serif;
+    --donation-stats-foreground-color: black;
+
+    /* Table Header */
+    --table-header-foreground-color: black;
+    --table-header-background-color: white;
+    --table-header-font-family: 'Roboto', sans-serif;
+
+    /* Table Rows */
+    --table-row-font-family: 'Roboto', sans-serif;
+    --table-row-border-color: #dddddd;
+    --table-row-border-thickness: 2px;
+    --table-row-odd-foreground-color: black;
+    --table-row-even-foreground-folor: black;
+    --table-row-odd-background-color: #f9f9f9;
+    --table-row-even-background-color: white;
+    --table-row-hover-foreground-color: black;
+    --table-row-hover-background-color: #dfdfdf;
+    --table-row-click-foreground-color: black;
+    --table-row-click-background-color: #dfdfdf;
+
+    /* Do not change anything below this line. */
+}
+
+html, body {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: var(--global-font-family);
+}
+
+body {
+    display: none;
+}
+
+.link {
+    color: var(--link-color);
+    text-decoration: none;
+}
+
+.link:hover {
+    color: var(--link-hover-color);
+}
+
+.link:visited {
+    color: var(--link-color);
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    color: var(--header-foreground-color);
+    background-color: var(--header-background-color);
+    width: calc(100% - 64px);
+    height: 50px;
+    padding: 0 32px;
+    cursor: default;
+    z-index: 100;
+}
+
+.topNav {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    align-items: center;
+    height: 100%;
+}
+
+.topNavImg {
+    display: inline-block;
+    height: 2em;
+    object-fit: contain;
+    text-align: center;
+    vertical-align: middle;
+    margin: 0;
+    cursor: pointer;
+}
+
+.topNavImg img {
+    max-width: 100%;
+    max-height: 100%;
+    pointer-events: none;
+}
+
+.topNavButton {
+    color: var(--nav-button-foreground-color);
+    background-color: transparent;
+    height: 100%;
+    outline: none;
+    border: none;
+    text-decoration: none;
+    padding: 0 10px;
+    font-size: 18px;
+}
+
+.topNavButton:hover {
+    color: var(--nav-button-hover-foreground-color);
+    cursor: pointer;
+}
+
+.topNavButton:active {
+    color: var(--nav-button-click-foreground-color);
+    cursor: pointer;
+}
+
+.eventDropdown {
+    color: var(--nav-button-foreground-color);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-left: auto;
+    font-size: 18px;
+    height: 100%;
+    cursor: pointer;
+    padding-left: 32px;
+}
+
+.eventDropdownText {
+    max-width: min-content;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 300px;
+}
+
+.eventDropdown:hover {
+    color: var(--nav-button-hover-foreground-color);
+}
+
+.eventDropdownContent {
+    color: var(--event-dropdown-foreground-color);
+    background-color: var(--event-dropdown-background-color);
+    font-family: var(--event-dropdown-font-family);
+
+    display: none;
+    position: absolute;
+    min-width: 200px;
+    max-height: 300px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    right: 32px;
+    top: 50px;
+    font-size: 18px;
+    padding: 8px 0;
+    box-shadow: 0 6px 12px rgb(0 0 0 / 18%);
+    cursor: default;
+}
+
+.eventDropdown:hover .eventDropdownContent {
+    display: inline-block;
+}
+
+.eventDropdownContent:hover {
+    display: inline-block;
+}
+
+.eventDropdownContent .eventDropdownSpacer {
+    margin: 10px 0;
+    height: 0.5px;
+    background-color: var(--event-dropdown-separator-color);
+}
+
+.eventDropdownContent .eventDropdownButton {
+    width: calc(100% - 32px);
+    padding: 4px 16px;
+    height: 24px;
+    overflow: hidden;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.eventDropdownContent .eventDropdownButton:hover {
+    color: var(--event-dropdown-hover-foreground-color);
+    background-color: var(--event-dropdown-hover-background-color);
+}
+
+.eventDropdownContent .eventDropdownButton:active {
+    color: var(--event-dropdown-click-foreground-color);
+    background-color: var(--event-dropdown-click-background-color);
+}
+
+.body {
+    padding: 32px;
+    width: calc(100% - 64px);
+    height: 100%;
+    overflow-y: scroll;
+    margin: 0;
+    visibility: hidden;
+    margin-top: 50px;
+}
+
+.content {
+    margin: 0;
+}
+
+.donationStats {
+    color: var(--donation-stats-foreground-color);
+    font-family: var(--donation-stats-font-family);
+    
+    font-size: 20px;
+    text-align: center;
+}
+
+table {
+    width: 100%;
+    font-size: 14px;
+    border-collapse: collapse;
+    cursor: default;
+}
+
+th {
+    color: var(--table-header-foreground-color);
+    background-color: var(--table-header-background-color);
+    font-family: var(--table-header-font-family);
+    border: none;
+    cursor: default;
+    padding: 10px;
+    padding-bottom: 6px;
+    text-align: left;
+    font-size: 16px;
+}
+
+td {
+    font-family: var(--table-row-font-family);
+    border-top: var(--table-row-border-thickness) solid var(--table-row-border-color);
+    cursor: pointer;
+    padding: 10px;
+    vertical-align: top;
+}
+
+tr:nth-child(odd) {
+    color: var(--table-row-odd-foreground-color);
+    background-color: var(--table-row-odd-background-color);
+}
+
+tr:nth-child(even) {
+    color: var(--table-row-even-foreground-color);
+    background-color: var(--table-row-even-background-color);
+}
+
+tr:hover {
+    color: var(--table-row-hover-foreground-color);
+    background-color: var(--table-row-hover-background-color);
+}
+
+tr:last-child {
+    border-bottom: var(--table-row-border-thickness) solid var(--table-row-border-color);
+}
+
+tr:nth-child(odd).subTableRow:hover {
+    color: var(--table-row-odd-foreground-color);
+    background-color: var(--table-row-odd-background-color);
+}
+
+tr:nth-child(even).subTableRow:hover {
+    color: var(--table-row-even-foreground-color);
+    background-color: var(--table-row-even-background-color);
+}
+
+.subTableRow {
+    display: none;
+    width: 100%;
+}
+
+.subTableRow th {
+    font-size: 14px;
+}
+
+.subTableRow td {
+    width: 44%;
+    cursor: default;
+    font-size: 12px;
+}
+
+.subTableRow tr:nth-child(odd):hover {
+    color: var(--table-row-odd-foreground-color);
+    background-color: var(--table-row-odd-background-color);
+}
+
+.subTableRow tr:nth-child(even):hover {
+    color: var(--table-row-even-foreground-color);
+    background-color: var(--table-row-even-background-color);
+}
+
+.tableOptionsButton {
+    width: 105px;
+    margin: 6px 0;
+    font-size: 14px;
+}
+
+.sweepstakesRulesLink:hover {
+    color: var(--link-hover-color);
+}
+
+.pageTitle {
+    font-size: 38px;
+    font-weight: bold;
+    text-align: center;
+    padding-bottom: 16px;
+}
+
+.footer {
+    color: black;
+    visibility: visible;
+    display: block;
+    font-size: 16px;
+    text-align: center;
+    margin-top: 50px;
+}
+
+.successText {
+    font-weight: bold;
+    font-size: 48px;
+    margin-bottom: 8px;
+    opacity: 0;
+    transition-duration: 2s;
+}
+
+.successMessage {
+    font-size: 24px;
+    opacity: 0;
+    transition-duration: 2s;
+}
+
+.checkmarkDiv {
+    text-align: center;
+}
+
+.wrapper {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #eee
+}
+
+.checkmark__circle {
+    stroke-dasharray: 166;
+    stroke-dashoffset: 166;
+    stroke-width: 2;
+    stroke-miterlimit: 10;
+    stroke: #7ac142;
+    fill: none;
+    animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards
+}
+
+.checkmark {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    display: block;
+    stroke-width: 2;
+    stroke: #fff;
+    stroke-miterlimit: 10;
+    margin: 32px auto;
+    box-shadow: inset 0px 0px 0px #7ac142;
+    animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both
+}
+
+.checkmark__check {
+    transform-origin: 50% 50%;
+    stroke-dasharray: 48;
+    stroke-dashoffset: 48;
+    animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards
+}
+
+@keyframes stroke {
+    100% {
+        stroke-dashoffset: 0
+    }
+}
+
+@keyframes scale {
+    0%, 100% {
+        transform: none
+    }
+
+    50% {
+        transform: scale3d(1.1, 1.1, 1)
+    }
+}
+
+@keyframes fill {
+    100% {
+        box-shadow: inset 0px 0px 0px 75px #7ac142
+    }
+}

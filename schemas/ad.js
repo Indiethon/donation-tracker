@@ -14,6 +14,10 @@ module.exports.schema = (mongoose, database) => {
         },
         notes: {
             type: String,
+        },
+        active: {
+            type: Boolean,
+            default: false
         }
     }, { toJSON: { virtuals: true } }, { toObject: { virtuals: true } });
 

@@ -2,14 +2,14 @@
 <html>
 
 <head>
-    <title>Admin - Donation Tracker</title>
+    <title>Volunteer - Donation Tracker</title>
     <link rel="shortcut icon" href="/content/logo">
     <script defer src="/content/pages/dashboard/utils.js"></script>
     <script defer src="/content/pages/dashboard/volunteer/volunteer/volunteer.js"></script>
     <link rel="stylesheet" href="/content/pages/dashboard/volunteer/volunteer/volunteer.css" />
 </head>
 
-<body onload="load(false)">
+<body>
     <div id="sidebar">
         <div id="iconDiv">
             <img id="icon" src="/content/logo">
@@ -17,6 +17,10 @@
         <div id="navigation">
             <div class="navGeneral">
                 <div class="navTopText">GENERAL</div>
+                <button onClick="switchPage('/content/pages/dashboard/volunteer/home/home.html')">
+                    <span class="material-icons-outlined">home</span>
+                    <div class="buttonText">Overview</div>
+                </button>
                 <button onClick="switchPage('/content/pages/dashboard/volunteer/donations/donations.html')">
                     <span class="material-icons-outlined">payments</span>
                     <div class="buttonText">Donations</div>
@@ -42,9 +46,12 @@
     <div id="mainPage">
         <div id="header">
             <div id="welcomeText"></div>
-            <button id="adminView" onClick="location.href = '/content/pages/dashboard/admin/admin/admin.html'">Switch To
+            <button id="adminView"
+                onClick="location.href = '/admin/dashboard'">Switch To
                 Admin View</button>
-            <button id="logout" onClick="logout()">Logout</button>
+            <button id="logout" onClick="logout()">
+                <span class="material-icons-outlined">logout</span>
+                <div class="buttonText">Logout</div></button>
         </div>
         <div id="content">
             <iframe id="pageFrame" src="/content/pages/dashboard/volunteer/home/home.html"></iframe>

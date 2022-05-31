@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="/content/pages/dashboard/common.css" />
 </head>
 
-<body onLoad="load(false)">
+<body>
     <script>let model = 'users';</script>
     <ul class="breadcrumb">
         <li><a onClick="switchPage('/content/pages/dashboard/admin/home/home.html')">Home</a></li>
@@ -27,88 +27,45 @@
         </div>
     </div>
     <div class="content">
-        <table id="table">
-            <thead>
-                <tr>
-                    <th><input type="checkbox" item="all" /></th>
-                    <th>Username</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Group</th>
-                    <th>Superuser</th>
-                    <th>Volunteer</th>
-                    <th>Last Login</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
 
-            </tbody>
-        </table>
-        <div class="tableDropdownContent" id="test">
-            <button class="tableDropdownButton" onClick="dropdownSwitchPage(this)">View</button>
-            <button class="tableDropdownButton" onClick="dropdownSwitchPage(this)">Edit</button>
-            <button class="tableDropdownButton" onClick="dropdownSwitchPage(this)">Delete</button>
-        </div>
     </div>
     <script>
+        load(false, { model: 'group', level: 'access' });
+
         function pageLoaded() {
-            showBody();
-            GET('users', (err, data) => {
-                if (err) return;
-                let table = document.querySelector('tbody');
-                for (const user of data.data) {
-
-                    let lastLogin = new Date(user.lastLogin);
-                    lastLoginHours = (lastLogin.getHours() < 10) ? '0' + lastLogin.getHours() : '' + lastLogin.getHours();
-                    lastLoginMins = (lastLogin.getMinutes() < 10) ? '0' + lastLogin.getMinutes() : '' + lastLogin.getMinutes();
-                    lastLogin = `${lastLogin.getMonth() + 1}/${lastLogin.getDate()}/${lastLogin.getFullYear()} ${lastLoginHours}:${lastLoginMins} `
-
-                    let row = table.insertRow();
-                    row.insertCell().innerHTML = `<input type="checkbox" item="${user.id}" />`;
-                    row.insertCell().innerHTML = `<p class="tableText">${user.username}</p>`;
-                    row.insertCell().innerHTML = `<p class="tableText">${user.firstName}</p>`;
-                    row.insertCell().innerHTML = `<p class="tableText">${user.lastName}</p>`;
-                    row.insertCell().innerHTML = `<p class="tableText"></p>`; // Group name here.
-                    row.insertCell().innerHTML = `<p class="tableText">${user.superuser}</p>`;
-                    row.insertCell().innerHTML = `<p class="tableText">${user.volunteer}</p>`;
-                    row.insertCell().innerHTML = `<p class="tableText">${lastLogin}</p>`;
-                    row.insertCell().innerHTML = `
-                <div class="tableDropdown">
-                    <button class="tableButton">...</button>
-                    <div class="tableDropdownContent">
-                        <button class="tableDropdownButton" onClick="dropdownSwitchPage('view', '${user._id}')">View</button>
-                        <button class="tableDropdownButton" onClick="dropdownSwitchPage('edit', '${user._id}')">Edit</button>
-                        <button class="tableDropdownButton" onClick="deleteItem('${user._id}', '${user.username}')">Delete</button>
-                    </div>
-                </div>`;
-                }
-                showContent();
-            });
-        }
-
-        function dropdownSwitchPage(page, user) {
-            switch (page) {
-                case 'view': switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=view&id=${user}`); break;
-                case 'edit': switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=edit&id=${user}`); break;
-            }
-        }
-
-        function deleteItem(id, name) {
-            showDialog({
-                model: 'user',
-                name: name,
-                endpoint: `users/${id}`,
+            document.body.style.visibility = 'visible';
+            generateTable({
+                name: 'user',
+                model: 'users',
+                endpoint: 'users',
+                table: [{
+                    name: 'Username',
+                    data: 'username',
+                }, {
+                    name: 'Group',
+                    data: 'groupId',
+                    textFunction: (value) => {
+                        if (value.group !== undefined && value.group !== null) return value.group.name;
+                        return '';
+                    }
+                }, {
+                    name: 'Admin',
+                    data: 'admin',
+                }, {
+                    name: 'Superuser',
+                    data: 'superuser',
+                }, {
+                    name: 'Volunteer',
+                    data: 'volunteer',
+                }, {
+                    name: 'Last Login',
+                    data: 'lastLogin',
+                    textFunction: (value) => {
+                        return new Date(value.lastLogin).toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit', seconds: undefined })
+                    }
+                },]
             })
         }
-
-        // Listen for events from parent.
-        window.addEventListener("message", (event) => {
-            if (event.origin !== window.location.origin) return;
-            switch (event.data.name) {
-                case 'reload': location.reload(); break;
-            }
-        }, false);
     </script>
 </body>
 

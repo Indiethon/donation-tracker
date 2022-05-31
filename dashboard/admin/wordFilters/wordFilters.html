@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="/content/pages/dashboard/common.css" />
 </head>
 
-<body onLoad="load(false)">
+<body>
     <script>let model = 'wordFilters';</script>
     <ul class="breadcrumb">
         <li><a onClick="switchPage('/content/pages/dashboard/admin/home/home.html')">Home</a></li>
@@ -27,74 +27,34 @@
         </div>
     </div>
     <div class="content">
-        <table id="table">
-            <thead>
-                <tr>
-                    <th><input type="checkbox" item="all" /></th>
-                    <th>Word</th>
-                    <th>Blocked</th>
-                    <th>Allowed</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-
-            </tbody>
-        </table>
         <div class="tableDropdownContent" id="test">
             <button class="tableDropdownButton" onClick="dropdownSwitchPage(this)">View</button>
             <button class="tableDropdownButton" onClick="dropdownSwitchPage(this)">Edit</button>
             <button class="tableDropdownButton" onClick="dropdownSwitchPage(this)">Delete</button>
         </div>
+
     </div>
     <script>
+        load(false, { model: 'wordFilter', level: 'access' });
+
         function pageLoaded() {
-            showBody();
-            GET('wordFilters', (err, data) => {
-                if (err) return;
-                let table = document.querySelector('tbody');
-                for (const word of data.data) {
-                    let row = table.insertRow();
-                    row.insertCell().innerHTML = `<input type="checkbox" item="${word.id}" />`;
-                    row.insertCell().innerHTML = `<p class="tableText">${word.word}</p>`;
-                    row.insertCell().innerHTML = `<p class="tableText">${word.blocked}</p>`;
-                    row.insertCell().innerHTML = `<p class="tableText">${word.allowed}</p>`;
-                    row.insertCell().innerHTML = `
-                <div class="tableDropdown">
-                    <button class="tableButton">...</button>
-                    <div class="tableDropdownContent">
-                        <button class="tableDropdownButton" onClick="dropdownSwitchPage('view', '${word._id}')">View</button>
-                        <button class="tableDropdownButton" onClick="dropdownSwitchPage('edit', '${word._id}')">Edit</button>
-                        <button class="tableDropdownButton" onClick="deleteItem('${word._id}', '${word.name}')">Delete</button>
-                    </div>
-                </div>`;
-                }
-                showContent();
-            });
-        }
-
-        function dropdownSwitchPage(page, word) {
-            switch (page) {
-                case 'view': switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=view&id=${word}`); break;
-                case 'edit': switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=edit&id=${word}`); break;
-            }
-        }
-
-        function deleteItem(id, name) {
-            showDialog({
-                model: 'wordFilter',
-                name: name,
-                endpoint: `wordFilters/${id}`,
+            document.body.style.visibility = 'visible';
+            generateTable({
+                name: 'wordFilter',
+                model: model,
+                endpoint: 'wordFilters',
+                table: [{
+                    name: 'Word',
+                    data: 'word',
+                }, {
+                    name: 'Allowed',
+                    data: 'allowed'
+                }, {
+                    name: 'Blocked',
+                    data: 'blocked'
+                }]
             })
         }
-
-        // Listen for events from parent.
-        window.addEventListener("message", (event) => {
-            if (event.origin !== window.location.origin) return;
-            switch (event.data.name) {
-                case 'reload': location.reload(); break;
-            }
-        }, false);
     </script>
 </body>
 

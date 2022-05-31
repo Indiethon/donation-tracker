@@ -6,21 +6,24 @@
     <link rel="stylesheet" href="/content/pages/dashboard/common.css" />
 </head>
 
-<body onLoad="load(false)">
+<body>
     <script>
         let model = 'speedruns';
         const urlParams = new URLSearchParams(window.location.search);
     </script>
     <ul class="breadcrumb">
         <li><a onClick="switchPage('/content/pages/dashboard/admin/home/home.html')">Home</a></li>
-        <li><a onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)">Speedruns</a>
+        <li id="eventBreadcrumb"><a onClick="switchPage(`/content/pages/dashboard/admin/overview/overview.html?event=${urlParams.get('event')}`)"></a></li>
+        <li><a
+                onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)">Speedruns</a>
         </li>
     </ul>
     <div class="header">
         <h2 class="title">Speedruns</h2>
         <div id="headerButtonDiv">
             <button class="oengusImport"
-                onClick="switchPage(`/content/pages/dashboard/admin/${model}/import.html?event=${urlParams.get('event')}`)">Import From Oengus</button>
+                onClick="switchPage(`/content/pages/dashboard/admin/${model}/import.html?event=${urlParams.get('event')}`)">Import
+                From Oengus</button>
             <button
                 onClick="switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=create&event=${urlParams.get('event')}`)">Create
                 New</button>
@@ -34,94 +37,47 @@
         </div>
     </div>
     <div class="content">
-        <table id="table">
-            <thead>
-                <tr>
-                    <th><input type="checkbox" item="all" /></th>
-                    <th>Game</th>
-                    <th>Category</th>
-                    <th>Runners</th>
-                    <th>Estimate</th>
-                    <th>Start Time</th>
-                    <th>Multiplayer</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-
-            </tbody>
-        </table>
-        <div class="tableDropdownContent" id="test">
-            <button class="tableDropdownButton" onClick="dropdownSwitchPage(this)">View</button>
-            <button class="tableDropdownButton" onClick="dropdownSwitchPage(this)">Edit</button>
-            <button class="tableDropdownButton" onClick="dropdownSwitchPage(this)">Delete</button>
-        </div>
     </div>
     <script>
+        load(false, { model: 'speedrun', level: 'access' });
+        setBreadcrumb(urlParams.get('event'));
+
         function pageLoaded() {
-            const urlParams = new URLSearchParams(window.location.search);
-
-            showBody();
-
-            GET(`speedruns/event/${urlParams.get('event')}`, (err, data) => {
-                if (err) return;
-                let table = document.querySelector('tbody');
-                for (const speedrun of data.data) {
-                    let runnerList = [];
-                    for (const runner of speedrun.runners) {
-                        runnerList.push(runner.name)
+            document.body.style.visibility = 'visible';
+            generateTable({
+                name: 'speedrun',
+                model: model,
+                endpoint: `speedruns/event/${urlParams.get('event')}`,
+                event: urlParams.get('event'),
+                table: [{
+                    name: 'Game',
+                    data: 'game'
+                }, {
+                    name: 'Category',
+                    data: 'category'
+                }, {
+                    name: 'Runners',
+                    textFunction: (value) => {
+                        let runnerList = [];
+                        for (const runner of value.runners) {
+                            runnerList.push(runner.name)
+                        }
+                        return runnerList.join(', ');
                     }
-
-                    let startTime = new Date(speedrun.startTime);
-                    startTimeHours = (startTime.getHours() < 10) ? '0' + startTime.getHours() : '' + startTime.getHours();
-                    startTimeMins = (startTime.getMinutes() < 10) ? '0' + startTime.getMinutes() : '' + startTime.getMinutes();
-                    startTime = `${startTime.getMonth() + 1}/${startTime.getDate()}/${startTime.getFullYear()} ${startTimeHours}:${startTimeMins} `
-
-                    let row = table.insertRow();
-                    row.insertCell().innerHTML = `<input type="checkbox" item="${speedrun.id}" />`;
-                    row.insertCell().innerHTML = `<p class="tableText">${speedrun.game}</p>`;
-                    row.insertCell().innerHTML = `<p class="tableText">${speedrun.category}</p>`;
-                    row.insertCell().innerHTML = `<p class="tableText">${runnerList.join(', ')}</p>`;
-                    row.insertCell().innerHTML = `<p class="tableText">${speedrun.estimate}</p>`;
-                    row.insertCell().innerHTML = `<p class="tableText">${startTime}</p>`;
-                    row.insertCell().innerHTML = `<p class="tableText">${speedrun.multiplayer}</p>`;
-                    row.insertCell().innerHTML = `
-                <div class="tableDropdown">
-                    <button class="tableButton">...</button>
-                    <div class="tableDropdownContent">
-                        <button class="tableDropdownButton" onClick="dropdownSwitchPage('view', '${speedrun._id}')">View</button>
-                        <button class="tableDropdownButton" onClick="dropdownSwitchPage('edit', '${speedrun._id}')">Edit</button>
-                        <button class="tableDropdownButton" onClick="deleteItem('${speedrun._id}', '${speedrun.name}')">Delete</button>
-                    </div>
-                </div>`;
-                }
-                showContent();
-            });
-        }
-
-        function dropdownSwitchPage(page, speedrun) {
-            switch (page) {
-                case 'view': switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=view&id=${speedrun}&event=${urlParams.get('event')}`); break;
-                case 'edit': switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=edit&id=${speedrun}&event=${urlParams.get('event')}`); break;
-            }
-        }
-
-        function deleteItem(id, name) {
-            showDialog({
-                model: 'speedrun',
-                name: name,
-                endpoint: `speedruns/${id}`,
-                message: 'This will also delete all speedruns assosiated with this runner.',
+                }, {
+                    name: 'Estimate',
+                    data: 'estimate'
+                }, {
+                    name: 'Start Time',
+                    textFunction: (eventData) => {
+                        return new Date(eventData.startTime).toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit', seconds: undefined })
+                    }
+                }, {
+                    name: 'Multiplayer',
+                    data: 'multiplayer'
+                }]
             })
         }
-
-        // Listen for events from parent.
-        window.addEventListener("message", (event) => {
-            if (event.origin !== window.location.origin) return;
-            switch (event.data.name) {
-                case 'reload': location.reload(); break;
-            }
-        }, false);
     </script>
 </body>
 

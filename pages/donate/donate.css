@@ -1,0 +1,668 @@
+.content {
+    max-width: 600px;
+    margin: 0 auto;
+    justify-content: center;
+}
+
+form {
+    width: 100%;
+}
+
+form .inputDiv {
+    display: block;
+    width: calc(100% - 24px);
+    height: 100%;
+}
+
+.inputDiv .label {
+    font-size: 16px;
+    margin-bottom: 10px;
+    margin-left: 3px;
+}
+
+*:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.label.large {
+    color: var(--donation-page-heading-color);
+    font-family: var(--donation-page-heading-font-family);
+    
+    font-size: 28px;
+    font-weight: bold;
+    margin-left: 0;
+}
+
+.pageTitle {
+    font-size: 36px;
+    text-align: left;
+    font-weight: bold;
+}
+
+.pageSubtitle {
+    font-size: 16px;
+    color: var(--donation-page-heading-color);
+    font-family: var(--donation-page-heading-font-family);
+
+    margin-bottom: 12px;
+}
+
+/* Text Inputs */
+.inputDiv input {
+    color: var(--input-foreground-color);
+    background-color: var(--input-hover-background-color);
+    border-width: var(--input-border-thickness);
+    border-style: solid;
+    border-color: var(--input-border-color);
+    border-radius: var(--input-border-radius);
+    font-family: var(--input-font-family);
+
+    width: 100%;
+    height: 26px;
+    padding: 4px 8px;
+    margin: 5px 0;
+    font-size: 16px;
+    outline: none;
+    vertical-align: middle;
+}
+
+.inputDiv input:hover {
+    color: var(--input-hover-foreground-color);
+    background-color: var(--input-hover-background-color);
+    border-color: var(--input-hover-border-color);
+}
+
+.inputDiv input:focus {
+    color: var(--input-focus-foreground-color);
+    background-color: var(--input-focus-background-color);
+    border-color: var(--input-focus-border-color);
+}
+
+.inputDiv textarea {
+    color: var(--input-foreground-color);
+    background-color: var(--input-background-color);
+    border-width: var(--input-border-thickness);
+    border-style: solid;
+    border-color: var(--input-border-color);
+    border-radius: var(--input-border-radius);
+    font-family: var(--input-font-family);
+
+    flex: 1;
+    width: 100%;
+    height: 74px;
+    padding: 8px 8px;
+    margin: 5px 0;
+    font-size: 16px;
+    outline: none;
+    resize: vertical;
+}
+
+.inputDiv textarea:hover {
+    color: var(--input-hover-foreground-color);
+    background-color: var(--input-hover-background-color);
+    border-color: var(--input-hover-border-color);
+}
+
+.inputDiv textarea:focus {
+    color: var(--input-focus-foreground-color);
+    background-color: var(--input-focus-background-color);
+    border-color: var(--input-focus-border-color);
+}
+
+.inputSubtext {
+    font-size: 14px;
+    margin-left: 3px;
+    margin-top: -15px;
+    cursor: default;
+}
+
+#amount .inputSubtext {
+    margin-top: 0;
+}
+
+#comment .inputSubtext {
+    margin-top: -20px;
+}
+
+.inputDiv .errorText {
+    color: var(--input-error-text-color);
+
+    font-size: 14px;
+    visibility: hidden;
+    margin-left: 3px;
+}
+
+input[type=checkbox] {
+    display: block;
+    width: 26px;
+    height: 26px;
+}
+
+.inputUnit {
+    font-family: var(--input-font-family);
+
+    position: relative;
+    font-size: 16px;
+    top: 34px;
+    left: -56px;
+    pointer-events: none;
+}
+
+.inputCount {
+    font-family: var(--input-font-family);
+
+    text-align: right;
+    position: relative;
+    font-size: 12px;
+    top: -24px;
+    right: -10px;
+    pointer-events: none;
+    width: auto;
+    margin: 0;
+}
+
+.textareaDiv .inputCount {
+    top: -28px;
+}
+
+/* Incentive Add Button */
+#incentiveAdd {
+    color: var(--incentive-add-button-foreground-color);
+    background-color: var(--incentive-add-button-background-color);
+    border-style: solid;
+    border-width: var(--incentive-add-button-border-thickness);
+    border-color: var(--incentive-add-button-border-color);
+    border-radius: var(--incentive-add-button-border-radius);
+
+    margin-top: 0;
+    margin-bottom: 24px;
+    width: calc(100% + 18px);
+}
+
+#incentiveAdd:hover {
+    color: var(--incentive-add-button-hover-foreground-color);
+    background-color: var(--incentive-add-button-hover-background-color);
+    border-color: var(--incentive-add-button-hover-border-color);
+}
+
+#incentiveAdd:active {
+    color: var(--incentive-add-button-click-foreground-color);
+    background-color: var(--incentive-add-button-click-background-color);
+    border-color: var(--incentive-add-button-click-border-color);
+}
+
+#incentiveAdd:disabled:hover {
+    color: var(--incentive-add-button-foreground-color);
+    background-color: var(--incentive-add-button-background-color);
+    border-color: var(--incentive-add-button-border-color);
+}
+
+/* Incentive Select Container */
+.incentiveDiv {
+    border-color: var(--incentive-container-border-color);
+    border-style: solid;
+    border-radius: var(--incentive-container-border-radius);
+    border-width: var(--incentive-container-border-thickness);
+
+    width: calc(100% + 16px);
+    min-height:300px;
+    height: 100%;
+    display: none;
+    margin-top: 16px;
+    margin-bottom: 24px;
+}
+
+#incentives .inputSubtext {
+    margin: 4px 0;
+    font-size: 16px;
+}
+
+/* Incentive Select Window */
+.incentiveList {
+    background-color: var(--incentive-select-background-color);
+    border-right: var(--incentive-container-border-thickness) solid var(--incentive-container-border-color);
+
+    width: 35%;
+    margin: 0;
+    flex-shrink: 0;
+    overflow-y: auto;
+    overflow-x: none;
+}
+
+.incentiveListDiv {
+    background-color: var(--incentive-select-background-color);
+    border-bottom: var(--incentive-select-border-thickness) solid var(--incentive-select-border-color);
+
+    padding: 8px 8px;
+}
+
+.incentiveListDiv .incentiveGame {
+    color: var(--incentive-select-game-color);
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.incentiveListDiv .incentiveName {
+    color: var(--incentive-select-name-color);
+    font-size: 14px;
+}
+
+.incentiveListDiv:hover {
+    background-color: var(--incentive-select-hover-background-color);
+    cursor: pointer;
+}
+
+.incentiveListDiv:hover .incentiveGame {
+    color: var(--incentive-select-hover-game-color);
+}
+
+.incentiveListDiv:hover .incentiveName {
+    color: var(--incentive-select-hover-name-color);
+}
+
+.incentiveListDiv.selected {
+    background-color: var(--incentive-select-selected-background-color);
+}
+
+.incentiveListDiv.selected .incentiveGame {
+    color: var(--incentive-select-selected-game-color);
+}
+
+.incentiveListDiv.selected .incentiveName {
+    color: var(--incentive-select-selected-name-color);
+}
+
+/* Incentive Info Window */
+.incentiveInfo {
+    color: var(--incentive-info-foreground-color);
+    background-color: var(--incentive-info-background-color);
+
+    flex-grow: 1;
+    visibility: hidden;
+    padding: 16px;
+}
+
+.incentiveInfo .incentiveGame {
+    color: var(--incentive-info-game-color);
+    margin-bottom: 10px;
+    font-size: 20px;
+    cursor: default;
+}
+
+.incentiveInfo .incentiveName {
+    color: var(--incentive-info-name-color);
+    margin-bottom: 10px;
+    font-size: 18px;
+    cursor: default;
+}
+
+.incentiveInfo .incentiveDescription {
+    margin-bottom: 10px;
+    font-size: 14px;
+    cursor: default;
+}
+
+.incentiveTotalProgress {
+    background-color: var(--incentive-info-progress-background-color);
+    border: var(--incentive-info-progress-border-width) solid var(--incentive-info-progress-border-color);
+    border-radius: var(--incentive-info-progress-border-radius);
+    height: var(--incentive-info-progress-height);
+    padding: 2px;
+    margin-bottom: 4px;
+}
+
+.incentiveTotalProgressBar {
+    background-color: var(--incentive-info-progress-foreground-color);
+    border-radius: var(--incentive-info-progress-border-radius);
+    height: 100%;
+    margin: 0;
+}
+
+.incentiveTotal {
+    display: none;
+    margin-bottom: 16px;
+    cursor: default;
+}
+
+.incentiveTotalText {
+    font-size: 16px;
+}
+
+.incentiveInfo .label {
+    padding-left: 4px;
+    font-size: 14px;
+}
+
+#incentives .incentiveInfo .inputSubtext {
+    margin-top: 0px;
+    padding-left: 4px;
+    font-size: 14px;
+}
+
+.incentiveInfo .inputUnit {
+    color: var(--incentive-info-input-foreground-color);
+    margin-left: -150px;
+}
+
+#incentiveAmount {
+    width: calc(100% - 31px)
+}
+
+.incentiveInfo input[type=input] {
+    color: var(--incentive-info-input-foreground-color);
+    background-color: var(--incentive-info-input-hover-background-color);
+    border-width: var(--incentive-info-input-border-thickness);
+    border-style: solid;
+    border-color: var(--incentive-info-input-border-color);
+    border-radius: var(--incentive-info-input-border-radius);
+    font-family: var( --incentive-info-input-font-family);
+}
+
+.incentiveInfo input[type=input]:hover {
+    color: var(--incentive-info-input-hover-foreground-color);
+    background-color: var(--incentive-info-input-hover-background-color);
+    border-color: var(--incentive-info-input-hover-border-color);
+}
+
+.incentiveInfo input[type=input]:focus {
+    color: var(--incentive-info-input-focus-foreground-color);
+    background-color: var(--incentive-info-input-focus-background-color);
+    border-color: var(--incentive-info-input-focus-border-color);
+}
+
+.incentiveOptions {
+    display: none;
+    margin-top: 16px;
+}
+
+.incentiveOptionDiv {
+    display: flex;
+    align-items: center;
+    height: 22px;
+    padding: 4px 8px;
+    cursor: pointer;
+}
+
+.incentiveOptionDiv:hover {
+    background-color: var(--incentive-info-option-hover-background-color);
+}
+
+.incentiveOptionDiv.selected {
+    background-color: var(--incentive-info-option-selected-background-color);
+    cursor: default;
+    pointer-events: none;
+}
+
+.incentiveOptionDiv .incentiveOptionCheck {
+    color: var(--incentive-info-foreground-color);
+    background-color: var(--incentive-info-background-color);
+    
+    width: 16px;
+    height: 16px;
+    margin-right: 6px;
+    pointer-events: none;
+}
+
+.incentiveOptionDiv .incentiveOptionName {
+    font-size: 16px;
+    pointer-events: none;
+}
+
+.incentiveOptionDiv .incentiveOptionAmount {
+    margin-left: auto;
+    font-size: 16px;
+    pointer-events: none;
+}
+
+.incentiveOptionDiv.customOption {
+    width: calc(100% - 16px);
+    display: inline-block;
+    height: 72px;
+    padding: 4px 8px;
+    padding-top: 3px;
+}
+
+.incentiveOptionDiv.customOption.selected {
+    pointer-events: none;
+}
+
+.incentiveOptionDiv.customOption .flexbox {
+    display: flex;
+    align-items: center;
+}
+
+.incentiveOptionDiv.customOption .incentiveOptionName {
+    width: 200px;
+}
+
+.incentiveOptionDiv.customOption .incentiveCustomOption {
+    width: calc(100% - 46px);
+    margin-left: 20px;
+    pointer-events: all;
+}
+
+.incentiveOptionDiv.customOption .inputCount {
+    color: var(--incentive-info-input-foreground-color);
+    font-family: var(--incentive-info-input-font-family);
+
+    right: 17px;
+    top: -23px;
+}
+
+/* Incentive Confirm Button */
+#incentiveAddConfirm {
+    color: var(--incentive-confirm-button-foreground-color);
+    background-color: var(--incentive-confirm-button-background-color);
+    border-style: solid;
+    border-width: var(--incentive-confirm-button-border-thickness);
+    border-color: var(--incentive-confirm-button-border-color);
+    border-radius: var(--incentive-confirm-button-border-radius);
+
+    margin-top: 16px;
+    width: 100%;
+}
+
+#incentiveAddConfirm:hover {
+    color: var(--incentive-confirm-button-hover-foreground-color);
+    background-color: var(--incentive-confirm-button-hover-background-color);
+    border-color: var(--incentive-confirm-button-hover-border-color);
+}
+
+#incentiveAddConfirm:active {
+    color: var(--incentive-confirm-button-click-foreground-color);
+    background-color: var(--incentive-confirm-button-click-background-color);
+    border-color: var(--incentive-confirm-button-click-border-color);
+}
+
+#incentiveAddConfirm:disabled:hover {
+    color: var(--incentive-confirm-button-foreground-color);
+    background-color: var(--incentive-confirm-button-background-color);
+    border-color: var(--incentive-confirm-button-border-color);
+}
+
+.incentiveAddButton {
+    width: 100%;
+    height: 34px;
+    padding: 6px;
+    font-size: 16px;
+    vertical-align: middle;
+    text-align: center;
+}
+
+/* Selected Incentives List */
+
+.incentiveSelected {
+    width: calc(100% + 16px);
+    margin: 24px 0;
+    color: var(--incentive-selected-foreground);
+    background-color: var(--incentive-selected-background);
+    cursor: default;
+}
+
+.incentiveSelectedDiv {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-top: var(--incentive-selected-border-width) solid var(--incentive-selected-border-color);
+    border-bottom: var(--incentive-selected-border-width) solid var(--incentive-selected-border-color);
+}
+
+.incentiveSelectedRightDiv {
+    text-align: right;
+    justify-content: flex-end;
+}
+
+.incentiveSelectedRightDiv button {
+    color: var(--incentive-selected-button-foreground-color);
+    background-color: var(--incentive-selected-button-background-color);
+    border-style: solid;
+    border-width: var(--incentive-selected-button-border-thickness);
+    border-color: var(--incentive-selected-button-border-color);
+    border-radius: var(--incentive-selected-button-border-radius);
+
+    text-align: center;
+    font-size: 14px;
+    height: 32px;
+    padding: 6px 12px;
+    margin-top: 8px;
+}
+
+.incentiveSelectedRightDiv button:hover {
+    color: var(--incentive-selected-button-hover-foreground-color);
+    background-color: var(--incentive-selected-button-hover-background-color);
+    border-color: var(--incentive-selected-button-hover-border-color);
+}
+
+.incentiveSelectedRightDiv button:active {
+    color: var(--incentive-selected-button-click-foreground-color);
+    background-color: var(--incentive-selected-button-click-background-color);
+    border-color: var(--incentive-selected-button-click-border-color);
+}
+
+.incentiveSelectedDiv .incentiveGame {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.incentiveSelectedDiv .incentiveName {
+    font-size: 16px;
+}
+
+.incentiveSelectedDiv .incentiveOption {
+    margin-top: 10px; 
+    font-size: 16px;
+}
+
+.incentiveSelectedDiv .incentiveAmount {
+    font-size: 20px;
+}
+
+/* Prize Text */
+.prizesLabel {
+    color: var(--donation-page-heading-color);
+    font-family: var(--donation-page-heading-font-family);
+    
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 4px;
+    cursor: default;
+}
+
+#prizes {
+    width: calc(100% - 8px);
+    display: flex;
+    height: 300px;
+    margin-bottom: 16px;
+}
+
+.prizeText div {
+    font-size: 16px;
+    margin-bottom: 16px;
+}
+
+.prizeText {
+    width: 60%;
+    padding-right: 16px;
+    cursor: default;
+}
+
+.prizeList {
+    width: 40%;
+    border: 1px solid var(--prize-list-border-color);
+    border-radius: var(--prize-list-border-radius);
+    overflow-y: auto;
+    overflow-x: none;
+}
+
+.prizeList .prizeListDiv {
+    color: var(--prize-list-item-foreground-color);
+    background-color: var(--prize-list-item-background-color);
+    border-bottom: var(--prize-list-item-border-thickness) solid var(--prize-list-item-border-color);
+    
+    border-radius: 0;
+    padding: 8px;
+}
+
+.prizeList .prizeListDiv:hover {
+    color: var(--prize-list-item-hover-foreground-color);
+    background-color: var(--prize-list-item-hover-background-color);
+}
+
+.prizeList .prizeListDiv:focus {
+    color: var(--prize-list-item-click-foreground-color);
+    background-color: var(--prize-list-item-click-background-color);
+}
+
+.prizeListDiv p {
+    margin: 0;
+    cursor: default;
+}
+
+.prizeListDiv .prizeName {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+
+.prizeListDiv .prizeAmount {
+    font-size: 14px;
+}
+
+/* Donate button */
+.donateButton {
+    color: var(--donate-button-foreground-color);
+    background-color: var(--donate-button-background-color);
+    border: var(--donate-button-border-thickness) solid var(--donate-button-border-color);
+    border-radius: var(--donate-button-border-radius);
+
+    width: calc(100% - 8px);
+    height: 46px;
+    padding: 8px;
+}
+
+.donateButton:hover {
+    color: var(--donate-button-hover-foreground);
+    background-color: var(--donate-button-hover-background);
+    border-color: var(--donate-button-hover-border-color);
+    cursor: pointer;
+}
+
+.donateButton:active {
+    color: var(--donate-button-click-foreground);
+    background-color: var(--donate-button-click-background);
+    border-color: var(--donate-button-click-border-color);
+}
+
+.donateButton:disabled:hover {
+    color: var(--donate-button-foreground-color);
+    background-color: var(--donate-button-background-color);
+    border: var(--donate-button-border-thickness) solid var(--donate-button-border-color);
+    border-radius: var(--donate-button-border-radius);
+    cursor: not-allowed;
+}
+
+.donateButtonCurrency {
+    display: none;
+    margin-right: -4px;
+}

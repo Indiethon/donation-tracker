@@ -19,7 +19,7 @@ module.exports.schema = (mongoose, database) => {
         runId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'run',
-            required: [true, 'Run id is required.'],
+            required: [true, 'Speedrun is required.'],
         },
         name: {
             type: String,

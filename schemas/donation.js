@@ -1,7 +1,19 @@
 module.exports.schema = (mongoose, database) => {
-    // let incentiveSchema = mongoose.Schema({
-        
-    // }, { toJSON: { virtuals: true } }, { toObject: { virtuals: true } });
+    let incentiveSchema = mongoose.Schema({
+        incentiveId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'incentive',
+            required: [true, 'Incentive id is required.'],
+        },
+        option: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'incentive.options',
+        },
+        amount: {
+            type: Number,
+            required: [true, 'Incentive amount is required.'],
+        },
+    }, { toJSON: { virtuals: true } }, { toObject: { virtuals: true } });
 
     let schema = mongoose.Schema({
         eventId: {
@@ -16,7 +28,8 @@ module.exports.schema = (mongoose, database) => {
         },
         alias: {
             type: String,
-            required: [true, 'Alias is required.']
+            required: [true, 'Alias is required.'],
+            maxLength: [32, 'Alias is too long.'],
         },
         amount: {
             type: Number,
@@ -31,28 +44,15 @@ module.exports.schema = (mongoose, database) => {
             }
         },
         comment: {
-            type: String
+            type: String,
+            maxLength: [5000, 'Comment is too long.'],
         },
-        incentives: [{
-            incentiveId: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'incentive',
-                required: [true, 'Incentive id is required.'],
-            },
-            option: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'incentive.options',
-            },
-            amount: {
-                type: Number,
-                required: [true, 'Incentive amount is required.'],
-            },
-        }],
+        incentives: [incentiveSchema],
         custom: [{
             customId: {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'event.customFields',
-                required: [true, 'Custom id is required.'],
+                // required: [true, 'Custom id is required.'],
             },
             value: {}
         }],
@@ -81,6 +81,12 @@ module.exports.schema = (mongoose, database) => {
             required: [true, 'Read is required.']
         }
     }, { toJSON: { virtuals: true } }, { toObject: { virtuals: true } });
+    incentiveSchema.virtual('incentive', {
+        ref: 'incentive',
+        localField: 'incentiveId',
+        foreignField: '_id',
+        justOne: true,
+    });
     schema.virtual('event', {
         ref: 'event',
         localField: 'eventId',

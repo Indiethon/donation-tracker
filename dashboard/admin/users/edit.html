@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="/content/pages/dashboard/common.css" />
 </head>
 
-<body onLoad="load(false)">
+<body>
     <script>let model = 'users';</script>
     <ul class="breadcrumb">
         <li><a onClick="switchPage(`/content/pages/dashboard/admin/home/home.html`)">Home</a></li>
@@ -16,7 +16,8 @@
     </ul>
     <div class="header">
         <div class="editHeader">
-            <button class="editBack" onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)">&lt;</button>
+            <button class="editBack"
+                onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)">&lt;</button>
             <h2 class="title"></h2>
         </div>
     </div>
@@ -28,148 +29,104 @@
         </div>
     </div>
     <div class="content">
-        <form>
-            <div id="id" class="inputDiv">
-                <label class="label">ID</label>
-                <input class="input" disabled>
-                <span class="errorText"></span>
-            </div>
-            <div id="username" class="inputDiv">
-                <label class="label">Username</label>
-                <input class="input">
-                <span class="errorText"></span>
-            </div>
-            <div id="firstName" class="inputDiv">
-                <label class="label">First Name</label>
-                <input class="input">
-                <span class="errorText"></span>
-            </div>
-            <div id="lastName" class="inputDiv">
-                <label class="label">Last Name</label>
-                <input class="input">
-                <span class="errorText"></span>
-            </div>
-            <div id="email" class="inputDiv">
-                <label class="label">Email</label>
-                <input class="input">
-                <span class="errorText"></span>
-            </div>
-            <div id="superuser" class="inputDiv">
-                <label class="label">Superuser</label>
-                <input class="input" type="checkbox">
-                <span class="errorText"></span>
-            </div>
-            <div id="volunteer" class="inputDiv">
-                <label class="label">Volunteer</label>
-                <input class="input" type="checkbox">
-                <span class="errorText"></span>
-            </div>
-            <!-- Will be implemented later! -->
-            <!-- <div id="group" class="inputDiv">
-                <label class="label">Group</label>
-                <input class="input">
-                <span class="errorText"></span>
-            </div> -->
-        </form>
-        <button id="submit" onClick="submit()"></button>
-        <div></div>
     </div>
 
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
+        const urlParams = new URLSearchParams(window.location.search);''
 
-        function pageLoaded() {
-            showBody();
-            try {
-                switch (urlParams.get('type')) {
-                    case 'create': create(); break;
-                    case 'edit': edit(urlParams.get('id')); break;
-                    case 'view': view(urlParams.get('id')); break;
-                    default:
-                        showToast('error', `Error opening page. Please contact the system administrator.`)
-                        switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)
-                }
-            } catch {
-                showToast('error', `Error opening page. Please contact the system administrator.`)
-                switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)
-            }
+        switch (urlParams.get('type')) {
+            case 'create': load(false, { model: 'user', level: 'full' }); break;
+            case 'edit': load(false, { model: 'user', level: 'modify' }); break;
+            case 'view': load(false, { model: 'user', level: 'read' }); break;
         }
 
-        function fetchData(user, callback) {
-            GET(`users/${urlParams.get('id')}`, (err, data) => {
-                if (err) return;
-                document.querySelector('#id input').value = data.data.id;
-                document.querySelector('#username input').value = data.data.username;
-                document.querySelector('#firstName input').value = data.data.firstName;
-                document.querySelector('#lastName input').value = data.data.lastName;
-                document.querySelector('#email input').value = data.data.email;
-                document.querySelector('#superuser input').checked = data.data.superuser;
-                document.querySelector('#volunteer input').checked = data.data.volunteer;
-                //document.querySelector('#group input').value = data.data.groupName;
-                callback();
-            })
-        }
-
-        function create() {
-            document.querySelector('#id').style.display = 'none';
-            document.querySelector('.title').innerHTML = 'Create User';
-            document.getElementById('submit').innerHTML = 'Create';
-            showContent();
-        }
-
-        function edit(user) {
-            fetchData(user, () => {
-                document.querySelector('.title').innerHTML = 'Edit User';
-                document.getElementById('submit').innerHTML = 'Save';
-                showContent();
-            })
-        }
-        function view(user) {
-            fetchData(user, () => {
-                document.querySelector('#username input').disabled = true;
-                document.querySelector('#firstName input').disabled = true;
-                document.querySelector('#lastName input').disabled = true;
-                document.querySelector('#email input').disabled = true;
-                document.querySelector('#superuser input').disabled = true;
-                document.querySelector('#volunteer input').disabled = true;
-                //document.querySelector('#group input').disabled = true;
-                document.getElementById('submit').style.display = 'none';
-                document.querySelector('.title').innerHTML = 'View User';
-                showContent();
-            })
-        }
-
-        function submit() {
-            let options = {};
-            options.username = document.querySelector('#username input').value;
-            options.firstName = document.querySelector('#firstName input').value;
-            options.lastName = document.querySelector('#lastName input').value;
-            options.email = document.querySelector('#email input').value;
-            options.superuser = document.querySelector('#superuser input').checked;
-            options.volunteer = document.querySelector('#volunteer input').checked;
-            //options.group = document.querySelector('#group input').value;
-
-            let elementList = document.querySelectorAll('.inputDiv');
-            [...elementList].forEach(element => {
-                let el = document.querySelector(`#${element.id} span`)
-                el.innerHTML = '';
-                el.style.visibility = 'hidden';
+        async function pageLoaded() {
+            generateForm({
+                name: 'User',
+                model: model,
+                type: urlParams.get('type'),
+                endpoint: (urlParams.get('id') !== undefined && urlParams.get('id') !== null) ? `${model}/${urlParams.get('id')}` : model,
+                datalist: {
+                    groupDatalist: {
+                        endpoint: 'groups',
+                        textFunction: (value) => {
+                            return value.name;
+                        },
+                    },
+                },
+                form: [{
+                    name: 'Username',
+                    type: 'input',
+                    data: 'username',
+                    required: true,
+                    attributes: {
+                        maxLength: 60,
+                    },
+                    submit: (value) => {
+                        return value;
+                    },
+                },  {
+                    name: 'First Name',
+                    type: 'input',
+                    data: 'firstName',
+                    submit: (value) => {
+                        return value;
+                    },
+                },  {
+                    name: 'Last Name',
+                    type: 'input',
+                    data: 'lastName',
+                    submit: (value) => {
+                        return value;
+                    },
+                },  {
+                    name: 'Email',
+                    type: 'input',
+                    data: 'email',
+                    submit: (value) => {
+                        return value;
+                    },
+                },  {
+                    name: 'Group',
+                    type: 'input',
+                    data: 'groupId',
+                    textFunction: (value) => {
+                        if (value.group !== undefined && value.group !== null) return value.group.name
+                        return '';
+                    },
+                    attributes: {
+                        list: 'groupDatalist',
+                    },
+                    submit: async (value) => {
+                        let groupList = document.querySelectorAll('#groupDatalist option');
+                        for (const option of groupList) {
+                            if (option.getAttribute('value') === value) return option.getAttribute('dataId');
+                        }
+                        return null;
+                    },
+                }, {
+                    name: 'Admin',
+                    type: 'checkbox',
+                    data: 'admin',
+                    submit: (value) => {
+                        return value;
+                    },
+                },{
+                    name: 'Superuser',
+                    type: 'checkbox',
+                    data: 'superuser',
+                    submit: (value) => {
+                        return value;
+                    },
+                },  {
+                    name: 'Volunteer',
+                    type: 'checkbox',
+                    data: 'volunteer',
+                    submit: (value) => {
+                        return value;
+                    },
+                }],
             });
-
-            POST(`users${(urlParams.get('type') === 'create') ? '' : `/${urlParams.get('id')}`}`, options, (err, data) => {
-                if (!err) {
-                    showToast('success', `User ${options.username} updated successfully.`)
-                    switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)
-                    return;
-                }
-
-                data.data.errorCodes.forEach(error => {
-                    let element = document.querySelector(`#${error.item} span`);
-                    element.innerHTML = error.code;
-                    element.style.visibility = 'inherit';
-                })
-                showToast('error', `Validation errors found, please resolve them.`)
-            })
         }
     </script>
 </body>

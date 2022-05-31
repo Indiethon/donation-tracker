@@ -23,7 +23,8 @@ module.exports.schema = (mongoose, database) => {
             default: false,
         },
         description: {
-            type: String
+            type: String,
+            default: '',
         },
         startTime: {
             type: Date,
@@ -48,6 +49,15 @@ module.exports.schema = (mongoose, database) => {
                 message: () => 'Invalid final time format.'
             },
         },
+        setupTime: {
+            type: String,
+            validate: {
+                validator: function (v) {
+                    return /^[0-9]{2}:[0-9]{2}:[0-9]{2}$/.test(v) || v === '' || v === undefined
+                },
+                message: () => 'Invalid setup time format.'
+            },
+        },
         finalSetupTime: {
             type: String,
             validate: {
@@ -57,14 +67,26 @@ module.exports.schema = (mongoose, database) => {
                 message: () => 'Invalid final setup time format.'
             },
         },
+        region: {
+            type: String,
+            default: '',
+        },
         releaseYear: {
-            type: Number
+            type: Number,
+            default: null
         },
         console: {
-            type: String
+            type: String,
+            default: '',
         },
         notes: {
-            type: String
+            type: String,
+            default: '',
+        },
+        completed: {
+            type: Boolean,
+            default: false,
+            required: [true, 'Completed is required.']
         },
     }, { toJSON: { virtuals: true } }, { toObject: { virtuals: true } });
     return schema;

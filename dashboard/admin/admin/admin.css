@@ -17,6 +17,7 @@ body {
 
 button {
     font-family: 'Roboto', sans-serif;
+    font-size: 14px;
 }
 
 #sidebar {
@@ -36,13 +37,14 @@ button {
     height: 60px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     background-color: rgb(255, 255, 255);
     border-bottom: 1px solid rgb(221, 225, 229);
 }
 
 #welcomeText {
     padding: 10px;
-    font-size: 24px;
+    font-size: 18px;
     margin: auto 0;
 }
 
@@ -79,10 +81,14 @@ button {
 
 #navigation {
     overflow-y: scroll;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* Internet Explorer 10+ */
 }
-#navigation::-webkit-scrollbar { /* WebKit */
+
+#navigation::-webkit-scrollbar {
+    /* WebKit */
     width: 0;
     height: 0;
 }
@@ -111,7 +117,7 @@ button {
 
 .navDropdownDiv button:hover {
     color: rgb(66, 104, 246);
-    cursor:pointer;
+    cursor: pointer;
 }
 
 #pageFrame {
@@ -191,7 +197,7 @@ button {
 }
 
 .mainNavButton:hover {
-    cursor:pointer;
+    cursor: pointer;
 }
 
 .mainNavButton.pressed {
@@ -217,10 +223,16 @@ button {
 }
 
 .mainNavButton .buttonText {
+    display: block;
     text-align: left;
     justify-content: left;
-    margin-top: 1px;
-    margin-left : 20px;
+    margin-top: 2px;
+    margin-left: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 38px;
+    line-height: 19px;
+    align-items: center;
 }
 
 .navTopText {
@@ -249,4 +261,50 @@ button {
 #navUser {
     padding: 16px 25px;
     padding-top: 0;
+}
+
+#logout {
+    width: 100px;
+    height: 34px;
+    background-color: rgb(66, 104, 246);
+    color: rgb(255, 255, 255);
+    border: none;
+    transition-duration: 0.2s;
+    margin: 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#logout:hover {
+    background-color: rgb(83, 91, 142);
+    cursor: pointer;
+}
+
+#logout .material-icons-outlined {
+    font-size: 20px;
+    font-weight: 100;
+}
+
+#logout .buttonText {
+    text-align: left;
+    justify-content: left;
+    margin-left: 5px;
+}
+
+#volunteerView {
+    width: 200px;
+    height: 34px;
+    background-color: #FFFFFF;
+    color: rgb(66, 104, 246);
+    border: 1px solid rgb(66, 104, 246);
+    margin-right: 10px;
+}
+
+#volunteerView:hover {
+    color: #ffffff;
+    background-color: rgb(83, 91, 142);
+    border-color: rgb(83, 91, 142);
+    cursor: pointer;
+    transition-duration: 0.2s;
 }

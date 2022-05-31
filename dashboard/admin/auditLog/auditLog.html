@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="/content/pages/dashboard/utils.js"></script>
+    <link rel="stylesheet" href="/content/pages/dashboard/common.css" />
+</head>
+
+<body>
+    <script>
+        let model = 'auditLogs';
+        const urlParams = new URLSearchParams(window.location.search);
+    </script>
+    <ul class="breadcrumb">
+        <li><a onClick="switchPage('/content/pages/dashboard/admin/home/home.html')">Home</a></li>
+        <li><a
+                onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)">Audit
+                Logs</a>
+        </li>
+    </ul>
+    <div class="header">
+        <h2 class="title">Audit Logs</h2>
+        <div id="headerButtonDiv">
+            <button onClick="deleteAll()">Delete All</button>
+        </div>
+    </div>
+    <div class="loadingContent">
+        <div class="loadingAnimation">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <div class="content">
+    </div>
+    <script>
+        load(false, { model: 'auditLog', level: 'access' });
+
+        function pageLoaded() {
+            document.body.style.visibility = 'visible';
+            generateTable({
+                name: 'auditLog',
+                model: model,
+                endpoint: `auditLogs`,
+                table: [{
+                    name: 'Timestamp',
+                    textFunction: (value) => {
+                        return new Date(value.startTime).toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit', seconds: undefined })
+                    }
+                }, {
+                    name: 'User',
+                    textFunction: (value) => {
+                        return value.user.username;
+                    }
+                }, {
+                    name: 'Event',
+                    textFunction: (value) => {
+                        return value.event.name;
+                    }
+                }, {
+                    name: 'Resource',
+                    textFunction: (value) => {
+                        return value.resourceId;
+                    }
+                }, {
+                    name: 'Action',
+                    data: 'action',
+                }]
+            })
+        }
+
+        function deleteAll() {
+            window.parent.postMessage({
+                name: 'dialog', data: {
+                    model: model,
+                    name: 'Audit Log',
+                    endpoint: `${model}`,
+                    custom: 'Are you sure you want to delete the entire audit log? This action is non-recoverable!'
+                }
+            }, window.parent)
+        }
+    </script>
+</body>
+
+</html>
