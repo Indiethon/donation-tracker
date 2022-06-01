@@ -77,9 +77,10 @@
                     rowAttribute: (value) => {
                         return !value.completed;
                     },
-                    // rowFunction: (value) => {
-                    //     return value._id;
-                    // }
+                    rowFunction: (value) => {
+                        if (value.active || value.completed) return true;
+                        return false;
+                    }
                 }
                 await generateTable(options);
                 setRowVisibility(document.querySelector('#headerButtonDiv button.selected'))

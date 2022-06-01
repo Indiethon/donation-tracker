@@ -53,11 +53,12 @@
         let eventData = await GET(`events/stats/${event}`);
         let detailsData = await GET(`details/${event}`);
         let div = document.querySelector('.donationStats');
+        try {
         div.innerHTML = `Total (Count): ${detailsData.data.currencySymbol}${eventData.data.total.toFixed(2)}
          (${eventData.data.count}) - Max/Avg/Median Donation: ${detailsData.data.currencySymbol}${eventData.data.max.toFixed(2)}/
         ${detailsData.data.currencySymbol}${eventData.data.avg}/
-        ${detailsData.data.currencySymbol}${eventData.data.median.toFixed(2)}
-        `
+        ${detailsData.data.currencySymbol}${eventData.data.median.toFixed(2)}`
+        } catch {}
     }
 
     generateTable({

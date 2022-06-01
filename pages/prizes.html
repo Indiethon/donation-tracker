@@ -62,7 +62,8 @@
             data: 'contributor'
         }, {
             name: 'Minimum Donation',
-            data: 'minDonation'
+            textFunction: (value, details) => 
+            { return `${details.data.currencySymbol}${value.minDonation.toFixed(2)}`; }
         }, {
             name: 'Start Time',
             textFunction: (value) => {

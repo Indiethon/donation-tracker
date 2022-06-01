@@ -75,7 +75,8 @@
                         }
                     }],
                     rowAttribute: (value) => {
-                        return value.read;
+                        if (value.read || !value.visible) return true;
+                        return false;
                     },
                     rowFunction: (value) => {
                         return value.completed;
