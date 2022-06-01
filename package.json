@@ -20,16 +20,13 @@
   "dependencies": {
     "bcrypt-nodejs": "^0.0.3",
     "better-logging": "^4.6.0",
-    "ejs": "^3.1.6",
     "express": "^4.17.2",
-    "express-session": "^1.17.2",
     "json-schema-defaults": "^0.4.0",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.3",
     "mongoose": "^6.3.1",
     "mongoose-unique-validator": "github:trading-peter/mongoose-unique-validator",
     "node-fetch": "^2.6.7",
-    "node-localstorage": "^2.2.1",
     "tzdata": "^1.0.30",
     "uuid": "^8.3.2"
   }
