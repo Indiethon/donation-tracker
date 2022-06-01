@@ -279,6 +279,8 @@ async function generateForm(options) {
                 label.setAttribute('class', 'label');
                 label.innerHTML = field.name;
 
+                if (field.required) label.innerHTML += `<span class="required"> ✱</span>`
+
                 let input;
                 if (field.type === 'select') {
                     input = document.createElement('select');
@@ -426,7 +428,7 @@ async function submit(options) {
     // Clear any errors.
     let elementList = document.querySelectorAll('.content .inputDiv');
     [...elementList].forEach(element => {
-        let el = document.querySelector(`#${element.id} span`)
+        let el = document.querySelector(`#${element.id} .errorText`)
         el.innerHTML = '';
         el.style.visibility = 'none';
     });
@@ -460,8 +462,7 @@ async function submit(options) {
 
     // If errors, show errors on page.
     save.data.errorCodes.forEach(error => {
-        console.log(error)
-        let element = document.querySelector(`.content #${error.item} span`);
+        let element = document.querySelector(`.content #${error.item} .errorText`);
         element.innerHTML = error.code;
         element.style.visibility = 'inherit';
     })

@@ -75,7 +75,6 @@
                     name: 'Description',
                     type: 'input',
                     data: 'description',
-                    required: true,
                     submit: (value) => {
                         return value;
                     },
@@ -83,6 +82,7 @@
                     name: 'Speedrun',
                     type: 'input',
                     data: 'runId',
+                    required: true,
                     attributes: {
                         list: 'runDatalist',
                     },
@@ -101,6 +101,7 @@
                     name: 'Type',
                     type: 'select',
                     data: 'type',
+                    required: true,
                     options: {
                         target: 'Target',
                         bidwar: 'Bidwar',
@@ -155,6 +156,7 @@
                     name: 'Goal',
                     type: 'number',
                     data: 'goal',
+                    required: true,
                     attributes: {
                         min: 0.01,
                         step: 0.01,

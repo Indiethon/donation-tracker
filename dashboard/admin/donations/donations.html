@@ -52,7 +52,7 @@
                 }, {
                     name: 'Email',
                     textFunction: (value) => {
-                        return value.donor.email;
+                        try { return value.donor.email; } catch {};
                     }
                 }, {
                     name: 'Amount',

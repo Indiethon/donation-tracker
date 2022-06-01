@@ -39,7 +39,7 @@
     <div class="content">
         <form>
             <div id="short" class="inputDiv">
-                <label class="label">Event Short</label>
+                <label class="label">Event Short<span class="required"> ✱</span></label>
                 <input class="input">
                 <span class="errorText"></span>
             </div>
@@ -64,7 +64,7 @@
             showContent();
         }
 
-        function submit() {
+        async function submit() {
             let options = {};
             options.short = document.querySelector('#short input').value;
             options.schedule = document.querySelector('#schedule input').value;
@@ -77,23 +77,22 @@
                 el.style.visibility = 'hidden';
             });
 
-            showToast('working', `Working, please wait...`)
+            showToast('working', `Working, please wait...<br>Do not reload the page.`)
 
-            POST(`speedruns/import/${urlParams.get('event')}`, options, (err, data) => {
-                if (!err) {
-                    showToast('success', `Oengus import successful.`)
-                    switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)
-                    return;
-                }
+            let speedruns = await POST(`speedruns/import/${urlParams.get('event')}`, options);
+            if (!speedruns.error) {
+                showToast('success', `Oengus import successful.`)
+                switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)
+                return;
+            }
 
-                document.getElementById('submit').disabled = false;
-                data.data.errorCodes.forEach(error => {
-                    let element = document.querySelector(`#${error.item.split('.')[0]} span`);
-                    element.innerHTML = error.code;
-                    element.style.visibility = 'inherit';
-                })
-                showToast('error', `Validation errors found, please resolve them.`)
+            document.getElementById('submit').disabled = false;
+            data.data.errorCodes.forEach(error => {
+                let element = document.querySelector(`#${error.item.split('.')[0]} .errorText`);
+                element.innerHTML = error.code;
+                element.style.visibility = 'inherit';
             })
+            showToast('error', `Validation errors found, please resolve them.`)
         }
     </script>
 </body>
