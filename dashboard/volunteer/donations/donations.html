@@ -42,7 +42,7 @@
         let details;
 
         let donationListener = new EventSource('/api/eventSource')
-        donationListener.addEventListener('message', (event) => updateTable(JSON.parse(event.data)));
+        donationListener.addEventListener('message', updateTable);
 
         async function pageLoaded() {
             details = await GET('details');
@@ -88,6 +88,7 @@
         }
 
         async function updateTable() {
+            console.log('got event!')
             document.querySelector('.loadingContent').style.display = 'flex';
             for (const content of document.querySelectorAll('.content')) {
                 content.style.visibility = 'hidden';
@@ -119,6 +120,14 @@
                 }
             }
         }
+
+        window.onbeforeunload = function () {
+            donationListener.removeEventListener('message', updateTable);
+        }
+        window.addEventListener("beforeunload", function (e) {
+            donationListener.removeEventListener('message', updateTable);
+        }, false);
+
     </script>
 </body>
 

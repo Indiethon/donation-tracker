@@ -42,7 +42,7 @@
         let details;
 
         let donationListener = new EventSource('/api/eventSource')
-        donationListener.addEventListener('message', (event) => updateTable(JSON.parse(event.data)));
+        donationListener.addEventListener('message', updateTable);
 
         async function pageLoaded() {
             details = await GET('details');
@@ -119,6 +119,13 @@
                 }
             }
         }
+
+        window.onbeforeunload = function () {
+            donationListener.removeEventListener('message', updateTable);
+        }
+        window.addEventListener("beforeunload", function (e) {
+            donationListener.removeEventListener('message', updateTable);
+        }, false);
     </script>
 </body>
 

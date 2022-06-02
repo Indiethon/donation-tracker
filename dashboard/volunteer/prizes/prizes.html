@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="/content/pages/dashboard/utils.js"></script>
+    <link rel="stylesheet" href="/content/pages/dashboard/common.css" />
+    <link rel="stylesheet" href="/content/pages/dashboard/volunteer/volunteer.css" />
+
+</head>
+
+<body>
+    <script>
+        let model = 'prizes';
+        const urlParams = new URLSearchParams(window.location.search);
+    </script>
+    <ul class="breadcrumb">
+        <li><a onClick="switchPage('/content/pages/dashboard/volunteer/home/home.html')">Home</a></li>
+        <li><a
+                onClick="switchPage(`/content/pages/dashboard/volunteer/${model}/${model}.html?event=${urlParams.get('event')}`)">Prizes</a>
+        </li>
+    </ul>
+    <div class="header">
+        <h2 class="title">Prizes</h2>
+        <div id="headerButtonDiv">
+        </div>
+    </div>
+    <div class="loadingContent">
+        <div class="loadingAnimation">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <div class="content">
+    </div>
+    <script>
+        load(false, { model: null });
+        let options;
+        let details;
+
+        async function pageLoaded() {
+            details = await GET('details');
+            if (details.data === undefined || details.data.eventShort === undefined) return;
+            else {
+                document.body.style.visibility = 'visible';
+                options = {
+                    name: 'prize',
+                    model: model,
+                    endpoint: `prizes/event/${details.data.eventShort}`,
+                    volunteer: true,
+                    table: [{
+                        name: 'Name',
+                        data: 'name',
+                    }, {
+                        name: 'Contributor',
+                        data: 'contributor'
+                    }, {
+                        name: 'Minimum Donation',
+                        textFunction: (value) => {
+                            return `${details.data.currencySymbol}${value.minDonation.toFixed(2)}`;
+                        }
+                    }, {
+                        name: 'Type',
+                        textFunction: (value) => {
+                            return value.type.charAt(0).toUpperCase() + value.type.slice(1);
+                        }
+                    }],
+                }
+                await generateTable(options);
+            }
+        }
+    </script>
+</body>
+
+</html>
