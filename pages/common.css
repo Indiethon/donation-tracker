@@ -8,7 +8,7 @@
     /* ----- Global styles ----- */
     --global-font-family: 'Roboto', sans-serif;
     --header-background-color: #222;
-    --body-background-color: #ffffff;
+    --body-background-color: white;
     --link-color: #00aeef;
     --link-hover-color: #0076a3;
 
@@ -49,6 +49,7 @@
     --input-border-color: rgb(192, 192, 202);
     --input-border-radius: 5px;
     --input-border-thickness: 1px;
+    --input-label-color: white;
     --input-hover-foreground-color: black;
     --input-hover-background-color: white;
     --input-hover-border-color: rgb(68, 107, 246);
