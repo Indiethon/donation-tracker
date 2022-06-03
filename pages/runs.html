@@ -28,6 +28,7 @@
                 <div class="eventDropdownSpacer"></div>
             </div>
         </div>
+        <button class="topNavButton topNavDonate" onClick="location.href = '/donate'">Donate</button>
     </nav>
     <div class="body">
         <div class="content">
@@ -78,7 +79,8 @@
         }, {
             name: 'Final Time',
             textFunction: (value) => {
-                if (value.finalTime.length > 0) return value.finalTime;
+
+                if (value.finalTime && value.finalTime.length > 0) return value.finalTime;
                 return '';
             }
         }],

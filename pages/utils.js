@@ -19,6 +19,7 @@ async function pageLoaded() {
     document.querySelector('.topNavImg').setAttribute('onClick', `location.href = '${details.data.homepage}'`);
     try { document.querySelector('.timezoneText').innerHTML += new window.Intl.DateTimeFormat().resolvedOptions().timeZone; } catch { };
     try { document.querySelector('.successMessage').innerHTML = details.data.donationSuccessMessage } catch {}
+    if (details.data.activeEvent) { try { document.querySelector('.topNavDonate').style.display = 'inline-block' } catch {}}
     generateEventDropdown()
     try { loadData() } catch {};
 }

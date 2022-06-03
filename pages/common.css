@@ -27,6 +27,15 @@
     --event-dropdown-click-foreground-color: black;
     --event-dropdown-click-background-color: #f2f2f2;
 
+    /* Top Navigation Donate Button */
+    --nav-donate-button-foreground-color: white;
+    --nav-donate-button-background-color: #4268F6;
+    --nav-donate-button-hover-foreground-color: white;
+    --nav-donate-button-hover-background-color: #535B8E;
+    --nav-donate-button-click-foreground-color: white;
+    --nav-donate-button-click-background-color: #535B8E;
+
+
     /* ----- Donation Page Styles ----- */
 
     /* General */
@@ -351,6 +360,28 @@ body {
 .eventDropdownContent .eventDropdownButton:active {
     color: var(--event-dropdown-click-foreground-color);
     background-color: var(--event-dropdown-click-background-color);
+}
+
+.topNavDonate {
+    color: var(--nav-donate-button-foreground-color);
+    background-color: var(--nav-donate-button-background-color);
+    border-radius: 5px;
+    width: 100px;
+    height: 36px;
+    margin-left: 16px;
+    display: none;
+}
+
+.topNavDonate:hover {
+    color: var(--nav-donate-button-hover-foreground-color);
+    background-color: var(--nav-donate-button-hover-background-color);
+    border-radius: 5px;
+}
+
+.topNavDonate:active {
+    color: var(--nav-donate-button-click-foreground-color);
+    background-color: var(--nav-donate-click-button-background-color);
+    border-radius: 5px;
 }
 
 .body {

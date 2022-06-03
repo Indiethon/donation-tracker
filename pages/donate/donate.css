@@ -639,7 +639,10 @@ input[type=checkbox] {
 
     width: calc(100% - 8px);
     height: 46px;
-    padding: 8px;
+    padding: 8px 4px;
+    font-size: 18px;
+    text-align: center;
+    vertical-align: middle;
 }
 
 .donateButton:hover {
