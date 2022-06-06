@@ -164,6 +164,7 @@
     --prize-list-item-click-background-color: #d9d9d9;
 
     /* Donate Button */
+    --incentive-error-text: red;
     --donate-button-foreground-color: white;
     --donate-button-background-color: black;
     --donate-button-border-color: black;

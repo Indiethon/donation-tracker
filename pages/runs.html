@@ -71,6 +71,7 @@
         }, {
             name: 'Start Time',
             textFunction: (value) => {
+                if (value.actualStartTime) return new Date(value.actualStartTime).toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit', seconds: undefined })
                 return new Date(value.startTime).toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit', seconds: undefined })
             }
         }, {

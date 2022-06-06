@@ -144,7 +144,7 @@ input[type=checkbox] {
 
     position: relative;
     font-size: 16px;
-    top: 34px;
+    top: 33px;
     left: -56px;
     pointer-events: none;
 }
@@ -628,6 +628,13 @@ input[type=checkbox] {
 
 .prizeListDiv .prizeAmount {
     font-size: 14px;
+}
+
+.incentiveErrorText {
+    display: none;
+    font-size: 14px;
+    color: var(--incentive-error-text);
+    margin-bottom: 6px;
 }
 
 /* Donate button */

@@ -39,9 +39,9 @@
 
     <script>
         switch (urlParams.get('type')) {
-            case 'create': load(false, { model: 'speedrun', level: 'full' }); break;
-            case 'edit': load(false, { model: 'speedrun', level: 'modify' }); break;
-            case 'view': load(false, { model: 'speedrun', level: 'read' }); break;
+            case 'create': load(false, { model: 'run', level: 'full' }); break;
+            case 'edit': load(false, { model: 'run', level: 'modify' }); break;
+            case 'view': load(false, { model: 'run', level: 'read' }); break;
         }
 
         setBreadcrumb(urlParams.get('event'));
@@ -131,6 +131,22 @@
                     data: 'startTime',
                     textFunction: (eventData) => {
                         let time = new Date(eventData.startTime)
+                        time.setMinutes(time.getMinutes() - time.getTimezoneOffset());
+                        return time.toISOString().slice(0, 16);
+                    },
+                    required: true,
+                    submit: (value) => {
+                        let time;
+                        try { time = new Date(value).toISOString() } catch { time = value }
+                        return time;
+                    },
+                }, {
+                    name: 'Actual Start Time',
+                    type: 'datetime-local',
+                    data: 'actualStartTime',
+                    textFunction: (eventData) => {
+                        if (!eventData.actualStartTime) return;
+                        let time = new Date(eventData.actualStartTime)
                         time.setMinutes(time.getMinutes() - time.getTimezoneOffset());
                         return time.toISOString().slice(0, 16);
                     },

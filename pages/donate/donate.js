@@ -176,7 +176,6 @@ function showIncentiveInfo(element) {
     info.querySelector('.incentiveName').innerHTML = incentive.name;
     info.querySelector('.incentiveDescription').innerHTML = incentive.description;
     info.querySelector('.inputUnit').innerHTML = data.currencySymbol;
-    info.querySelector('#incentiveAmount').value = '';
     info.querySelector('#incentiveAmount').style.paddingLeft = `${info.querySelector('.inputUnit').offsetWidth + 12}px`;
     info.querySelector('#incentiveAddConfirm').disabled = true;
     if (incentive.type === 'target') {
@@ -189,7 +188,6 @@ function showIncentiveInfo(element) {
         info.querySelector('.incentiveTotal').style.display = 'none';
         info.querySelector('.incentiveOptions').innerHTML = '';
         let incentiveOptions = incentive.options.sort((a, b) => { return b.total - a.total });
-        console.log(incentiveOptions)
         for (const option of incentiveOptions) {
             let div = `
                 <div class="incentiveOptionDiv" optionID=${option.id} onClick="selectIncentiveOption(this, false)">
@@ -264,6 +262,7 @@ function addIncentive() {
     selectedIncentive = {};
     document.querySelector('.incentiveDiv').style.display = 'none';
     document.querySelector('#incentiveAdd').style.display = 'inherit';
+    document.querySelector('.incentiveErrorText').style.display = 'none';
     updateSelectedIncentives();
 }
 
@@ -274,6 +273,7 @@ function showIncentiveMenu(button) {
     document.querySelector('.incentiveInfo').style.visibility = 'hidden'
     button.style.display = 'none';
     document.querySelector('.incentiveDiv').style.display = 'flex';
+    document.querySelector('.incentiveErrorText').style.display = 'inherit';
 }
 
 function updateSelectedIncentives() {
@@ -309,8 +309,11 @@ function updateSelectedIncentives() {
 function calculateIncentiveAmountRemaining() {
     let amount = parseFloat(document.querySelector('#amount input').value);
     if (donationData.incentives.length > 0) amount += donationData.incentives.reduce((sum, x) => sum - x.amount, 0);
-    document.querySelector('.incentiveInfo #incentiveAmount').setAttribute('max', amount)
+    let input = document.querySelector('.incentiveInfo #incentiveAmount');
+    input.value = amount.toFixed(2);
+    input.setAttribute('max', amount);
     document.querySelector('.incentiveInfo .inputSubtext').innerHTML = `You have <b>${data.currencySymbol}${parseFloat(amount).toFixed(2)}</b> remaining.`;
+    addIncentiveAmount(input)
 }
 
 function removeIncentive(id) {

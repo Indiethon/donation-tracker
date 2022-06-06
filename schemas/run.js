@@ -30,6 +30,9 @@ module.exports.schema = (mongoose, database) => {
             type: Date,
             required: [true, 'Start time is required.'],
         },
+        actualStartTime: {
+            type: Date,
+        },
         estimate: {
             type: String,
             required: [true, 'Estimate is required.'],

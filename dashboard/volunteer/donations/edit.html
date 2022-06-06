@@ -112,9 +112,10 @@
                             data: 'option',
                             textFunction: async (value) => {
                                 let incentive = await GET(`incentives/${value.incentiveId}`)
-                                if (value.option === undefined) return '';
+                                if (!incentive || value.option === undefined) return '';
                                 let option = incentive.data.options.find(x => x._id === value.option);
-                                return option.name;
+                                if (option !== undefined && option.length > 0) return option.name;
+                                return ''
                             },
                             attributes: {
                                 disabled: true,

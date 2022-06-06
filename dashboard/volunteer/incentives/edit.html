@@ -49,6 +49,7 @@
                     type: undefined,
                     endpoint: (urlParams.get('id') !== undefined && urlParams.get('id') !== null) ? `${model}/${urlParams.get('id')}` : model,
                     event: details.data.eventShort,
+                    volunteer: true,
                     datalist: {
                         runDatalist: {
                             endpoint: `speedruns/event/${details.data.eventShort}`,
@@ -83,13 +84,6 @@
                         textFunction: (value) => {
                             if (value.run !== null) return value.run.game + ' ' + value.run.category;
                             else return '';
-                        },
-                        submit: async (value) => {
-                            let runList = document.querySelectorAll('#runDatalist option');
-                            for (const option of runList) {
-                                if (option.getAttribute('value') === value) return option.getAttribute('dataId');
-                            }
-                            return null;
                         },
                     }, {
                         name: 'Type',
@@ -128,16 +122,6 @@
                                 disabled: true,
                             }
                         }],
-                        submit: (value) => {
-                            if (document.querySelector('#type select').value === 'target') return;
-                            let fields = value.querySelectorAll('.array.childDiv');
-                            let data = [];
-                            for (const field of fields) {
-                                if (field.querySelector('input').getAttribute('dataId') !== null) data.push({ _id: field.querySelector('input').getAttribute('dataId'), name: field.querySelector('input').value });
-                                else data.push({ name: field.querySelector('input').value });
-                            }
-                            return data;
-                        },
                     }, {
                         name: 'Allow User Options',
                         type: 'checkbox',
@@ -195,7 +179,7 @@
                     other: [{
                         data: 'eventId',
                         submit: (value) => {
-                            return details.data.eventShort;
+                            return details.data.eventID;
                         },
                     }]
                 });
