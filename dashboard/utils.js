@@ -369,6 +369,9 @@ async function generateForm(options) {
                 label.setAttribute('class', 'label');
                 label.innerHTML = arrayField.name;
 
+                if (arrayField.required) label.innerHTML += `<span class="required"> ✱</span>`
+
+
                 let input;
                 if (arrayField.type === 'select') {
                     input = document.createElement('select');
@@ -461,13 +464,13 @@ async function submit(options) {
     }
 
     // If errors, show errors on page.
+    showToast('error', `Validation errors found, please resolve them.`)
     save.data.errorCodes.forEach(error => {
         let element = document.querySelector(`.content #${error.item} .errorText`);
         element.innerHTML = error.code;
         element.style.visibility = 'inherit';
     })
 
-    showToast('error', `Validation errors found, please resolve them.`)
     return;
 }
 
