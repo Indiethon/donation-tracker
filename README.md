@@ -1,3 +1,29 @@
+Image here
+
+# donation-tracker
+An easy to use donation tracker for speedrunning marathons.
+
+[![Release](https://img.shields.io/github/v/release/indiethon/donation-tracker?label=Release)](https://github.com/indiethon/donation-tracker/releases)
+![License](https://img.shields.io/github/license/indiethon/donation-tracker?label=License)
+[![Twitter](https://img.shields.io/twitter/follow/nicnacnic11?style=social)](https://twitter.com/nicnacnic11)
+[![Discord](https://img.shields.io/badge/-Join%20the%20Discord!-brightgreen?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/A34Qpfe)
+
+## About
+This project is a fully fleged donation tracker built specifically for speedrunning marathons. Inspired by the GDQ tracker, this system can track and process donations, manage incentives and prizes, and more. Everything is written in pure Node.JS and is easy to install. 
+
+### Features
+- Accept
+
+## Requirements
+- Node.JS v16 or higher
+- MongoDB v4 or higher
+
+Furthermore, your charity of choice must be part of the [Paypal Giving Fund](https://www.paypal.com/fundraiser/hub) and you must have your charity's payee email.
+
+## Installation
+
+
+# OLD README BELOW
 # donation-tracker
 A easy to use and open source donation tracker for speedrunning marathons. Inspired by the GDQ donation tracker but runs in Node. Currently, the tracker admin dashboard is nearing completion with a volunteer dashboard starting soon. API is *almost* complete, in the phase of testing things. Progress can be tracked on our [projects page](https://github.com/Indiethon/donation-tracker/projects/1). IF you have any suggestions or bugs, please post them in the issue tracker. Thanks!
 
