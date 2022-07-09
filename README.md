@@ -22,6 +22,46 @@ Furthermore, your charity of choice must be part of the [Paypal Giving Fund](htt
 
 ## Installation
 
+To install, navigate to your desired directory and run the following commands.
+
+- Using Git, clone the repo. `git clone https://github.com/indiethon/donation-tracker.git`
+- Install all the dependencies. `npm install`
+- Generate the config file. `npm run config`
+- Open `config.json` and change desired settings. More information can be found in the [docs]()
+
+## Usage
+
+Once installed and configured, do `npm start` to start the tracker.
+
+## Supporting Projects
+
+Alongside the main project, check out these supporting projects that extend the functionality of the tracker! See their individial Github pages for installation instructions and more information.
+
+- [nodecg-tracker-link](https://github.com/Indiethon/nodecg-tracker-link) Link the tracker with a NodeCG instance to update the schedule, and set start and end times for each run automatically!
+
+If you'd like to add your own project to the list, please submit a pull request.
+
+## Contributing
+
+Even in a perfect world, there will still be bugs. However, before you go out and squash those bugs, 
+
+## Special Thanks
+
+Riekelt, DoubleDubbel and thedmpanda for suggestions, bug finding, and moral support while developing the tracker.
+
+KunoDememtries and the Horror(ible) Games Staff for testing the tracker during their marathon.
+
+## License
+
+MIT License
+
+Copyright (c) 2021 nicnacnic
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 # OLD README BELOW
 # donation-tracker
