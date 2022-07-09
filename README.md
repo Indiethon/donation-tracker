@@ -12,7 +12,6 @@ An easy to use donation tracker for speedrunning marathons.
 This project is a fully fleged donation tracker built specifically for speedrunning marathons. Inspired by the GDQ tracker, this system can track and process donations, manage incentives and prizes, and more. Everything is written in pure Node.JS and is easy to install. 
 
 ### Features
-- Accept
 
 ## Requirements
 - Node.JS v16 or higher
@@ -31,7 +30,7 @@ To install, navigate to your desired directory and run the following commands.
 
 ## Usage
 
-Once installed and configured, do `npm start` to start the tracker.
+Once installed and configured, type `npm start` in the command line to start the tracker. Ensure your MongoDB instance is running before you start the tracker!
 
 ## Supporting Projects
 
@@ -43,19 +42,23 @@ If you'd like to add your own project to the list, please submit a pull request.
 
 ## Contributing
 
-Even in a perfect world, there will still be bugs. However, before you go out and squash those bugs, 
+The latest [release](https://github.com/Indiethon/donation-tracker/releases) is where the latest stable build is located, and is recommended for production. 
+
+If you come across a bug, please submit in the [issue tracker](https://github.com/Indiethon/donation-tracker/issues). Make sure to include your version of Node.JS, your version of MongoDB, the error that you're encountering and the steps to reproduce the error.
+
+If you would like to help advance the project, all development is done through the `main` branch. Simply submit a pull request with your proposed changes and they will be promptly reviewed. Please make sure to **test your code** before submitting any pull requests!
 
 ## Special Thanks
 
 Riekelt, DoubleDubbel and thedmpanda for suggestions, bug finding, and moral support while developing the tracker.
 
-KunoDememtries and the Horror(ible) Games Staff for testing the tracker during their marathon.
+KunoDememtries and the Horror(ible) Games Staff for their willingness to test the tracker during their marathon.
 
 ## License
 
 MIT License
 
-Copyright (c) 2021 nicnacnic
+Copyright (c) 2022 nicnacnic
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
