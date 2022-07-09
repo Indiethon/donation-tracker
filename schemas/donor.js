@@ -16,48 +16,6 @@ module.exports.schema = (mongoose, database) => {
                 message: () => `Email is invalid.`
             },
         },
-        firstName: {
-            type: String,
-            default: '',
-        },
-        lastName: {
-            type: String,
-            default: '',
-        },
-        address: {
-            name: {
-                type: String,
-                default: '',
-            },
-            street: {
-                type: String,
-                default: '',
-            },
-            apt: {
-                type: String,
-                default: '',
-            },
-            city: {
-                type: String,
-                default: '',
-            },
-            state: {
-                type: String,
-                default: '',
-            },
-            postalCode: {
-                type: String,
-                default: '',
-            },
-            country: {
-                type: String,
-                default: '',
-            },
-        },
-        paypalEmail: {
-            type: String,
-            default: '',
-        },
         donations: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: 'donation',

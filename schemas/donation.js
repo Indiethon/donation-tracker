@@ -34,14 +34,6 @@ module.exports.schema = (mongoose, database) => {
         amount: {
             type: Number,
             required: [true, 'Amount is required.'],
-            validate: {
-                validator: async function (v) {
-                    const event = await database.models['event'].findOne({ _id: this.eventId });
-                    if (v < event.minDonation) return false;
-                    return true;
-                },
-                message: 'Amount is under the minimum donation.'
-            }
         },
         comment: {
             type: String,
@@ -59,6 +51,9 @@ module.exports.schema = (mongoose, database) => {
         timestamp: {
             type: Date,
             default: Date.now
+        },
+        paypalStatus: {
+            type: String,
         },
         completed: {
             type: Boolean,

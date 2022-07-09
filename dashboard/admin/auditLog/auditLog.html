@@ -8,7 +8,7 @@
 
 <body>
     <script>
-        let model = 'auditLogs';
+        let model = 'auditLog';
         const urlParams = new URLSearchParams(window.location.search);
     </script>
     <ul class="breadcrumb">
@@ -53,18 +53,18 @@
                         return value.user.username;
                     }
                 }, {
-                    name: 'Event',
-                    textFunction: (value) => {
-                        return value.event.name;
-                    }
-                }, {
                     name: 'Resource',
                     textFunction: (value) => {
                         return value.resourceId;
                     }
-                }, {
+                },  {
                     name: 'Action',
                     data: 'action',
+                }, {
+                    name: 'Event',
+                    textFunction: (value) => {
+                        return value.event.name;
+                    }
                 }]
             })
         }

@@ -233,6 +233,18 @@
                         return time;
                     },
                 }, {
+                    name: 'Paypal Status',
+                    type: 'input',
+                    data: 'paypalStatus',
+                    required: false,
+                    textFunction: (value) => {
+                        if (!value.paypalStatus) return 'Unknown';
+                        return value.paypalStatus;
+                    },
+                    submit: (value) => {
+                        return value;
+                    },
+                }, {
                     name: 'Completed',
                     type: 'checkbox',
                     data: 'completed',

@@ -1,24 +1,25 @@
 let details;
 
 async function pageLoaded() {
-    let eventShort = window.location.pathname.split('/')[2];
+    let eventShort = (window.location.pathname.split('/')[2]) ? window.location.pathname.split('/')[2] : 'all';
+    let title = document.querySelector('title');
     if (eventShort !== undefined && eventShort !== 'success' && eventShort !== 'error') details = await GET(`details/${eventShort}`)
     else {
         details = await GET('details');
         eventShort = details.data.eventShort;
     }
-    if (details.data.eventName === undefined) details.data.eventName = 'All Events'
-    document.querySelector('title').innerHTML += ` - ${details.data.eventName}`;
+    let eventName = (details.data.eventName) ? details.data.eventName : 'All Events';
+    title.innerHTML = `${title.getAttribute('name')} | ${eventName}`;
     try { document.querySelector('.sweepstakesRulesLink').href = details.data.sweepstakesRules } catch { }
-    document.querySelector('.eventDropdownText').innerHTML = details.data.eventName;
+    document.querySelector('.eventDropdownText').innerHTML = eventName;
     const navButtons = document.querySelectorAll('.topNavButton');
     for (const button of navButtons) {
         button.setAttribute('event', eventShort)
     }
-    try { document.querySelector('.pageTitle').innerHTML += ` - ${details.data.eventName}` } catch { };
     document.querySelector('.topNavImg').setAttribute('onClick', `location.href = '${details.data.homepage}'`);
     try { document.querySelector('.timezoneText').innerHTML += new window.Intl.DateTimeFormat().resolvedOptions().timeZone; } catch { };
     try { document.querySelector('.successMessage').innerHTML = details.data.donationSuccessMessage } catch {}
+    try { document.querySelector('.errorMessage').innerHTML = details.data.donationErrorMessage } catch {}
     if (details.data.activeEvent) { try { document.querySelector('.topNavDonate').style.display = 'inline-block' } catch {}}
     generateEventDropdown()
     try { loadData() } catch {};

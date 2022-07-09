@@ -4,28 +4,21 @@ module.exports.schema = (mongoose, database) => {
             type: Date,
             default: Date.now(),
         },
-        eventId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'event',
-        },
         userId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'user',
         },
         resourceId: {
+            type: mongoose.Schema.Types.ObjectId,
+        },
+        model: {
             type: String,
         },
         action: {
             type: String,
+            enum: ['create', 'edit', 'delete']
         },
     }, { toJSON: { virtuals: true } }, { toObject: { virtuals: true } });
-
-    schema.virtual('event', {
-        ref: 'event',
-        localField: 'eventId',
-        foreignField: '_id',
-        justOne: true,
-    });
 
     schema.virtual('user', {
         ref: 'user',
