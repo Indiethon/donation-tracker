@@ -12,6 +12,13 @@ An easy to use donation tracker for speedrunning marathons.
 This project is a fully fleged donation tracker built specifically for speedrunning marathons. Inspired by the GDQ tracker, this system can track and process donations, manage incentives and prizes, and more. Everything is written in pure Node.JS and is easy to install. 
 
 ### Features
+- Accept and track donations through PayPal
+- Set up incentives, bidwars and prizes to encourage donations
+- Set up multiple events to sort your donations
+- See marathon stats, such as donation total and average donation
+- Fully featured API with detailed documentation
+- Import runs from Oengus to your schedule
+- Data stored in MongoDB database
 
 ## Requirements
 - Node.JS v16 or higher
