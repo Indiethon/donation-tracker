@@ -8,18 +8,18 @@
 
 <body>
     <script>
-        let model = 'ads';
+        let model = 'blurbs';
         const urlParams = new URLSearchParams(window.location.search);
     </script>
     <ul class="breadcrumb">
         <li><a onClick="switchPage('/content/pages/dashboard/admin/home/home.html')">Home</a></li>
         <li id="eventBreadcrumb"><a onClick="switchPage(`/content/pages/dashboard/admin/overview/overview.html?event=${urlParams.get('event')}`)"></a></li>
         <li><a
-                onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)">Ads</a>
+                onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)">Blurbs</a>
         </li>
     </ul>
     <div class="header">
-        <h2 class="title">Ads</h2>
+        <h2 class="title">Blurbs</h2>
         <div id="headerButtonDiv">
             <button
                 onClick="switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=create&event=${urlParams.get('event')}`)">Create
@@ -42,19 +42,22 @@
         function pageLoaded() {
             document.body.style.visibility = 'visible';
             generateTable({
-                name: 'ad',
-                model: model,
-                endpoint: `ads/event/${urlParams.get('event')}`,
+                name: 'blurb',
+                model: 'blurbs',
+                endpoint: `blurbs/event/${urlParams.get('event')}`,
                 event: urlParams.get('event'),
                 table: [{
                     name: 'Name',   
-                    data: 'name'
+                    data: 'name',
+                    priority: 1,
                 }, {
                     name: 'Text',
                     data: 'text',
+                    priority: 5,
                 }, {
                     name: 'Active',
                     data: 'active',
+                    priority: 1,
                 }]
             })
         }

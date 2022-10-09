@@ -3,7 +3,6 @@ let timer = null;
 load(false, { model: null });
 
 function pageLoaded() {
-    document.querySelector('#welcomeText').innerHTML = `Welcome ${user.username}!`
     updateNav();
 }
 
@@ -23,7 +22,7 @@ async function updateNav() {
             <button onClick="switchPage('/content/pages/dashboard/admin/donations/donations.html?event=${event._id}')">Donations</button>
             <button onClick="switchPage('/content/pages/dashboard/admin/incentives/incentives.html?event=${event._id}')">Incentives</button>
             <button onClick="switchPage('/content/pages/dashboard/admin/prizes/prizes.html?event=${event._id}')">Prizes</button>
-            <button onClick="switchPage('/content/pages/dashboard/admin/ads/ads.html?event=${event._id}')">Ads</button>
+            <button onClick="switchPage('/content/pages/dashboard/admin/blurbs/blurbs.html?event=${event._id}')">Blurbs</button>
             </div>
             `
     }
@@ -128,4 +127,15 @@ async function dialogConfirm(button) {
     //     if (button.getAttribute('endpoint').includes('event')) updateNav();
     //     return showToast({ type: 'success', message: 'Successfully deleted resource.' })
     // })
+}
+
+function showNavbar() {
+    document.getElementById('sidebar').classList.add('visible');
+    document.getElementById('mainPageShadow').classList.add('visible')
+}
+
+function hideNavbar() {
+    if (!document.getElementById('sidebar').classList.contains('visible')) return;
+    document.getElementById('sidebar').classList.remove('visible');
+    document.getElementById('mainPageShadow').classList.remove('visible');
 }

@@ -37,16 +37,30 @@
 
     <script>
         load(false, { model: null });
+        let incentiveList = {};
 
         async function pageLoaded() {
             let details = await GET('details');
             if (details.data === undefined || details.data.eventShort === undefined) return;
             else {
                 document.body.style.visibility = 'visible';
+                incentiveList = await GET(`incentives/event/${details.data.eventShort}`);
+                for (let incentive of incentiveList.data) {
+                    if (incentive && incentive.options.length > 0) {
+                        let datalist = document.createElement('datalist');
+                        datalist.setAttribute('id', `incentiveOptions${incentive._id}`);
+                        let optionName = '';
+                        for (let option of incentive.options) {
+                            datalist.innerHTML += `<option optionId="${option._id}" value="${option.name}">ID: ${option._id}</option>`
+                        }
+                        document.body.append(datalist);
+                    }
+                }
+
                 await generateForm({
                     name: 'Donation',
                     model: 'donations',
-                    type: undefined,
+                    type: 'edit',
                     endpoint: (urlParams.get('id') !== undefined && urlParams.get('id') !== null) ? `${model}/${urlParams.get('id')}` : model,
                     event: details.data.eventShort,
                     volunteer: true,
@@ -55,7 +69,7 @@
                             endpoint: 'donors',
                             textFunction: (value) => {
                                 return value.email;
-                            },
+                            }
                         },
                         incentiveDatalist: {
                             endpoint: `incentives/event/${details.data.eventShort}`,
@@ -82,7 +96,14 @@
                         attributes: {
                             disabled: true,
                         },
-                    },  {
+                    }, {
+                        name: 'Amount',
+                        type: 'number',
+                        data: 'amount',
+                        attributes: {
+                            disabled: true,
+                        },
+                    }, {
                         name: 'Comment',
                         type: 'textarea',
                         data: 'comment',
@@ -98,40 +119,92 @@
                             name: 'Incentive',
                             type: 'input',
                             data: 'incentiveId',
-                            textFunction: async (value) => {
-                                let incentive = await GET(`incentives/${value.incentiveId}`)
-                                return incentive.data.name;
+                            required: true,
+                            textFunction: (value) => {
+                                let incentive = incentiveList.data.find(x => x._id === value.incentiveId);
+                                if (!incentive) return '';
+                                return incentive.name;
                             },
                             attributes: {
                                 list: 'incentiveDatalist',
-                                disabled: true,
+                                onChange: 'setDisabled(this)',
                             }
                         }, {
                             name: 'Option',
                             type: 'input',
                             data: 'option',
-                            textFunction: async (value) => {
-                                let incentive = await GET(`incentives/${value.incentiveId}`)
-                                if (!incentive || value.option === undefined) return '';
-                                let option = incentive.data.options.find(x => x._id === value.option);
-                                if (option !== undefined && option.length > 0) return option.name;
-                                return ''
-                            },
                             attributes: {
                                 disabled: true,
                             },
+                            textFunction: async (value, input) => {
+                                let incentive = incentiveList.data.find(x => x._id === value.incentiveId);
+                                if (!incentive || incentive.options.length <= 0) {
+                                    input.disabled = true;
+                                    return '';
+                                }
+                                input.disabled = false;
+                                input.setAttribute('list', `incentiveOptions${value.incentiveId}`)
+                                console.log(incentive.options)
+                                console.log(value)
+                                let option = incentive.options.find(x => x._id === value.option);
+                                if (option) return option.name;
+                                return '';
+
+
+                                // console.log(input)
+                                // for (let incentive of document.querySelectorAll('#incentiveDatalist option')) {
+                                //     if (incentive.getAttribute('dataid') === value.incentiveId) {
+                                //         let incentiveData = await GET(`incentives/${incentive.getAttribute('dataid')}`)
+                                //         if (!incentiveData.data || incentiveData.data.options.length <= 0) {
+                                //             input.disabled = true;
+                                //             return '';
+                                //         }
+                                //         for (let option of incentiveData.data.options) {
+                                //             if (option._id === value.option) {
+                                //                 let datalist = document.createElement('datalist');
+                                //                 datalist.setAttribute('id', `incentiveOptionDatalist${value.incentiveId}`);
+                                //                 console.log(incentiveData.data.options)
+                                //                 for (let incentiveOption of incentiveData.data.options) {
+                                //                     datalist.innerHTML += `<option optionId="${incentiveOption._id}" value="${incentiveOption.name}">ID: ${incentiveOption._id}</option>`
+                                //                 }
+                                //                 document.body.append(datalist);
+                                //                 input.setAttribute('list', `incentiveOptionDatalist${value.incentiveId}`)
+                                //                 return option.name;
+                                //             }
+                                //         }
+                                //     }
+                                // }
+                                // return '';
+                            }
                         }, {
                             name: 'Amount',
                             type: 'number',
-                            textFunction: async (value) => {
-                                return value.amount;
-                            },
+                            required: true,
                             attributes: {
                                 min: 0.01,
-                                step: 0.01,
-                                disabled: true,
+                                step: 0.01
                             },
+                            textFunction: (value) => {
+                                return value.amount;
+                            }
                         }],
+                        submit: async (value) => {
+                            let fields = value.querySelectorAll('.array.childDiv');
+                            let data = [];
+                            for (const field of fields) {
+                                let inputs = field.querySelectorAll('input');
+                                let incentiveData = {};
+                                let incentive = incentiveList.data.find(x => x.name === inputs[0].value);
+                                incentiveData.incentiveId = incentive._id;
+                                if (incentive.options.length > 0) {
+                                    let option = incentive.options.find(x => x.name === inputs[1].value);
+                                    incentiveData.option = option._id;
+                                }
+                                incentiveData.amount = inputs[2].value;
+                                data.push(incentiveData);
+                            }
+                            return data;
+                        },
                     }, {
                         name: 'Timestamp',
                         type: 'datetime-local',
@@ -183,15 +256,14 @@
                         },
                     }]
                 });
-                try {
-                    let buttons = document.querySelectorAll('.deleteButton');
-                    for (let button of buttons) {
-                        button.style.display = 'none';
-                    }
-                } catch { }
-                document.querySelector('.addButton').style.display = 'none'
-
             }
+        }
+
+        async function setDisabled(element) {
+            let incentive = incentiveList.data.find(x => x.name === element.value);
+            if (!incentive || incentive.options.length <= 0) return element.parentNode.nextSibling.querySelector('input').disabled = true;
+            element.parentNode.nextSibling.querySelector('input').disabled = false;
+            element.parentNode.nextSibling.querySelector('input').setAttribute('list', `incentiveOptions${incentive._id}`)
         }
     </script>
 </body>

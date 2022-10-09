@@ -48,32 +48,40 @@
                 event: urlParams.get('event'),
                 table: [{
                     name: 'Alias',
-                    data: 'alias'
+                    data: 'alias',
+                    priority: 1,
                 }, {
                     name: 'Email',
+                    priority: 4,
                     textFunction: (value) => {
                         try { return value.donor.email; } catch {};
                     }
                 }, {
                     name: 'Amount',
-                    data: 'amount'
+                    data: 'amount',
+                    priority: 1,
                 }, {
                     name: 'Timestamp',
                     textFunction: (value) => {
                         return new Date(value.timestamp).toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit', seconds: undefined })
-                    }
+                    },
+                    priority: 3,
                 }, {
                     name: 'Completed',
-                    data: 'completed'
+                    data: 'completed',
+                    priority: 1,
                 }, {
                     name: 'Verified',
-                    data: 'verified'
+                    data: 'verified',
+                    priority: 2,
                 }, {
                     name: 'Visible',
-                    data: 'visible'
+                    data: 'visible',
+                    priority: 2,
                 }, {
                     name: 'Read',
-                    data: 'read'
+                    data: 'read',
+                    priority: 2,
                 }]
             })
         }

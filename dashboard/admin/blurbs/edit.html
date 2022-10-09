@@ -8,7 +8,7 @@
 
 <body>
     <script>
-        let model = 'ads';
+        let model = 'blurbs';
         const urlParams = new URLSearchParams(window.location.search);
     </script>
     <ul class="breadcrumb">
@@ -17,7 +17,7 @@
                 onClick="switchPage(`/content/pages/dashboard/admin/overview/overview.html?event=${urlParams.get('event')}`)"></a>
         </li>
         <li><a
-                onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)">Ads</a>
+                onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)">Blurbs</a>
         </li>
         <li><a onClick="location.reload()">Edit</a>
         </li>
@@ -50,8 +50,8 @@
 
         async function pageLoaded() {
             await generateForm({
-                name: 'Ad',
-                model: 'ads',
+                name: 'Blurb',
+                model: 'blurbs',
                 type: urlParams.get('type'),
                 endpoint: (urlParams.get('id') !== undefined && urlParams.get('id') !== null) ? `${model}/${urlParams.get('id')}` : model,
                 event: urlParams.get('event'),

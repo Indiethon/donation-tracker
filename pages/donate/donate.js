@@ -29,6 +29,10 @@ function loadData() {
         data = resData;
         document.getElementById('privacyPolicy').href = data.privacyPolicy;
         document.getElementById('sweepstakesRules').href = data.sweepstakesRules;
+        let navButtons = document.querySelectorAll('.topNavButton');
+        for (let button of navButtons) {
+            button.setAttribute('event', data.eventShort)
+        }
         let div = document.querySelector('#custom');
         for (const custom of data.custom) {
             if (custom.type !== 'select') {
@@ -91,7 +95,7 @@ function donateForm() {
                 <input type="hidden" name="amount" value="${donationData.amount}" />
                 <input type="hidden" name="currency_code" value="${data.currency}" />
                 <input type="hidden" name="item_name" value="${data.event} Donation" />
-                <input type="hidden" name="custom" value='{ "event": "${data.event}", "donationId": "${data.id}" }' />
+                <input type="hidden" name="custom" value=${data.id} />
                 <input type="hidden" name="notify_url" value="${window.location.origin}/api/donation/ipn" />
                 <input type="hidden" name="return" value="${window.location.origin}/donate/success" />
                 <input type="hidden" name="cancel_return" value="${window.location.origin}/donate/error" />
@@ -177,14 +181,15 @@ function showIncentiveInfo(element) {
     info.querySelector('.incentiveDescription').innerHTML = incentive.description;
     info.querySelector('.inputUnit').innerHTML = data.currencySymbol;
     info.querySelector('#incentiveAmount').style.paddingLeft = `${info.querySelector('.inputUnit').offsetWidth + 12}px`;
-    info.querySelector('#incentiveAddConfirm').disabled = true;
     if (incentive.type === 'target') {
         info.querySelector('.incentiveOptions').style.display = 'none';
         info.querySelector('.incentiveTotalProgressBar').style.width = `${(((100 * incentive.total) / incentive.goal) > 100) ? 100 : (100 * incentive.total) / incentive.goal}%`;
         info.querySelector('.incentiveTotal .incentiveTotalText').innerHTML = `Current Raised Amount: ${data.currencySymbol}${incentive.total.toFixed(2)} / ${data.currencySymbol}${incentive.goal.toFixed(2)}`
         info.querySelector('.incentiveTotal').style.display = 'inherit';
+        info.querySelector('#incentiveAddConfirm').disabled = false;
     }
     else {
+        info.querySelector('#incentiveAddConfirm').disabled = true;
         info.querySelector('.incentiveTotal').style.display = 'none';
         info.querySelector('.incentiveOptions').innerHTML = '';
         let incentiveOptions = incentive.options.sort((a, b) => { return b.total - a.total });

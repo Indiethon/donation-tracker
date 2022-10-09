@@ -6,15 +6,15 @@
     <script src="/content/pages/dashboard/volunteer/home/home.js"></script>
     <link rel="stylesheet" href="/content/pages/dashboard/common.css" />
     <link rel="stylesheet" href="/content/pages/dashboard/volunteer/volunteer.css" />
-
+    <link rel="stylesheet" href="/content/pages/dashboard/volunteer/home/home.css" />
 </head>
 
 <body>
     <ul class="breadcrumb">
-        <li><a onClick="switchPage('/content/pages/dashboard/volunteer/home/home.html')">Overview</a></li>
+        <li><a onClick="switchPage('/content/pages/dashboard/volunteer/home/home.html')">Home</a></li>
     </ul>
     <div class="header">
-        <h2 class="title">Overview</h2>
+        <h2 class="title">Home</h2>
         <!-- <div id="headerButtonDiv">
             <button onClick="switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=create`)">Create
                 New</button>
@@ -77,45 +77,80 @@
 
         load(false, { model: null });
 
-        function pageLoaded() {
+        async function pageLoaded() {
             showBody();
             showContent();
 
-            // generateHomeTable({
-            //     name: 'donation',
-            //     model: 'donations',
-            //     endpoint: `donations/event/${event}`,
-            //     event: event,
-            //     table: [{
-            //         name: 'Alias',
-            //         data: 'alias',
-            //     }, {
-            //         name: 'Time Received',
-            //         textFunction: (value) => {
-            //             return new Date(value.timestamp).toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit', seconds: undefined })
-            //         }
-            //     }, {
-            //         name: 'Amount',
-            //         textFunction: (value, details) => {
-            //             return `${details.data.currencySymbol}${value.amount.toFixed(2)}`;
-            //         }
-            //     }, {
-            //         name: 'Comment',
-            //         textFunction: (value) => {
-            //             if (value.comment.length > 0) return 'Yes';
-            //             return 'No';
-            //         }
-            //     }],
-            //     rowFunction: (value) => {
-            //         if (value.completed && value.verified && value.visible) return true;
-            //         return false;
-            //     },
-            //     clickFunction: (value) => {
-            //         return `location.href = '/donations/${event}/${value.id}'`
-            //     }
-            // })
+            details = await GET('details');
+
+
+            document.body.style.visibility = 'visible';
+            options = {
+                name: 'donation',
+                model: 'donations',
+                endpoint: `donations/event/${details.data.eventShort}`,
+                volunteer: true,
+                table: [{
+                    name: 'Alias',
+                    data: 'alias',
+                    priority: 1,
+                }, {
+                    name: 'Amount',
+                    textFunction: (value) => {
+                        return `${details.data.currencySymbol}${value.amount.toFixed(2)}`
+                    },
+                    priority: 1,
+                }],
+                rowAttribute: (value) => {
+                    if (value.read || !value.visible) return true;
+                    return false;
+                },
+                rowFunction: (value) => {
+                    return value.completed;
+                },
+                subTable: [{
+                    name: 'Comment',
+                    data: 'comment',
+                    priority: 1,
+                }]
+            }
+            await generateHomeTable(options);
+            // setRowVisibility(document.querySelector('#headerButtonDiv button.selected'))
         }
 
+        // generateHomeTable({
+        //     name: 'donation',
+        //     model: 'donations',
+        //     endpoint: `donations/event/${event}`,
+        //     event: event,
+        //     table: [{
+        //         name: 'Alias',
+        //         data: 'alias',
+        //     }, {
+        //         name: 'Time Received',
+        //         textFunction: (value) => {
+        //             return new Date(value.timestamp).toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit', seconds: undefined })
+        //         }
+        //     }, {
+        //         name: 'Amount',
+        //         textFunction: (value, details) => {
+        //             return `${details.data.currencySymbol}${value.amount.toFixed(2)}`;
+        //         }
+        //     }, {
+        //         name: 'Comment',
+        //         textFunction: (value) => {
+        //             if (value.comment.length > 0) return 'Yes';
+        //             return 'No';
+        //         }
+        //     }],
+        //     rowFunction: (value) => {
+        //         if (value.completed && value.verified && value.visible) return true;
+        //         return false;
+        //     },
+        //     clickFunction: (value) => {
+        //         return `location.href = '/donations/${event}/${value.id}'`
+        //     }
+        // })
         // function pageLoaded() {
         //     showBody();
         //     GET('charities', (err, data) => {

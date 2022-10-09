@@ -8,7 +8,6 @@ body {
     background-color: rgb(246, 247, 251);
     font-family: 'Roboto', sans-serif;
     visibility: hidden;
-    margin-bottom: 64px;
 }
 
 /* Breadcrumb */
@@ -160,6 +159,8 @@ div.content {
     padding: 24px;
     height: 100%;
     visibility: hidden;
+    display: table;
+    width: calc(100% - 48px);
 }
 
 table {
@@ -168,6 +169,7 @@ table {
     border-collapse: none;
     border-spacing: 0;
     column-width: auto;
+    word-break: break-word;
 }
 
 table thead {
@@ -184,6 +186,7 @@ table tbody td {
     height: 24px;
     font-size: 14px;
     border-bottom: 2px solid rgb(246, 247, 251);
+    text-overflow: ellipsis;
 }
 
 thead th {
@@ -198,6 +201,26 @@ table tr {
 
 table tr:hover {
     background-color: #F6F7FB;
+}
+
+table th:first-child {
+    width: 30px;
+    padding: 10px 8px;
+}
+
+table th:last-child {
+    width: 30px;
+    padding: 10px 8px;
+}
+
+table td:first-child {
+    width: 30px;
+    padding: 10px 8px;
+}
+
+table td:last-child {
+    width: 30px;
+    padding: 10px 8px;
 }
 
 table input[type=checkbox] {
@@ -241,6 +264,7 @@ table input[type=checkbox] {
     z-index: 10;
     background-color: #FFFFFF;
     box-shadow: rgb(137 138 154 / 40%) 0px 1px 6px 0px;
+    margin-bottom: 16px;
 }
 
 .tableDropdownContent button {
@@ -370,35 +394,35 @@ form .inputDiv {
 }
 
 .inputDiv input:disabled {
-    opacity: 0.8;
+    opacity: 1;
     background-color: rgb(240, 240, 240);
 }
 
 .inputDiv input:disabled:hover {
-    opacity: 0.8;
+    opacity: 1;
     border-color: rgb(192, 192, 202);
     background-color: rgb(240, 240, 240);
 }
 
 .inputDiv input:disabled:focus {
-    opacity: 0.8;
+    opacity: 1;
     border-color: rgb(192, 192, 202);
     background-color: rgb(240, 240, 240);
 }
 
 .inputDiv textarea:disabled {
-    opacity: 0.8;
+    opacity: 1;
     background-color: rgb(240, 240, 240);
 }
 
 .inputDiv textarea:disabled:hover {
-    opacity: 0.8;
+    opacity: 1;
     border-color: rgb(192, 192, 202);
     background-color: rgb(240, 240, 240);
 }
 
 .inputDiv textarea :disabled:focus {
-    opacity: 0.8;
+    opacity: 1;
     border-color: rgb(192, 192, 202);
 }
 
@@ -482,18 +506,18 @@ input[type=checkbox] {
 }
 
 .array.childDiv input:disabled {
-    opacity: 0.8;
+    opacity: 1;
     background-color: rgb(240, 240, 240);
 }
 
 .array.childDiv input:disabled:hover {
-    opacity: 0.8;
+    opacity: 1;
     border-color: rgb(192, 192, 202);
     background-color: rgb(240, 240, 240);
 }
 
 .array.childDiv input:disabled:focus {
-    opacity: 0.8;
+    opacity: 1;
     border-color: rgb(192, 192, 202);
     background-color: rgb(240, 240, 240);
 }
@@ -517,18 +541,18 @@ input[type=checkbox] {
 }
 
 .array.childDiv select:disabled {
-    opacity: 0.8;
+    opacity: 1;
     background-color: rgb(240, 240, 240);
 }
 
 .array.childDiv select:disabled:hover {
-    opacity: 0.8;
+    opacity: 1;
     border-color: rgb(192, 192, 202);
     background-color: rgb(240, 240, 240);
 }
 
 .array.childDiv select:disabled:focus {
-    opacity: 0.8;
+    opacity: 1;
     border-color: rgb(192, 192, 202);
     background-color: rgb(240, 240, 240);
 }
@@ -568,18 +592,18 @@ input[type=checkbox] {
 /* Other */
 
 .inputDiv select:disabled {
-    opacity: 0.8;
+    opacity: 1;
     background-color: rgb(240, 240, 240);
 }
 
 .inputDiv select:disabled:hover {
-    opacity: 0.8;
+    opacity: 1;
     border-color: rgb(192, 192, 202);
     background-color: rgb(240, 240, 240);
 }
 
 .inputDiv select:disabled:focus {
-    opacity: 0.8;
+    opacity: 1;
     border-color: rgb(192, 192, 202);
     background-color: rgb(240, 240, 240);
 }
@@ -601,4 +625,67 @@ input[type=checkbox] {
     border-color: rgb(83, 91, 142);
     cursor: pointer;
     transition-duration: 0.2s;
+}
+
+.tableBoolean {
+    width: 20px;
+    display: block;
+    border-radius: 20px;
+    border: 1px solid rgb(192, 192, 202);
+    padding: 2px 8px;
+    font-size: 12px;
+    color: rgb(137, 138, 154);
+    text-align: center;
+}
+
+.tableCellBoolean {
+    overflow: hidden;
+    text-overflow: unset;
+    white-space: nowrap;
+}
+
+@media only screen and (max-width : 1400px) {
+    table td[priority='5'] {
+       display: none;
+    }
+
+    table th[priority='5'] {
+        display: none;
+     }
+}
+
+@media only screen and (max-width : 1100px) {
+    table td[priority='4'] {
+       display: none;
+    }
+
+    table th[priority='4'] {
+        display: none;
+     }
+}
+
+@media only screen and (max-width : 800px) {
+    table td[priority='3'] {
+       display: none;
+    }
+
+    table th[priority='3'] {
+        display: none;
+     }
+}
+
+@media only screen and (max-width : 500px) {
+    table td[priority='2'] {
+       display: none;
+    }
+
+    table th[priority='2'] {
+        display: none;
+     }
+}
+
+@media only screen and (max-width : 700px) {
+    body {
+        zoom: 75%;
+    }
 }

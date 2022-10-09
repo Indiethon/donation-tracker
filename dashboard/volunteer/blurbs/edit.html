@@ -8,12 +8,12 @@
 
 <body>
     <script>
-        let model = 'ads';
+        let model = 'blurbs';
         const urlParams = new URLSearchParams(window.location.search);
     </script>
     <ul class="breadcrumb">
         <li><a onClick="switchPage(`/content/pages/dashboard/volunteer/home/home.html`)">Home</a></li>
-        <li><a onClick="switchPage(`/content/pages/dashboard/volunteer/${model}/${model}.html`)">Ads</a>
+        <li><a onClick="switchPage(`/content/pages/dashboard/volunteer/${model}/${model}.html`)">Blurbs</a>
         </li>
         <li><a onClick="location.reload()">View</a>
         </li>
@@ -44,8 +44,8 @@
             else {
                 document.body.style.visibility = 'visible';
                 await generateForm({
-                    name: 'Ad',
-                    model: 'ads',
+                    name: 'Blurb',
+                    model: 'blurbs',
                     type: 'view',
                     endpoint: (urlParams.get('id') !== undefined && urlParams.get('id') !== null) ? `${model}/${urlParams.get('id')}` : model,
                     event: details.data.eventShort,

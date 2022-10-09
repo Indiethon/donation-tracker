@@ -51,10 +51,12 @@
                 event: urlParams.get('event'),
                 table: [{
                     name: 'Game',
-                    data: 'game'
+                    data: 'game',
+                    priority: 1,
                 }, {
                     name: 'Category',
-                    data: 'category'
+                    data: 'category',
+                    priority: 2,
                 }, {
                     name: 'Runners',
                     textFunction: (value) => {
@@ -63,18 +65,22 @@
                             runnerList.push(runner.name)
                         }
                         return runnerList.join(', ');
-                    }
+                    },
+                    priority: 1,
                 }, {
                     name: 'Estimate',
-                    data: 'estimate'
+                    data: 'estimate',
+                    priority: 3,
                 }, {
                     name: 'Start Time',
                     textFunction: (eventData) => {
                         return new Date(eventData.startTime).toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit', seconds: undefined })
-                    }
+                    },
+                    priority: 3,
                 }, {
                     name: 'Multiplayer',
-                    data: 'multiplayer'
+                    data: 'multiplayer',
+                    priority: 2,
                 }]
             })
         }

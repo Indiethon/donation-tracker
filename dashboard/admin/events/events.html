@@ -46,33 +46,41 @@
                 table: [{
                     name: 'Name',
                     data: 'name',
+                    priority: 1,
                 }, {
                     name: 'Short',
-                    data: 'short'
+                    data: 'short',
+                    priority: 2,
                 }, {
                     name: 'Charity',
                     textFunction: (eventData) => {
                         return eventData.charity.name
-                    }
+                    },
+                    priority: 3,
                 }, {
                     name: 'Target',
-                    data: 'targetAmount'
+                    data: 'targetAmount',
+                    priority: 3,
                 }, {
                     name: 'Start Time',
                     textFunction: (eventData) => {
                         return new Date(eventData.startTime).toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit', seconds: undefined })
-                    }
+                    },
+                    priority: 4,
                 }, {
                     name: 'End Time',
                     textFunction: (eventData) => {
                         return new Date(eventData.endTime).toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit', seconds: undefined })
-                    }
+                    },
+                    priority: 4,
                 }, {
                     name: 'Visible',
-                    data: 'visible'
+                    data: 'visible',
+                    priority: 2,
                 }, {
                     name: 'Active',
-                    data: 'active'
+                    data: 'active',
+                    priority: 1,
                 }]
             })
         }

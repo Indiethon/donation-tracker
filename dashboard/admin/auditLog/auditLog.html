@@ -45,26 +45,25 @@
                 table: [{
                     name: 'Timestamp',
                     textFunction: (value) => {
-                        return new Date(value.startTime).toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit', seconds: undefined })
+                        return new Date(value.timestamp).toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit', seconds: undefined })
                     }
                 }, {
                     name: 'User',
                     textFunction: (value) => {
+                        console.log(value)
                         return value.user.username;
                     }
                 }, {
+                    name: 'Model',
+                    value: 'modelName',
+                },  {
                     name: 'Resource',
                     textFunction: (value) => {
                         return value.resourceId;
                     }
-                },  {
+                }, {
                     name: 'Action',
                     data: 'action',
-                }, {
-                    name: 'Event',
-                    textFunction: (value) => {
-                        return value.event.name;
-                    }
                 }]
             })
         }

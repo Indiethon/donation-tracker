@@ -7,11 +7,15 @@
     <script src="/content/pages/dashboard/utils.js"></script>
     <script src="/content/pages/dashboard/admin/admin/admin.js"></script>
     <link rel="stylesheet" href="/content/pages/dashboard/admin/admin/admin.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body>
     <div id="sidebar">
-        <div id="iconDiv">
+        <button id="mobileNavButtonClose" onClick="document.getElementById('sidebar').style.display = 'none'">
+            <span class="material-icons-outlined">close</span>
+        </button>
+        <div id="navIconDiv">
             <img id="icon" src="/content/logo">
         </div>
         <div id="navigation">
@@ -23,7 +27,8 @@
                     <span class="material-icons-outlined button-expand">expand_more</span>
                 </button>
                 <div class="navDropdownDiv" id="administrationNav">
-                    <button onClick="switchPage('/content/pages/dashboard/admin/auditLog/auditLog.html')">Audit Log</button>
+                    <button onClick="switchPage('/content/pages/dashboard/admin/auditLog/auditLog.html')">Audit
+                        Log</button>
                     <button onClick="switchPage('/content/pages/dashboard/admin/users/users.html')">Users</button>
                     <button onClick="switchPage(`/content/pages/dashboard/admin/groups/groups.html`)">Groups</button>
                 </div>
@@ -71,21 +76,32 @@
             </button>
         </div>
     </div>
+    <div id="mainPageShadow" onClick="hideNavbar()"></div>
     <div id="mainPage">
         <div id="header">
-            <div id="welcomeText"></div>
-            <button id="volunteerView"
-                onClick="location.href = '/volunteer/dashboard'">Switch To
-                Volunteer View</button>
+            <div id="headerNavButtonDiv">
+                <button id="navOpenButton" onClick="showNavbar()">
+                    <span class="material-icons-outlined">menu</span>
+                </button>
+                <div id="iconDiv">
+                    <img id="icon" src="/content/logo">
+                </div>
+            </div>
+            <button id="volunteerView" onClick="location.href = '/volunteer/dashboard'">
+                <span class="material-icons-outlined">switch_account</span>
+                <div class="buttonText">Volunteer View</div>
+            </button>
             <button id="logout" onClick="logout()">
                 <span class="material-icons-outlined">logout</span>
-                <div class="buttonText">Logout</div></button>
+                <div class="buttonText">Logout</div>
+            </button>
         </div>
         <div id="content">
-            <iframe id="pageFrame" src="/content/pages/dashboard/admin/home/home.html" srcOld="/content/pages/dashboard/admin/home/home.html"></iframe>
+            <iframe id="pageFrame" src="/content/pages/dashboard/admin/home/home.html"
+                srcOld="/content/pages/dashboard/admin/home/home.html"></iframe>
         </div>
     </div>
-    <div id="toast">
+    <div id="toast" onClick="this.classList.remove('showToast') ">
         <div id="toastHeader"></div>
         <div id="toastContent"></div>
     </div>

@@ -11,15 +11,15 @@ module.exports.schema = (mongoose, database) => {
         resourceId: {
             type: mongoose.Schema.Types.ObjectId,
         },
-        model: {
-            type: String,
+        modelName: {
+            type: String
         },
         action: {
             type: String,
             enum: ['create', 'edit', 'delete']
-        },
+        }
     }, { toJSON: { virtuals: true } }, { toObject: { virtuals: true } });
-
+    
     schema.virtual('user', {
         ref: 'user',
         localField: 'userId',

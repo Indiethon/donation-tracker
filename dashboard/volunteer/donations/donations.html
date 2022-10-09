@@ -41,8 +41,33 @@
         let options;
         let details;
 
-        let donationListener = new EventSource('/api/eventSource')
-        donationListener.addEventListener('message', updateTable);
+        connect();
+
+        async function connect() {
+            console.log('Connecting to websocket...')
+            GET(`websocket/start`)
+
+            const ws = new WebSocket(`${(window.location.protocol === 'https:') ? 'wss' : 'ws'}://${window.location.host}/api/websocket/data`);
+
+            ws.onopen = () => {
+                console.log('Connected to websocket!')
+                showToast('success', `Connected to donation websocket!`)
+            }
+
+            ws.onmessage = (event) => {
+                updateTable();
+            };
+            ws.onclose = () => {
+                console.error('Websocket connection closed. Attemping to reconnect...');
+                showToast('error', `Disconnected from donation websocket. Attempting to reconnect...`)
+                setTimeout(() => {
+                    connect();
+                }, 1000);
+            }
+        }
+
+        //let donationListener = new EventSource('/api/eventSource')
+        //donationListener.addEventListener('message', updateTable);
 
         async function pageLoaded() {
             details = await GET('details');
@@ -58,21 +83,25 @@
                         name: 'Timestamp',
                         textFunction: (value) => {
                             return new Date(value.timestamp).toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit', seconds: undefined })
-                        }
+                        },
+                        priority: 3,
                     }, {
                         name: 'Alias',
-                        data: 'alias'
+                        data: 'alias',
+                        priority: 1,
                     }, {
                         name: 'Amount',
                         textFunction: (value) => {
                             return `${details.data.currencySymbol}${value.amount.toFixed(2)}`
-                        }
+                        },
+                        priority: 1,
                     }, {
                         name: 'Comment',
                         textFunction: (value) => {
                             if (value.comment.length > 0) return 'Yes';
                             return 'No';
-                        }
+                        },
+                        priority: 1,           
                     }],
                     rowAttribute: (value) => {
                         if (value.read || !value.visible) return true;
@@ -119,13 +148,6 @@
                 }
             }
         }
-
-        window.onbeforeunload = function () {
-            donationListener.removeEventListener('message', updateTable);
-        }
-        window.addEventListener("beforeunload", function (e) {
-            donationListener.removeEventListener('message', updateTable);
-        }, false);
 
     </script>
 </body>

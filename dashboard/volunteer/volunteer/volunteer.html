@@ -7,11 +7,15 @@
     <script defer src="/content/pages/dashboard/utils.js"></script>
     <script defer src="/content/pages/dashboard/volunteer/volunteer/volunteer.js"></script>
     <link rel="stylesheet" href="/content/pages/dashboard/volunteer/volunteer/volunteer.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body>
     <div id="sidebar">
-        <div id="iconDiv">
+        <button id="mobileNavButtonClose" onClick="document.getElementById('sidebar').style.display = 'none'">
+            <span class="material-icons-outlined">close</span>
+        </button>
+        <div id="navIconDiv">
             <img id="icon" src="/content/logo">
         </div>
         <div id="navigation">
@@ -33,9 +37,9 @@
                     <span class="material-icons-outlined">emoji_events</span>
                     <div class="buttonText">Prizes</div>
                 </button>
-                <button onClick="switchPage('/content/pages/dashboard/volunteer/ads/ads.html')">
+                <button onClick="switchPage('/content/pages/dashboard/volunteer/blurbs/blurbs.html')">
                     <span class="material-icons-outlined">description</span>
-                    <div class="buttonText">Ads</div>
+                    <div class="buttonText">Blurbs</div>
                 </button>
             </div>
         </div>
@@ -47,12 +51,21 @@
             </button>
         </div>
     </div>
+    <div id="mainPageShadow" onClick="hideNavbar()"></div>
     <div id="mainPage">
         <div id="header">
-            <div id="welcomeText"></div>
+            <div id="headerNavButtonDiv">
+                <button id="navOpenButton" onClick="showNavbar()">
+                    <span class="material-icons-outlined">menu</span>
+                </button>
+                <div id="iconDiv">
+                    <img id="icon" src="/content/logo">
+                </div>
+            </div>
             <button id="adminView"
-                onClick="location.href = '/admin/dashboard'">Switch To
-                Admin View</button>
+                onClick="location.href = '/admin/dashboard'">
+                <span class="material-icons-outlined">switch_account</span>
+                <div class="buttonText">Admin View</div></button>
             <button id="logout" onClick="logout()">
                 <span class="material-icons-outlined">logout</span>
                 <div class="buttonText">Logout</div></button>

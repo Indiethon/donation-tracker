@@ -106,6 +106,7 @@ async function generateTable(options) {
             tr.append(checkbox)
             for (const option of options.table) {
                 let header = document.createElement('th');
+                header.setAttribute('priority', (option.priority) ? `${option.priority}` : '1')
                 header.innerHTML = option.name;
                 tr.append(header)
             }
@@ -129,8 +130,16 @@ async function generateTable(options) {
                     }
                     row.insertCell().innerHTML = `<input type="checkbox" item="${element._id}"</input>`;
                     for (const option of options.table) {
-                        if (option.textFunction !== undefined) row.insertCell().innerHTML = option.textFunction(element);
-                        else row.insertCell().innerHTML = element[option.data];
+                        let cell = row.insertCell();
+                        cell.setAttribute('priority', (option.priority) ? `${option.priority}` : '1')
+                        if (option.textFunction !== undefined) cell.innerHTML = option.textFunction(element);
+                        else {
+                            switch (element[option.data]) {
+                                case true: cell.innerHTML = `<div class="tableBoolean">Yes</div>`; cell.classList.add('tableCellBoolean'); break;
+                                case false: cell.innerHTML = `<div class="tableBoolean">No</div>`; cell.classList.add('tableCellBoolean'); break;
+                                default: cell.innerHTML = element[option.data]; break;
+                            }
+                        }
                     }
                     if (options.volunteer) {
                         row.insertCell().innerHTML = `
@@ -213,7 +222,7 @@ async function generateForm(options) {
         case 'create': document.querySelector('.title').innerHTML = `Create ${options.name}`; break;
         case 'edit': document.querySelector('.title').innerHTML = `Edit ${options.name}`; break;
         case 'view': document.querySelector('.title').innerHTML = `View ${options.name}`; break;
-        default:  document.querySelector('.title').innerHTML = `View ${options.name}`; break;
+        default: document.querySelector('.title').innerHTML = `View ${options.name}`; break;
     }
 
     // Generate datalists (if needed).
@@ -565,6 +574,8 @@ async function apiError(error, body) {
 
 // Other helper functions.
 function switchPage(page) {
+    try { document.getElementById('sidebar').classList.remove('visible') } catch { }
+    try { document.getElementById('mainPageShadow').classList.remove('visible') } catch { }
     window.parent.postMessage({ name: 'page', data: page }, window.parent)
 }
 

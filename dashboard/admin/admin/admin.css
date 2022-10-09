@@ -21,15 +21,44 @@ button {
 }
 
 #sidebar {
+    position: absolute;
+    top: 0;
+    left: -300px;
     width: 300px;
     height: 100%;
     background-color: rgb(255, 255, 255);
     border-right: 1px solid rgb(221, 225, 229);
+    transition: left 0.5s;
+    z-index: 10;
+}
+
+#sidebar.visible {
+    left: 0;
 }
 
 #mainPage {
     width: 100%;
     height: 100%;
+    box-shadow: none;
+}
+
+#mainPageShadow {
+    visibility: hidden;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0;
+    z-index: 0;
+    transition-duration: 0.5s;
+}
+
+#mainPageShadow.visible {
+    background-color: black;
+    visibility: visible;
+    pointer-events: all;
+    opacity: 0.5;
+    transition-duration: 0.5s;
 }
 
 #header {
@@ -50,15 +79,15 @@ button {
 
 #content {
     width: 100%;
-    height: 100%;
+    height: calc(100% - 64px);
     background-color: rgb(246, 247, 251);
     overflow-y: hidden;
+    margin-bottom: 100px;
 }
 
 #iconDiv {
-    width: calc(100% - 20px);
-    height: 64px;
-    padding: 10px;
+    height: 51px;  
+    padding: 10px 0;
     text-align: center;
     vertical-align: middle;
     object-fit: contain;
@@ -97,6 +126,7 @@ button {
     display: none;
     padding-bottom: 16px;
     width: 100%;
+    transition-duration: 0.5s;
 }
 
 .navDropdownDiv.visible {
@@ -124,6 +154,7 @@ button {
     width: 100%;
     height: 100%;
     border: none;
+    overflow-y: auto;
 }
 
 #toast {
@@ -159,28 +190,6 @@ button {
     right: -20px;
     transition-timing-function: ease-out;
     transition-duration: 0.5s;
-}
-
-#dialog {
-    display: none;
-    position: fixed;
-    z-index: 90;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgb(0, 0, 0);
-    background-color: rgba(0, 0, 0, 0.4);
-}
-
-#dialogContent {
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 30%;
-    height: 30%;
 }
 
 .mainNavButton {
@@ -264,13 +273,14 @@ button {
 }
 
 #logout {
-    width: 100px;
+    width: 120px;
     height: 34px;
     background-color: rgb(66, 104, 246);
     color: rgb(255, 255, 255);
     border: none;
     transition-duration: 0.2s;
     margin: 0 10px;
+    margin-left: 5px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -298,7 +308,10 @@ button {
     background-color: #FFFFFF;
     color: rgb(66, 104, 246);
     border: 1px solid rgb(66, 104, 246);
-    margin-right: 10px;
+    margin-right: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #volunteerView:hover {
@@ -307,4 +320,164 @@ button {
     border-color: rgb(83, 91, 142);
     cursor: pointer;
     transition-duration: 0.2s;
+}
+
+#volunteerView .material-icons-outlined {
+    font-size: 20px;
+    font-weight: 100;
+}
+
+#volunteerView .buttonText {
+    text-align: left;
+    justify-content: left;
+    margin-left: 5px;
+}
+
+#navOpenButton {
+    width: 40px;
+    height: 34px;
+    background-color: transparent;
+    color: black;
+    border: none;
+    transition-duration: 0.2s;
+    margin: 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#navOpenButton .material-icons-outlined {
+    font-size: 30px;
+    font-weight: 100;
+}
+
+#headerNavButtonDiv {
+    display: flex;
+    width: 100%;
+    height: 61px;
+    text-align: center;
+    align-items: center;
+    margin: 0px 10px;   
+}
+
+#navIconDiv {
+width: calc(100% - 20px);
+height: 64px;
+padding: 10px;
+text-align: center;
+vertical-align: middle;
+object-fit: contain;
+}
+
+#navIconDiv img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Hidden mobile buttons */
+
+
+
+#mobileNavButtonClose {
+    position: fixed;
+    left: 10px;
+    top: 14px;
+    width: 40px;
+    height: 34px;
+    background-color: transparent;
+    color: black;
+    border: none;
+    transition-duration: 0.2s;
+    margin: 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    display: none;
+}
+
+#mobileNavButtonClose .material-icons-outlined {
+    font-size: 20px;
+    font-weight: 100;
+}
+
+#dialog {
+    display: none;
+    position: fixed;
+    z-index: 90;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+#dialogContent {
+    display: flex;
+    flex-direction: column;
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 400px;
+    height: 100px;
+}
+
+#dialogText {
+    width: 100%;
+}
+
+#dialogButtonDiv {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+    margin-top: auto;
+    justify-content: center;
+}
+
+#dialogDelete {
+        width: 120px;
+        height: 34px;
+        background-color: #FF4567;
+        color: rgb(255, 255, 255);
+        border: none;
+        transition-duration: 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+}
+
+#dialogCancel {
+    width: 120px;
+    height: 34px;
+    background-color: rgb(66, 104, 246);
+    color: rgb(255, 255, 255);
+    border: none;
+    transition-duration: 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 700px) {
+    #logout {
+        width: 40px;
+        margin-left: 5px;
+    }
+
+    #volunteerView {
+        width: 40px;
+        margin-right: 5px;
+    }
+
+    #volunteerView .buttonText {
+        display: none;
+    }
+
+    #logout .buttonText {
+        display: none;
+    }
 }

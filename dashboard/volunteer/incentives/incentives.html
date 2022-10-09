@@ -41,8 +41,30 @@
         let options;
         let details;
 
-        let donationListener = new EventSource('/api/eventSource')
-        donationListener.addEventListener('message', updateTable);
+        connect();
+
+        async function connect() {
+            console.log('Connecting to websocket...')
+            GET(`websocket/start`)
+
+            const ws = new WebSocket(`${(window.location.protocol === 'https:') ? 'wss' : 'ws'}://${window.location.host}/api/websocket/data`);
+
+            ws.onopen = () => {
+                console.log('Connected to websocket!')
+                showToast('success', `Connected to incentive websocket!`)
+            }
+
+            ws.onmessage = (event) => {
+                updateTable();
+            };
+            ws.onclose = () => {
+                console.error('Websocket connection closed. Attemping to reconnect...');
+                showToast('error', `Disconnected from incentive websocket. Attempting to reconnect...`)
+                setTimeout(() => {
+                    connect();
+                }, 1000);
+            }
+        }
 
         async function pageLoaded() {
             details = await GET('details');

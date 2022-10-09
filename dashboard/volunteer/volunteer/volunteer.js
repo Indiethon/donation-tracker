@@ -3,7 +3,6 @@ load(false, { model: null });
 async function pageLoaded() {
     let userData = await GET(`users/${user.id}`);
     if (userData.data.superuser || userData.data.admin) document.querySelector('#adminView').style.display = 'flex';
-    document.querySelector('#welcomeText').innerHTML = `Welcome ${user.username}!`
     showBody();
 }
 
@@ -78,4 +77,15 @@ function dialogConfirm(button) {
         if (button.getAttribute('endpoint').includes('event')) updateNav();
         return showToast({ type: 'success', message: 'Successfully deleted resource.' })
     })
+}
+
+function showNavbar() {
+    document.getElementById('sidebar').classList.add('visible');
+    document.getElementById('mainPageShadow').classList.add('visible')
+}
+
+function hideNavbar() {
+    if (!document.getElementById('sidebar').classList.contains('visible')) return;
+    document.getElementById('sidebar').classList.remove('visible');
+    document.getElementById('mainPageShadow').classList.remove('visible');
 }
