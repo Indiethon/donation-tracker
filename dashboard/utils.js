@@ -50,7 +50,7 @@ async function login() {
         button.disabled = false;
         return;
     }
-    createCookie(login.data.username, login.data.id, login.data.token)
+    await createCookie(login.data.username, login.data.id, login.data.token)
     if (login.data.admin) setTimeout(() => location.href = '/admin/dashboard', 250);
     else if (login.data.volunteer) setTimeout(() => location.href = '/volunteer/dashboard', 250);
     else setTimeout(() => location.href = '/login', 250);
@@ -67,7 +67,11 @@ async function logout() {
 }
 
 function createCookie(username, id, token) {
-    document.cookie = `data=${JSON.stringify({ username: username, id: id, token: token })}; expires=0; path=/;`;
+    return new Promise((resolve, reject) => {
+        document.cookie = `data=${JSON.stringify({ username: username, id: id, token: token })}; expires=0; path=/;`;
+        console.log(document.cookie)
+        resolve();
+    })
 }
 
 async function setBreadcrumb(event) {
@@ -272,6 +276,10 @@ async function generateForm(options) {
     // Append to page.
     document.querySelector('.content').append(form);
 
+    // Setup help button.
+    if (options.help !== undefined) document.querySelector('.helpButton').setAttribute('onClick', `window.open('${options.help}', '_blank')`)
+    else document.querySelector('.helpButton').style.display = 'none';
+
     // Show content.
     showContent();
 
@@ -380,7 +388,6 @@ async function generateForm(options) {
 
                 if (arrayField.required) label.innerHTML += `<span class="required"> ✱</span>`
 
-
                 let input;
                 if (arrayField.type === 'select') {
                     input = document.createElement('select');
@@ -437,12 +444,19 @@ async function generateForm(options) {
 // Submit data.
 async function submit(options) {
 
+    try { submitPressed() } catch { };
+
+    // Hide page content while validating.
+    hideContent()
+
     // Clear any errors.
     let elementList = document.querySelectorAll('.content .inputDiv');
     [...elementList].forEach(element => {
         let el = document.querySelector(`#${element.id} .errorText`)
-        el.innerHTML = '';
-        el.style.visibility = 'none';
+        try {
+            el.innerHTML = '';
+            el.style.visibility = 'none';
+        } catch { };
     });
 
     // Generate form data.
@@ -451,6 +465,7 @@ async function submit(options) {
         if (field.submit === undefined) test = '1'
         else if (field.type === 'array') data[field.data] = await field.submit(document.querySelector(`form #${field.data}`));
         else if (field.type === 'select') data[field.data] = await field.submit(document.querySelector(`form #${field.data} select`).value)
+        else if (field.type === 'textarea') data[field.data] = await field.submit(document.querySelector(`form #${field.data} textarea`).value)
         else data[field.data] = await field.submit(document.querySelector(`form #${field.data} input`)[(field.type === 'checkbox') ? 'checked' : 'value'])
     };
 
@@ -473,12 +488,16 @@ async function submit(options) {
     }
 
     // If errors, show errors on page.
-    showToast('error', `Validation errors found, please resolve them.`)
-    save.data.errorCodes.forEach(error => {
-        let element = document.querySelector(`.content #${error.item} .errorText`);
-        element.innerHTML = error.code;
-        element.style.visibility = 'inherit';
-    })
+    showContent();
+    if (save.data.error === 'Invalid input.') {
+        showToast('error', `Validation errors found, please resolve them.`)
+        save.data.errorCodes.forEach(error => {
+            let element = document.querySelector(`.content #${error.item} .errorText`);
+            element.innerHTML = error.code;
+            element.style.visibility = 'inherit';
+        })
+    }
+    else showToast('error', save.data.error)
 
     return;
 }
@@ -536,6 +555,7 @@ async function POST(endpoint, body) {
     catch { headers = { 'Content-Type': 'application/json' } }
     let response = await fetch(`/api/${endpoint}`, { method: 'POST', headers: headers, body: JSON.stringify(body) });
     let data = await response.json();
+    console.log(data)
     switch (response.status) {
         case 200: return { error: false, status: response.status, data: data }; break;
         default: apiError(response, data); return { error: true, status: response.status, data: data }; break;
@@ -607,6 +627,13 @@ function showContent() {
     document.querySelector('.loadingContent').style.display = 'none';
     for (const content of document.querySelectorAll('.content')) {
         content.style.visibility = 'visible';
+    }
+}
+
+function hideContent() {
+    document.querySelector('.loadingContent').style.display = 'flex';
+    for (const content of document.querySelectorAll('.content')) {
+        content.style.visibility = 'hidden';
     }
 }
 

@@ -81,10 +81,13 @@
                 return value.type.charAt(0).toUpperCase() + value.type.slice(1);
             }
         }, {
-            name: 'Winner',
+            name: 'Winners',
             textFunction: (value) => {
-                if (value.winner === '' || value.winner === undefined) return 'None';
-                return value.winner;
+                let donorList = [];
+                for (const donor of value.winners) {
+                    donorList.push(donor.alias[0])
+                }
+                return donorList.join(', ');
             }
         }],
         clickFunction: (value) => {

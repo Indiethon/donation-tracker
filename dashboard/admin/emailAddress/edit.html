@@ -7,25 +7,17 @@
 </head>
 
 <body>
-    <script>
-        let model = 'blurbs';
-        const urlParams = new URLSearchParams(window.location.search);
-    </script>
+    <script>let model = 'emailAddress';</script>
     <ul class="breadcrumb">
         <li><a onClick="switchPage(`/content/pages/dashboard/admin/home/home.html`)">Home</a></li>
-        <li id="eventBreadcrumb"><a
-                onClick="switchPage(`/content/pages/dashboard/admin/overview/overview.html?event=${urlParams.get('event')}`)"></a>
-        </li>
-        <li><a
-                onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)">Blurbs</a>
-        </li>
+        <li><a onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)">Email Addresses</a></li>
         <li><a onClick="location.reload()">Edit</a>
         </li>
     </ul>
     <div class="header">
         <div class="editHeader">
             <button class="editBack"
-                onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)">&lt;</button>
+                onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)">&lt;</button>
             <h2 class="title"></h2>
             <button class="helpButton">Help</button>
         </div>
@@ -41,21 +33,20 @@
     </div>
 
     <script>
+        const urlParams = new URLSearchParams(window.location.search);''
+
         switch (urlParams.get('type')) {
-            case 'create': load(false, { model: 'ad', level: 'full' }); break;
-            case 'edit': load(false, { model: 'ad', level: 'modify' }); break;
-            case 'view': load(false, { model: 'ad', level: 'read' }); break;
+            case 'create': load(false, { model: 'emailAddress', level: 'full' }); break;
+            case 'edit': load(false, { model: 'emailAddress', level: 'modify' }); break;
+            case 'view': load(false, { model: 'emailAddress', level: 'read' }); break;
         }
 
-        setBreadcrumb(urlParams.get('event'));
-
         async function pageLoaded() {
-            await generateForm({
-                name: 'Blurb',
-                model: 'blurbs',
+            generateForm({
+                name: 'Email Address',
+                model: model,
                 type: urlParams.get('type'),
                 endpoint: (urlParams.get('id') !== undefined && urlParams.get('id') !== null) ? `${model}/${urlParams.get('id')}` : model,
-                event: urlParams.get('event'),
                 form: [{
                     name: 'Name',
                     type: 'input',
@@ -65,34 +56,51 @@
                         return value;
                     },
                 }, {
-                    name: 'Text',
+                    name: 'Email',
                     type: 'input',
-                    data: 'text',
+                    data: 'email',
+                    required: true,
                     submit: (value) => {
                         return value;
                     },
                 }, {
-                    name: 'Notes',
+                    name: 'SMTP Host',
                     type: 'input',
-                    data: 'notes',
+                    data: 'host',
+                    required: true,
                     submit: (value) => {
                         return value;
                     },
                 }, {
-                    name: 'Active',
-                    type: 'checkbox',
-                    data: 'active',
+                    name: 'SMTP Port',
+                    type: 'number',
+                    data: 'port',
+                    required: true,
+                    submit: (value) => {
+                        return value;
+                    },
+                }, {
+                    name: 'SMTP Username',
+                    type: 'input',
+                    data: 'username',
+                    required: true,
+                    submit: (value) => {
+                        return value;
+                    },
+                }, {
+                    name: 'SMTP Password',
+                    type: 'password',
+                    data: 'password',
+                    required: true,
                     submit: (value) => {
                         return value;
                     },
                 }],
-                other: [{
-                    data: 'eventId',
-                    submit: (value) => {
-                        return urlParams.get('event');
-                    },
-                }]
             });
+        }
+
+        function submitPressed() {
+            showToast('working', `Verifying email address...<br>Do not reload the page.`)
         }
     </script>
 </body>

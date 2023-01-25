@@ -1,6 +1,7 @@
 let details;
 
 async function pageLoaded() {
+    console.log('This is a test.')
     let eventShort = (window.location.pathname.split('/')[2]) ? window.location.pathname.split('/')[2] : 'all';
     let title = document.querySelector('title');
     if (eventShort !== undefined && eventShort !== 'success' && eventShort !== 'error') details = await GET(`details/${eventShort}`)
@@ -95,7 +96,7 @@ async function generateTable(options) {
                     }
 
                     // Temporarily disabled until the page is made!
-                    //row.setAttribute('onClick', options.clickFunction(element));
+                    row.setAttribute('onClick', options.clickFunction(element));
 
                     // Create sub table.
                     tbody.append(row);

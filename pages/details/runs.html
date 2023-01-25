@@ -46,12 +46,14 @@
 <script>
     pageLoaded();
 
-    let event = window.location.pathname.split('/')[2];
+    let id = window.location.pathname.split('/')[2];
+    const urlParams = new URLSearchParams(window.location.search);
+    console.log(fetch(`https://tracker.indiethon.com/api/speedruns/${id}`))
 
     generateTable({
         name: 'run',
         model: 'runs',
-        endpoint: `speedruns/event/${event}`,
+        endpoint: `speedruns/${id}`,
         event: event,
         table: [{
             name: 'Game',
@@ -60,7 +62,13 @@
             name: 'Category',
             data: 'category',
         }, {
-            name: 'Players',
+            name: 'Description',
+            data: 'description',
+        }, {
+            name: 'Estimate',
+            data: 'estimate',
+        }, {
+            name: 'Runners',
             textFunction: (value) => {
                 let runnerList = [];
                 for (const runner of value.runners) {
@@ -69,15 +77,18 @@
                 return runnerList.join(', ');
             }
         }, {
+            name: 'Release Year',
+            data: 'release',
+        }, {
+            name: "Console",
+            data: 'console',
+        }, {
             name: 'Start Time',
             textFunction: (value) => {
                 if (value.actualStartTime) return new Date(value.actualStartTime).toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit', seconds: undefined })
                 return new Date(value.startTime).toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit', seconds: undefined })
             }
-        }, {
-            name: 'Estimate',
-            data: 'estimate',
-        }, {
+        },  {
             name: 'Final Time',
             textFunction: (value) => {
 
@@ -86,7 +97,7 @@
             }
         }],
         clickFunction: (value) => {
-            return `location.href = '/runs/${value.id}'`
+            return `location.href = '/runs/details?id=${value.id}'`
         }
     })
     document.querySelector('.content').style.visibility = 'visible';

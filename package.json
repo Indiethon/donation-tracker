@@ -28,6 +28,7 @@
     "mongoose": "^6.3.1",
     "mongoose-unique-validator": "github:trading-peter/mongoose-unique-validator",
     "node-fetch": "^2.6.7",
+    "nodemailer": "^6.9.0",
     "tzdata": "^1.0.30",
     "uuid": "^8.3.2",
     "ws": "^8.8.1"

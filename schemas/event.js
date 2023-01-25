@@ -1,4 +1,4 @@
-const blockedShorts = ['all', 'active', 'tracker', 'create', 'edit', 'view', 'delete', 'donate', 'login', 'admin', 'volunteer']
+const blockedShorts = ['all', 'active', 'tracker', 'create', 'edit', 'view', 'delete', 'donate', 'login', 'admin', 'volunteer', 'details']
 
 module.exports.schema = (mongoose, database) => {
     let optionsSchema = mongoose.Schema({

@@ -7,25 +7,17 @@
 </head>
 
 <body>
-    <script>
-        let model = 'blurbs';
-        const urlParams = new URLSearchParams(window.location.search);
-    </script>
+    <script>let model = 'emailTemplate';</script>
     <ul class="breadcrumb">
         <li><a onClick="switchPage(`/content/pages/dashboard/admin/home/home.html`)">Home</a></li>
-        <li id="eventBreadcrumb"><a
-                onClick="switchPage(`/content/pages/dashboard/admin/overview/overview.html?event=${urlParams.get('event')}`)"></a>
-        </li>
-        <li><a
-                onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)">Blurbs</a>
-        </li>
+        <li><a onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)">Email Templates</a></li>
         <li><a onClick="location.reload()">Edit</a>
         </li>
     </ul>
     <div class="header">
         <div class="editHeader">
             <button class="editBack"
-                onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)">&lt;</button>
+                onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)">&lt;</button>
             <h2 class="title"></h2>
             <button class="helpButton">Help</button>
         </div>
@@ -41,21 +33,20 @@
     </div>
 
     <script>
+        const urlParams = new URLSearchParams(window.location.search);''
+
         switch (urlParams.get('type')) {
-            case 'create': load(false, { model: 'ad', level: 'full' }); break;
-            case 'edit': load(false, { model: 'ad', level: 'modify' }); break;
-            case 'view': load(false, { model: 'ad', level: 'read' }); break;
+            case 'create': load(false, { model: 'emailTemplate', level: 'full' }); break;
+            case 'edit': load(false, { model: 'emailTemplate', level: 'modify' }); break;
+            case 'view': load(false, { model: 'emailTemplate', level: 'read' }); break;
         }
 
-        setBreadcrumb(urlParams.get('event'));
-
         async function pageLoaded() {
-            await generateForm({
-                name: 'Blurb',
-                model: 'blurbs',
+            generateForm({
+                name: 'Email Template',
+                model: model,
                 type: urlParams.get('type'),
                 endpoint: (urlParams.get('id') !== undefined && urlParams.get('id') !== null) ? `${model}/${urlParams.get('id')}` : model,
-                event: urlParams.get('event'),
                 form: [{
                     name: 'Name',
                     type: 'input',
@@ -65,33 +56,34 @@
                         return value;
                     },
                 }, {
-                    name: 'Text',
+                    name: 'Subject',
                     type: 'input',
-                    data: 'text',
+                    data: 'subject',
+                    required: true,
+                    submit: (value) => {
+                        return value;
+                    },
+                },  {
+                    name: 'Content Type',
+                    type: 'select',
+                    data: 'contentType',
+                    required: true,
+                    options: {
+                        text: 'Text',
+                        html: 'HTML',
+                    },
                     submit: (value) => {
                         return value;
                     },
                 }, {
-                    name: 'Notes',
-                    type: 'input',
-                    data: 'notes',
-                    submit: (value) => {
-                        return value;
-                    },
-                }, {
-                    name: 'Active',
-                    type: 'checkbox',
-                    data: 'active',
+                    name: 'Content',
+                    type: 'textarea',
+                    data: 'content',
+                    required: true,
                     submit: (value) => {
                         return value;
                     },
                 }],
-                other: [{
-                    data: 'eventId',
-                    submit: (value) => {
-                        return urlParams.get('event');
-                    },
-                }]
             });
         }
     </script>

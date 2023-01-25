@@ -19,6 +19,7 @@
             <button class="editBack"
                 onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)">&lt;</button>
             <h2 class="title"></h2>
+            <button class="helpButton">Help</button>
         </div>
     </div>
     <div class="loadingContent">
@@ -55,27 +56,6 @@
                         return value;
                     },
                 }, {
-                    name: 'Paypal Email',
-                    type: 'input',
-                    data: 'paypalEmail',
-                    submit: (value) => {
-                        return value;
-                    },
-                }, {
-                    name: 'First Name',
-                    type: 'input',
-                    data: 'firstName',
-                    submit: (value) => {
-                        return value;
-                    },
-                }, {
-                    name: 'Last Name',
-                    type: 'input',
-                    data: 'lastName',
-                    submit: (value) => {
-                        return value;
-                    },
-                }, {
                     name: 'Aliases',
                     type: 'array',
                     data: 'alias',
@@ -91,55 +71,6 @@
                             data.push(field.querySelector('input').value)
                         }
                         return data;
-                    },
-                }, {
-                    name: 'Address Name',
-                    type: 'input',
-                    data: 'address.name',
-                    submit: (value) => {
-                        return value;
-                    },
-                },{
-                    name: 'Address Street',
-                    type: 'input',
-                    data: 'address.street',
-                    submit: (value) => {
-                        return value;
-                    },
-                },{
-                    name: 'Address Apartment',
-                    type: 'input',
-                    data: 'address.apt',
-                    submit: (value) => {
-                        return value;
-                    },
-                },{
-                    name: 'Address City',
-                    type: 'input',
-                    data: 'address.city',
-                    submit: (value) => {
-                        return value;
-                    },
-                }, {
-                    name: 'Address State',
-                    type: 'input',
-                    data: 'address.state',
-                    submit: (value) => {
-                        return value;
-                    },
-                }, {
-                    name: 'Address Postal Code',
-                    type: 'input',
-                    data: 'address.postalCode',
-                    submit: (value) => {
-                        return value;
-                    },
-                }, {
-                    name: 'Address Country',
-                    type: 'input',
-                    data: 'address.country',
-                    submit: (value) => {
-                        return value;
                     },
                 }],
             });

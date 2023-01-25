@@ -7,13 +7,13 @@
 </head>
 
 <body>
-    <script>let model = 'donors';</script>
+    <script>let model = 'emailAddress';</script>
     <ul class="breadcrumb">
         <li><a onClick="switchPage('/content/pages/dashboard/admin/home/home.html')">Home</a></li>
-        <li><a onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)">Donors</a></li>
+        <li><a onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)">Email Addresses</a></li>
     </ul>
     <div class="header">
-        <h2 class="title">Donors</h2>
+        <h2 class="title">Email Addresses</h2>
         <div id="headerButtonDiv">
             <button onClick="switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=create`)">Create
                 New</button>
@@ -35,25 +35,30 @@
 
     </div>
     <script>
-        load(false, { model: 'donor', level: 'access' });
+        load(false, { model: 'emailAddress', level: 'access' });
 
         function pageLoaded() {
             document.body.style.visibility = 'visible';
             generateTable({
-                name: 'donor',
+                name: 'emailAddress',
                 model: model,
-                endpoint: 'donors',
+                endpoint: 'emailAddress',
                 table: [{
+                    name: 'Name',
+                    data: 'name',
+                    priority: 1,
+                }, {
                     name: 'Email',
                     data: 'email',
                     priority: 1,
-                }, {
-                    name: 'Alias',
-                    data: 'alias',
-                    priority: 1,
-                    textFunction: (value) => {
-                        return value.alias[0];
-                    },
+                },{
+                    name: 'Host',
+                    data: 'host',
+                    priority: 2,
+                },{
+                    name: 'Port',
+                    data: 'port',
+                    priority: 2,
                 }]
             })
         }

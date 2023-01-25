@@ -54,11 +54,12 @@ module.exports.schema = (mongoose, database) => {
         },
         contributor: {
             type: String,
-            required: [true, 'Contributor is required.'],
         },
-        winner: {
-            type: String,
-        },
+        winners: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'donor',
+            required: [true, 'At least 1 donor is required.'],
+        }],
         visible: {
             type: Boolean,
             default: false,
