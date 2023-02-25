@@ -3,8 +3,8 @@
     "$id": "http://example.com/example.json",
     "type": "object",
     "default": {
-        "baseURL": "localhost",
-        "port": 8080,
+        "baseURL": "tracker.example.com",
+        "port": 3000,
         "ssl": {
             "enabled": false,
             "keyPath": "",
@@ -16,11 +16,18 @@
         },
         "tracker": {
             "name": "Donation Tracker",
-            "databaseURL": "mongodb://localhost:27017/donation-tracker",
-            "homepage": "https://google.com",
+            "databaseURL": "mongodb:/localhost:27017/DonationTracker",
+            "homepage": "https://example.com",
             "logoPath": "",
             "passwordHash": "",
             "tokens": []
+        },
+        "prizes": {
+            "maxDrawAttempts": 10,
+            "prizeLinkKey": "",
+            "prizeClaimMessage": "You will receive another email shortly with your prize redemption details. Thank your for your support!",
+            "prizeForfeitMessage": "You have successfully forfeited your prize. We're sorry to hear thar you did not want your prize.",
+            "prizeErrorMessage": "Please try clicking the link sent to your email again. If you're still having issues, contact the event organizers for help."
         },
         "legal": {
             "privacyPolicy": "",
@@ -28,7 +35,8 @@
         },
         "frontend": {
             "useDefault": true,
-            "donationSuccessMessage": "Thanks for donating! Enjoy the event!"
+            "donationSuccessMessage": "Thanks for donating! Enjoy the event!",
+            "donationErrorMessage": "Your card was not charged. If you didn't cancel your transaction, try donating again, otherwise contact the event organizers for help."
         }
     },
     "title": "Root Schema",
@@ -38,6 +46,7 @@
         "ssl",
         "paypal",
         "tracker",
+        "prizes",
         "legal",
         "frontend"
     ],
@@ -47,7 +56,7 @@
             "default": "",
             "title": "The baseURL Schema",
             "examples": [
-                "localhost"
+                "tracker.example.com"
             ]
         },
         "port": {
@@ -55,7 +64,7 @@
             "default": 0,
             "title": "The port Schema",
             "examples": [
-                8080
+                3000
             ]
         },
         "ssl": {
@@ -93,13 +102,11 @@
                     ]
                 }
             },
-            "examples": [
-                {
-                    "enabled": false,
-                    "keyPath": "",
-                    "certPath": ""
-                }
-            ]
+            "examples": [{
+                "enabled": false,
+                "keyPath": "",
+                "certPath": ""
+            }]
         },
         "paypal": {
             "type": "object",
@@ -127,12 +134,10 @@
                     ]
                 }
             },
-            "examples": [
-                {
-                    "useSandbox": false,
-                    "currency": "USD"
-                }
-            ]
+            "examples": [{
+                "useSandbox": false,
+                "currency": "USD"
+            }]
         },
         "tracker": {
             "type": "object",
@@ -160,7 +165,7 @@
                     "default": "",
                     "title": "The databaseURL Schema",
                     "examples": [
-                        "mongodb://localhost:27017"
+                        "mongodb:/localhost:27017/DonationTracker"
                     ]
                 },
                 "homepage": {
@@ -168,7 +173,7 @@
                     "default": "",
                     "title": "The homepage Schema",
                     "examples": [
-                        "https://google.com"
+                        "https://example.com"
                     ]
                 },
                 "logoPath": {
@@ -197,16 +202,75 @@
                     ]
                 }
             },
-            "examples": [
-                {
-                    "name": "Donation Tracker",
-                    "databaseURL": "mongodb://localhost:27017",
-                    "homepage": "https://google.com",
-                    "logoPath": "",
-                    "passwordHash": "",
-                    "tokens": []
+            "examples": [{
+                "name": "Donation Tracker",
+                "databaseURL": "mongodb:/localhost:27017/DonationTracker",
+                "homepage": "https://example.com",
+                "logoPath": "",
+                "passwordHash": "",
+                "tokens": []
+            }]
+        },
+        "prizes": {
+            "type": "object",
+            "default": {},
+            "title": "The prizes Schema",
+            "required": [
+                "maxDrawAttempts",
+                "prizeLinkKey",
+                "prizeClaimMessage",
+                "prizeForfeitMessage",
+                "prizeErrorMessage"
+            ],
+            "properties": {
+                "maxDrawAttempts": {
+                    "type": "integer",
+                    "default": 0,
+                    "title": "The maxDrawAttempts Schema",
+                    "examples": [
+                        10
+                    ]
+                },
+                "prizeLinkKey": {
+                    "type": "string",
+                    "default": "",
+                    "title": "The prizeLinkKey Schema",
+                    "examples": [
+                        ""
+                    ]
+                },
+                "prizeClaimMessage": {
+                    "type": "string",
+                    "default": "",
+                    "title": "The prizeClaimMessage Schema",
+                    "examples": [
+                        "You will receive another email shortly with your prize redemption details. Thank your for your support!"
+                    ]
+                },
+                "prizeForfeitMessage": {
+                    "type": "string",
+                    "default": "",
+                    "title": "The prizeForfeitMessage Schema",
+                    "examples": [
+                        "You have successfully forfeited your prize. We're sorry to hear thar you did not want your prize."
+                    ]
+                },
+                "prizeErrorMessage": {
+                    "type": "string",
+                    "default": "",
+                    "title": "The prizeErrorMessage Schema",
+                    "examples": [
+                        "Please try clicking the link sent to your email again. If you're still having issues, contact the event organizers for help."
+                    ]
                 }
-            ]
+            },
+            "examples": [{
+                "maxDrawAttempts": 10,
+                "prizeLinkKey": "",
+                "prizeClaimMessage": "You will receive another email shortly with your prize redemption details. Thank your for your support!",
+                "prizeForfeitMessage": "You have successfully forfeited your prize. We're sorry to hear thar you did not want your prize.",
+                "prizeErrorMessage": "Please try clicking the link sent to your email again. If you're still having issues, contact the event organizers for help."
+            }]
         },
         "legal": {
             "type": "object",
@@ -234,12 +298,10 @@
                     ]
                 }
             },
-            "examples": [
-                {
-                    "privacyPolicy": "",
-                    "sweepstakesRules": ""
-                }
-            ]
+            "examples": [{
+                "privacyPolicy": "",
+                "sweepstakesRules": ""
+            }]
         },
         "frontend": {
             "type": "object",
@@ -247,7 +309,8 @@
             "title": "The frontend Schema",
             "required": [
                 "useDefault",
-                "donationSuccessMessage"
+                "donationSuccessMessage",
+                "donationErrorMessage"
             ],
             "properties": {
                 "useDefault": {
@@ -265,45 +328,58 @@
                     "examples": [
                         "Thanks for donating! Enjoy the event!"
                     ]
+                },
+                "donationErrorMessage": {
+                    "type": "string",
+                    "default": "",
+                    "title": "The donationErrorMessage Schema",
+                    "examples": [
+                        "Your card was not charged. If you didn't cancel your transaction, try donating again, otherwise contact the event organizers for help."
+                    ]
                 }
             },
-            "examples": [
-                {
-                    "useDefault": true,
-                    "donationSuccessMessage": "Thanks for donating! Enjoy the event!"
-                }
-            ]
+            "examples": [{
+                "useDefault": true,
+                "donationSuccessMessage": "Thanks for donating! Enjoy the event!",
+                "donationErrorMessage": "Your card was not charged. If you didn't cancel your transaction, try donating again, otherwise contact the event organizers for help."
+            }]
         }
     },
-    "examples": [
-        {
-            "baseURL": "localhost",
-            "port": 8080,
-            "ssl": {
-                "enabled": false,
-                "keyPath": "",
-                "certPath": ""
-            },
-            "paypal": {
-                "useSandbox": false,
-                "currency": "USD"
-            },
-            "tracker": {
-                "name": "Donation Tracker",
-                "databaseURL": "mongodb://localhost:27017",
-                "homepage": "https://google.com",
-                "logoPath": "",
-                "passwordHash": "",
-                "tokens": []
-            },
-            "legal": {
-                "privacyPolicy": "",
-                "sweepstakesRules": ""
-            },
-            "frontend": {
-                "useDefault": true,
-                "donationSuccessMessage": "Thanks for donating! Enjoy the event!"
-            }
+    "examples": [{
+        "baseURL": "tracker.example.com",
+        "port": 3000,
+        "ssl": {
+            "enabled": false,
+            "keyPath": "",
+            "certPath": ""
+        },
+        "paypal": {
+            "useSandbox": false,
+            "currency": "USD"
+        },
+        "tracker": {
+            "name": "Donation Tracker",
+            "databaseURL": "mongodb:/localhost:27017/DonationTracker",
+            "homepage": "https://example.com",
+            "logoPath": "",
+            "passwordHash": "",
+            "tokens": []
+        },
+        "prizes": {
+            "maxDrawAttempts": 10,
+            "prizeLinkKey": "",
+            "prizeClaimMessage": "You will receive another email shortly with your prize redemption details. Thank your for your support!",
+            "prizeForfeitMessage": "You have successfully forfeited your prize. We're sorry to hear thar you did not want your prize.",
+            "prizeErrorMessage": "Please try clicking the link sent to your email again. If you're still having issues, contact the event organizers for help."
+        },
+        "legal": {
+            "privacyPolicy": "",
+            "sweepstakesRules": ""
+        },
+        "frontend": {
+            "useDefault": true,
+            "donationSuccessMessage": "Thanks for donating! Enjoy the event!",
+            "donationErrorMessage": "Your card was not charged. If you didn't cancel your transaction, try donating again, otherwise contact the event organizers for help."
         }
-    ]
+    }]
 }
