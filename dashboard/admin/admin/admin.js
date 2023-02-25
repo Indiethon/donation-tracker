@@ -21,8 +21,9 @@ async function updateNav() {
             <button onClick="switchPage('/content/pages/dashboard/admin/speedruns/speedruns.html?event=${event._id}')">Speedruns</button>
             <button onClick="switchPage('/content/pages/dashboard/admin/donations/donations.html?event=${event._id}')">Donations</button>
             <button onClick="switchPage('/content/pages/dashboard/admin/incentives/incentives.html?event=${event._id}')">Incentives</button>
-            <button onClick="switchPage('/content/pages/dashboard/admin/prizes/prizes.html?event=${event._id}')">Prizes</button>
             <button onClick="switchPage('/content/pages/dashboard/admin/blurbs/blurbs.html?event=${event._id}')">Blurbs</button>
+            <button onClick="switchPage('/content/pages/dashboard/admin/prizes/prizes.html?event=${event._id}')">Prizes</button>
+            <button onClick="switchPage('/content/pages/dashboard/admin/prizeRedemptions/prizeRedemptions.html?event=${event._id}')">Prize Redemptions</button>
             </div>
             `
     }

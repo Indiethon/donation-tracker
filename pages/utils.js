@@ -1,7 +1,6 @@
 let details;
 
 async function pageLoaded() {
-    console.log('This is a test.')
     let eventShort = (window.location.pathname.split('/')[2]) ? window.location.pathname.split('/')[2] : 'all';
     let title = document.querySelector('title');
     if (eventShort !== undefined && eventShort !== 'success' && eventShort !== 'error') details = await GET(`details/${eventShort}`)
@@ -9,7 +8,7 @@ async function pageLoaded() {
         details = await GET('details');
         eventShort = details.data.eventShort;
     }
-    let eventName = (details.data.eventName) ? details.data.eventName : 'All Events';
+    let eventName = (details.data.eventName) ? details.data.name : 'All Events';
     title.innerHTML = `${title.getAttribute('name')} | ${eventName}`;
     try { document.querySelector('.sweepstakesRulesLink').href = details.data.sweepstakesRules } catch { }
     document.querySelector('.eventDropdownText').innerHTML = eventName;
@@ -21,6 +20,11 @@ async function pageLoaded() {
     try { document.querySelector('.timezoneText').innerHTML += new window.Intl.DateTimeFormat().resolvedOptions().timeZone; } catch { };
     try { document.querySelector('.successMessage').innerHTML = details.data.donationSuccessMessage } catch {}
     try { document.querySelector('.errorMessage').innerHTML = details.data.donationErrorMessage } catch {}
+    try { document.querySelector('.prizeSuccessMessage').innerHTML = details.data.prizeClaimMessage } catch {}
+    try { document.querySelector('.prizeForfeitMessage').innerHTML = details.data.prizeForfeitMessage } catch {}
+    try { document.querySelector('.prizeErrorMessage').innerHTML = details.data.prizeErrorMessage } catch {}
+
+
     if (details.data.activeEvent) { try { document.querySelector('.topNavDonate').style.display = 'inline-block' } catch {}}
     generateEventDropdown()
     try { loadData() } catch {};

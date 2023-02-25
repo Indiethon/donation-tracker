@@ -83,7 +83,15 @@
                     submit: (value) => {
                         return value;
                     },
-                }],
+                }, {
+                    name: 'Email Carbon Copy (CC)',
+                    type: 'input',
+                    data: 'carbonCopy',
+                    required: false,
+                    submit: (value) => {
+                        return value;
+                    },
+                }, ],
             });
         }
     </script>

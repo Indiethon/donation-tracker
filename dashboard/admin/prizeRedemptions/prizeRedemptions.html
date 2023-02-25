@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="/content/pages/dashboard/utils.js"></script>
+    <link rel="stylesheet" href="/content/pages/dashboard/common.css" />
+</head>
+
+<body>
+    <script>
+        let model = 'prizeRedemptions';
+        const urlParams = new URLSearchParams(window.location.search);
+    </script>
+    <ul class="breadcrumb">
+        <li><a onClick="switchPage('/content/pages/dashboard/admin/home/home.html')">Home</a></li>
+        <li id="eventBreadcrumb"><a
+                onClick="switchPage(`/content/pages/dashboard/admin/overview/overview.html?event=${urlParams.get('event')}`)"></a>
+        </li>
+        <li><a
+                onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)">Prize
+                Redemptions</a>
+        </li>
+    </ul>
+    <div class="header">
+        <h2 class="title">Prize Redemptions</h2>
+        <div id="headerButtonDiv">
+            <button
+                onClick="switchPage(`/content/pages/dashboard/admin/${model}/edit.html?type=create&event=${urlParams.get('event')}`)">Create
+                New</button>
+        </div>
+    </div>
+    <div class="loadingContent">
+        <div class="loadingAnimation">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <div class="content">
+    </div>
+    <script>
+        load(false, { model: 'prize', level: 'access' });
+        setBreadcrumb(urlParams.get('event'));
+
+        function pageLoaded() {
+            document.body.style.visibility = 'visible';
+            generateTable({
+                name: 'prizeRedemption',
+                model: model,
+                endpoint: `prizeRedemptions/event/${urlParams.get('event')}`,
+                event: urlParams.get('event'),
+                table: [{
+                    name: 'Prize Name',
+                    textFunction: (data) => {
+                       return data.prize.name;
+                    },
+                    priority: 1
+                }, {
+                    name: 'Winner',
+                    textFunction: (data) => {
+                       return data.donor.alias[0]
+                    },
+                    priority: 1
+                }, {
+                    name: 'Status',
+                    data: 'status',
+                    priority: 1,
+                }, {
+                    name: 'Expiry Time',
+                    textFunction: (data) => {
+                        if (data.expiryTimestamp === undefined) return '';
+                        return new Date(data.expiryTimestamp).toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit', seconds: undefined })
+                    },
+                    priority: 2,
+                }]
+            })
+        }
+    </script>
+</body>
+
+</html>

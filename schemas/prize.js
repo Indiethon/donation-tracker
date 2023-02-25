@@ -60,6 +60,9 @@ module.exports.schema = (mongoose, database) => {
             ref: 'donor',
             required: [true, 'At least 1 donor is required.'],
         }],
+        redemptionCode: [{
+            type: String,
+        }],
         visible: {
             type: Boolean,
             default: false,

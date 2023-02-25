@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="/content/pages/dashboard/utils.js"></script>
+    <link rel="stylesheet" href="/content/pages/dashboard/common.css" />
+</head>
+
+<body>
+    <script>
+        let model = 'sendPrizeEmails';
+        const urlParams = new URLSearchParams(window.location.search);
+    </script>
+    <ul class="breadcrumb">
+        <li><a onClick="switchPage(`/content/pages/dashboard/admin/home/home.html`)">Home</a></li>
+        <li><a onClick="switchPage(`/content/pages/dashboard/admin/${model}/${model}.html`)">Send Prize Emails</a>
+        </li>
+    </ul>
+    <div class="header">
+        <div class="editHeader">
+            <button class="editBack" onClick="switchPage(`/content/pages/dashboard/admin/home/home.html`)">&lt;</button>
+            <h2 class="title"></h2>
+            <button class="helpButton"
+                onClick="window.open('https://github.com/Indiethon/donation-tracker/blob/main/docs/prizes/Sending%20Prize%20Emails.md', '_blank')">Help</button>
+        </div>
+    </div>
+    <div class="loadingContent">
+        <div class="loadingAnimation">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <div class="content">
+        <datalist id="prizeDatalist"></datalist>
+        <datalist id="emailAddressDatalist"></datalist>
+        <datalist id="emailTemplateDatalist"></datalist>
+        <form id="sendEmailsForm">
+            <div id="event" class="inputDiv">
+                <label class="label">Event<span class="required"> ✱</span></label>
+                <select class="select" id="eventSelect" onChange="displayPrizeArray(this.value)"></select>
+                <span class="errorText"></span>
+            </div>
+            <div id="prizes" class="inputDiv">
+                <label class="label">Prizes<span class="required"> ✱</span></label>
+                <select class="select" id="prizeSelect" onChange="displayPrizeArray(this.value)">
+                    <option value="all">All</option>
+                    <option value="expired">Unredeemed</option>
+                    <option value="custom">Custom</option>
+                </select>
+                <span class="errorText"></span>
+                <div class="array container">
+                    <div class="array div">
+
+                    </div><button type="button" class="array addButton" onClick="addNewArrayItem()">New
+                        Item</button>
+                </div><span class="errorText"></span>
+            </div>
+            <div id="emailAddress" class="inputDiv">
+                <label class="label">Email Address<span class="required"> ✱</span></label>
+                <input class="input" id="emailAddress" list="emailAddressDatalist"></input>
+                <span class="errorText"></span>
+            </div>
+            <div id="sendType" class="inputDiv">
+                <label class="label">Email Send Type<span class="required"> ✱</span></label>
+                <select class="select" id="sendType" onChange="updateEmailSendType(this.value)">
+                    <option value="initial" selected>Initial Winner Email</option>
+                    <option value="reminder">Prize Claim Reminder</option>
+                    <option value="expire">Prize Expired</option>
+                </select>
+                <span class="errorText"></span>
+            </div>
+            <div id="emailTemplate" class="inputDiv">
+                <label class="label">Email Template<span class="required"> ✱</span></label>
+                <input class="input" id="emailTemplate" list="emailTemplateDatalist"></input>
+                <span class="errorText"></span>
+            </div>
+            <div id="digitalClaimEmailTemplateDiv" class="inputDiv">
+                <label class="label">Digital Claim Email Template</label>
+                <input class="input" id="digitalClaimEmailTemplate" list="emailTemplateDatalist"></input>
+                <span class="errorText"></span>
+            </div>
+            <div id="physicalClaimEmailTemplateDiv" class="inputDiv">
+                <label class="label">Physical Claim Email Template</label>
+                <input class="input" id="physicalClaimEmailTemplate" list="emailTemplateDatalist"></input>
+                <span class="errorText"></span>
+            </div>
+            <div id="expiryTimeDiv" class="inputDiv">
+                <label class="label">Prize Expiry Time</label>
+                <input type="datetime-local" class="input" id="expiryTime"></input>
+                <span class="errorText"></span>
+            </div>
+        </form>
+        <form id="emailStatusForm" style="display: none">
+            <div id="emailStatus" class="inputDiv">
+                <label class="label">Email Send Status</label>
+                <textarea class="textarea" id="emailStatusTextarea" disabled></textarea>
+                <span class="errorText"></span>
+            </div>
+        </form>
+
+        <button id="submit" onClick="submit()"></button>
+        <div></div>
+    </div>
+
+    <script>
+        load(false, { model: 'sendPrizeEmails', level: 'full' });
+        // setBreadcrumb(urlParams.get('event'));
+
+        async function pageLoaded() {
+            let eventSelect = document.querySelector('#eventSelect');
+            let events = await GET('events');
+            events.data.forEach(event => eventSelect.innerHTML = eventSelect.innerHTML + `<option value="${event._id}">${event.name}</option>`);
+
+            let datalistData2 = await GET(`emailAddress`);
+            for (const item of datalistData2.data) {
+                document.querySelector('#emailAddressDatalist').innerHTML += `<option dataId="${item._id}" value="${item.name}">ID: ${item._id}</option>`
+            }
+
+            let datalistData3 = await GET(`emailTemplate`);
+            for (const item of datalistData3.data) {
+                document.querySelector('#emailTemplateDatalist').innerHTML += `<option dataId="${item._id}" value="${item.name}">ID: ${item._id}</option>`
+            }
+
+            await updatePrizes(document.querySelector('#event select').value)
+            showBody();
+            document.querySelector('.title').innerHTML = 'Send Prize Emails';
+            document.getElementById('submit').innerHTML = 'Continue';
+            showContent();
+        }
+
+        async function updatePrizes(value) {
+            let datalistData1 = await GET(`prizes?event=${value}`);
+            document.querySelector('#prizeDatalist').innerHTML = '';
+            for (const item of datalistData1.data) {
+                document.querySelector('#prizeDatalist').innerHTML += `<option dataId="${item._id}" value="${item.name}">ID: ${item._id}</option>`
+            }
+            document.querySelector('#prizes .array.div').innerHTML = '';
+            return;
+        }
+
+        function displayPrizeArray(value) {
+            if (value === 'custom') return document.querySelector('#prizes .array.container').style.display = 'inherit';
+            return document.querySelector('#prizes .array.container').style.display = 'none';
+        }
+
+        function updateEmailSendType(value) {
+            switch (true) {
+                case (value === 'initial'):
+                    document.querySelector('#digitalClaimEmailTemplateDiv').style.display = 'block';
+                    document.querySelector('#physicalClaimEmailTemplateDiv').style.display = 'block';
+                    document.querySelector('#expiryTimeDiv').style.display = 'block';
+                    break;
+                case (value === 'reminder'):
+                    document.querySelector('#digitalClaimEmailTemplateDiv').style.display = 'none';
+                    document.querySelector('#physicalClaimEmailTemplateDiv').style.display = 'none';
+                    document.querySelector('#expiryTimeDiv').style.display = 'none';
+                    break;
+                case (value === 'expire'):
+                    document.querySelector('#digitalClaimEmailTemplateDiv').style.display = 'none';
+                    document.querySelector('#physicalClaimEmailTemplateDiv').style.display = 'none';
+                    document.querySelector('#expiryTimeDiv').style.display = 'none';
+                    break;
+            }
+        }
+
+        function addNewArrayItem() {
+            let outerDiv = document.createElement('div');
+            outerDiv.setAttribute('class', 'array childDiv');
+
+            let div1 = document.createElement('div');
+
+            let label1 = document.createElement('label');
+            label1.setAttribute('class', 'label');
+            label1.innerHTML = 'Prize';
+
+            let input1 = document.createElement('input');
+            input1.setAttribute('class', 'input');
+            input1.setAttribute('type', 'input');
+            input1.setAttribute('list', 'prizeDatalist');
+
+            let button = document.createElement('button');
+            button.setAttribute('class', 'array deleteButton material-icons-outlined');
+            button.setAttribute('type', 'button');
+            button.setAttribute('onClick', 'this.parentNode.remove()')
+            button.innerHTML = 'delete_forever';
+
+            div1.append(label1, input1);
+
+            outerDiv.append(div1, button)
+
+            document.querySelector(`#prizes .array.div`).append(outerDiv)
+        }
+
+        async function submit() {
+            let data = {};
+            let prizes = [];
+            let prizeDatalist = document.querySelectorAll('#prizeDatalist option');
+            let emailAddressDatalist = document.querySelectorAll('#emailAddressDatalist option');
+            let emailTemplateDatalist = document.querySelectorAll('#emailTemplateDatalist option');
+
+            if (document.querySelector('#prizes select').value !== 'custom') {
+                let options = document.querySelectorAll('#prizeDatalist option');
+                for (let option of options) {
+                    prizes.push(option.getAttribute('dataId'));
+                }
+            }
+            else {
+                let fields = document.querySelectorAll('#prizes .array.childDiv input');
+                for (const field of fields) {
+                    for (const option of prizeDatalist) {
+                        if (option.getAttribute('value') === field.value) prizes.push(option.getAttribute('dataId'));
+                    }
+                }
+            }
+
+            let emailAddressElement = document.querySelector('#emailAddress input')
+            for (const emailAddressOption of emailAddressDatalist) {
+                if (emailAddressOption.getAttribute('value') === emailAddressElement.value) {
+                    data.emailAddress = emailAddressOption.getAttribute('dataId');
+                    break;
+                }
+            }
+
+            let emailTemplateElement = document.querySelector('#emailTemplate input')
+            for (const emailTemplateOption of emailTemplateDatalist) {
+                if (emailTemplateOption.getAttribute('value') === emailTemplateElement.value) {
+                    data.emailTemplate = emailTemplateOption.getAttribute('dataId');
+                    break;
+                }
+            }
+
+            let digitalClaimEmailTemplateElement = document.querySelector('#digitalClaimEmailTemplate')
+            for (const emailTemplateOption of emailTemplateDatalist) {
+                if (emailTemplateOption.getAttribute('value') === digitalClaimEmailTemplateElement.value) {
+                    data.digitalClaimEmailTemplate = emailTemplateOption.getAttribute('dataId');
+                    break;
+                }
+            }
+
+            let physicalClaimEmailTemplateElement = document.querySelector('#physicalClaimEmailTemplate')
+            for (const emailTemplateOption of emailTemplateDatalist) {
+                if (emailTemplateOption.getAttribute('value') === physicalClaimEmailTemplateElement.value) {
+                    data.physicalClaimEmailTemplate = emailTemplateOption.getAttribute('dataId');
+                    break;
+                }
+            }
+
+            data.expiryTime = document.querySelector('#expiryTime').value;
+            data.type = document.querySelector('#sendType select').value;
+            data.prizes = prizes;
+            data.event = document.querySelector('#eventSelect').value;
+            if (document.querySelector('#prizes select').value === 'expired') data.expired = true;
+
+            // let nameFields = document.querySelectorAll('#additionalEntrants .array.childDiv');
+            // for (const field of nameFields) {
+            //     let inputs = field.querySelectorAll('input')
+            //     for (const donorOption of donorDatalist) {
+            //         if (donorOption.getAttribute('value') === inputs[0].value) {
+            //             for (const option of prizeDatalist) {
+            //                 if (option.getAttribute('value') === inputs[1].value) {
+            //                     if (additionalEntrants[donorOption.getAttribute('dataId')] === undefined) additionalEntrants[donorOption.getAttribute('dataId')] = [option.getAttribute('dataId')];
+            //                     else additionalEntrants[donorOption.getAttribute('dataId')].push(option.getAttribute('dataId'))
+            //                 }
+            //             }
+            //             break;
+            //         }
+            //     }
+            // }
+
+            // let fields = value.querySelectorAll('.array.childDiv');
+            //             let data = [];
+            //             for (const field of fields) {
+            //                 let inputs = field.querySelectorAll('select');
+            //                 data.push({
+            //                     model: inputs[0].value,
+            //                     level: inputs[1].value,
+            //                 })
+            //             }
+
+            let emailSendData = await POST('sendPrizeEmails', data);
+
+            document.querySelector('#emailStatusTextarea').value = emailSendData.data.message;
+            document.querySelector('#sendEmailsForm').style.display = 'none'
+            document.querySelector('#emailStatusForm').style.display = 'block'
+            document.getElementById('submit').innerHTML = 'Finish';
+            document.getElementById('submit').setAttribute('onClick', 'switchPage(`/content/pages/dashboard/admin/home/home.html`)');
+            showToast('success', `Email send completed!`)
+        }
+    </script>
+    <style>
+        #prizes .array.container {
+            display: none;
+        }
+    </style>
+
+</body>
+
+</html>

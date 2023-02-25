@@ -25,13 +25,13 @@ async function load(_signin, authOptions) {
         }
     }
     try {
-        let cookie = JSON.parse(document.cookie.substring(5));
+        let cookie = JSON.parse(document.cookie.split('; ').find((x) => x.startsWith('data='))?.split('=')[1]);
         user = {
             username: cookie.username,
             id: cookie.id,
         }
         pageLoaded();
-    } catch { };
+    } catch(e) {  };
 }
 
 // Login function (on login page only).
@@ -69,7 +69,6 @@ async function logout() {
 function createCookie(username, id, token) {
     return new Promise((resolve, reject) => {
         document.cookie = `data=${JSON.stringify({ username: username, id: id, token: token })}; expires=0; path=/;`;
-        console.log(document.cookie)
         resolve();
     })
 }
@@ -351,11 +350,13 @@ async function generateForm(options) {
         if (options.type !== 'create') {
             let count = 0;
             for (const array of field.array) {
+                try {
                 for (const fieldData of data.data[field.data]) {
                     if (options.type !== 'create' && data.data[field.data][count] !== undefined) mainDiv.append(await addArrayElement(field, fieldData)) //data.data[field.data][count]
                     else if (options.type === 'create') mainDiv.append(await addArrayElement(field))
                     count++;
                 }
+            } catch {}
             }
         }
 
@@ -537,11 +538,17 @@ async function deleteItem(id, model, name) {
 
 
 // API Calls
+async function createAPIHeader() {
+    return new Promise((resolve, reject) => {
+        let headers = { 'Content-Type': 'application/json' };
+        let cookies = document.cookie.split('; ').find((x) => x.startsWith('data='))?.split('=')[1];
+        if (cookies) headers["Authorization"] = `Bearer ${JSON.parse(cookies).token}`;
+        resolve(headers);
+    })
+}
+
 async function GET(endpoint) {
-    let headers;
-    try { headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${JSON.parse(document.cookie.substring(5)).token}` } }
-    catch { headers = { 'Content-Type': 'application/json' } }
-    let response = await fetch(`/api/${endpoint}`, { method: 'GET', headers: headers });
+    let response = await fetch(`/api/${endpoint}`, { method: 'GET', headers: await createAPIHeader() });
     let data = await response.json();
     switch (response.status) {
         case 200: return { error: false, status: response.status, data: data }; break;
@@ -550,12 +557,8 @@ async function GET(endpoint) {
 }
 
 async function POST(endpoint, body) {
-    let headers;
-    try { headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${JSON.parse(document.cookie.substring(5)).token}` } }
-    catch { headers = { 'Content-Type': 'application/json' } }
-    let response = await fetch(`/api/${endpoint}`, { method: 'POST', headers: headers, body: JSON.stringify(body) });
+    let response = await fetch(`/api/${endpoint}`, { method: 'POST', headers: await createAPIHeader(), body: JSON.stringify(body) });
     let data = await response.json();
-    console.log(data)
     switch (response.status) {
         case 200: return { error: false, status: response.status, data: data }; break;
         default: apiError(response, data); return { error: true, status: response.status, data: data }; break;
@@ -563,10 +566,7 @@ async function POST(endpoint, body) {
 }
 
 async function PUT(endpoint, body) {
-    let headers;
-    try { headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${JSON.parse(document.cookie.substring(5)).token}` } }
-    catch { headers = { 'Content-Type': 'application/json' } }
-    let response = await fetch(`/api/${endpoint}`, { method: 'PUT', headers: headers, body: JSON.stringify(body) });
+    let response = await fetch(`/api/${endpoint}`, { method: 'PUT', headers: await createAPIHeader(), body: JSON.stringify(body) });
     let data = await response.json();
     switch (response.status) {
         case 200: return { error: false, status: response.status, data: data }; break;
@@ -575,10 +575,7 @@ async function PUT(endpoint, body) {
 }
 
 async function DELETE(endpoint, body) {
-    let headers;
-    try { headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${JSON.parse(document.cookie.substring(5)).token}` } }
-    catch { headers = { 'Content-Type': 'application/json' } }
-    let response = await fetch(`/api/${endpoint}`, { method: 'DELETE', headers: headers, body: JSON.stringify(body) });
+    let response = await fetch(`/api/${endpoint}`, { method: 'DELETE', headers: await createAPIHeader(), body: JSON.stringify(body) });
     let data = await response.json();
     switch (response.status) {
         case 200: return { error: false, status: response.status, data: data }; break;

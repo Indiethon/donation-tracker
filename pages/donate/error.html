@@ -43,6 +43,10 @@
             </div>
         </div>
     </div>
+    <div class="footer">
+        <div>It is now safe to close this window.</div>
+    </div>
+
 </body>
 
 <style>
@@ -58,6 +62,20 @@
         justify-content: center;
         height: 100%;
     }
+
+    
+    .footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        height: 50px;
+        width: 100%;
+        color: black;
+        text-align: center;
+        opacity: 0;
+        transition-duration: 2s;
+        font-size: 16px;
+    }
 </style>
 
 <script>
@@ -67,7 +85,7 @@
 
     setTimeout(() =>{
         document.querySelector('.successText').style.opacity = '1';
-        setTimeout(() => document.querySelector('.errorMessage').style.opacity = '1', 1250);
+        setTimeout(() => { document.querySelector('.errorMessage').style.opacity = '1'; document.querySelector('.footer').style.opacity = '1'}, 1250);
     }, 2000)
 
     document.querySelector('.content').style.visibility = 'visible';

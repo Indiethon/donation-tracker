@@ -4,6 +4,7 @@ const path = require('path');
 const http = require('http')
 const https = require('https')
 const Tracker = require('./lib/tracker/tracker');
+const taskScheduler = require('./lib/taskScheduler/taskScheduler');
 const betterLogging = require('better-logging');
 
 const { MessageConstructionStrategy } = betterLogging;
@@ -42,7 +43,7 @@ function start(tracker, database) {
 
   // Check for valid currency.
   console.debug('Checking currensies...')
-  if (currencies[tracker.config.paypal.currency] === undefined) {
+  if (tracker.currencies[tracker.config.paypal.currency] === undefined) {
     console.error('Currency is invalid. Please make sure it\'s ISO 4217 compliant and compatible with Paypal.')
     console.error('A list of compatible currencies can be found at https://developer.paypal.com/docs/reports/reference/paypal-supported-currencies/')
     process.exit();
@@ -56,34 +57,10 @@ function start(tracker, database) {
   }, tracker.server).listen(tracker.config.port, () => console.info(`Donation tracker is running at ${tracker.url}`));
   else http.createServer(tracker.server).listen(tracker.config.port, () => console.info(`Donation tracker is running at ${tracker.url}`));
 
+
+  // Setting up task scheduler...
+  taskScheduler.start();
+
   console.debug('Tracker start up complete!');
   console.debug(`Startup time: ${Date.now() - startTime}ms`)
-}
-
-const currencies = {
-  'AUD': 'A$',
-  'BRL': 'R$',
-  'CAD': 'CA$',
-  'CNY': 'CNY',
-  'CZK': 'Kč',
-  'DKK': 'kr',
-  'EUR': '€',
-  'HKD': 'HK$',
-  'HUF': 'Ft',
-  'ILS': '₪',
-  'JPY': '¥',
-  'MYR': 'RM',
-  'MXN': 'MX$',
-  'TWD': 'NT$',
-  'NZD': 'NZ$',
-  'NOK': 'kr',
-  'PHP': '₱',
-  'PLN': 'zł',
-  'GBP': '£',
-  'RUB': '₽',
-  'SGD': 'S$',
-  'SEK': 'kr',
-  'CHF': 'CHF',
-  'THB': '฿',
-  'USD': '$',
 }

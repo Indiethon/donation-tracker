@@ -144,8 +144,6 @@
                                 }
                                 input.disabled = false;
                                 input.setAttribute('list', `incentiveOptions${value.incentiveId}`)
-                                console.log(incentive.options)
-                                console.log(value)
                                 let option = incentive.options.find(x => x._id === value.option);
                                 if (option) return option.name;
                                 return '';

@@ -26,7 +26,7 @@
         load(true, { model: null });
 
         let input = document.getElementById('password')
-        input.addEventListener("keyup", (event) => {
+        input.addEventListener("keypress", (event) => {
             if (event.keyCode === 13) {
                 event.preventDefault();
                 document.getElementById("login").click();

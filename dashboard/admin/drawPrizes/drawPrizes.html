@@ -20,7 +20,8 @@
         <div class="editHeader">
             <button class="editBack" onClick="switchPage(`/content/pages/dashboard/admin/home/home.html`)">&lt;</button>
             <h2 class="title"></h2>
-            <button class="helpButton" onClick="window.open('https://github.com/Indiethon/donation-tracker/blob/main/docs/prizes/Drawing%20Prizes.md', '_blank')">Help</button>
+            <button class="helpButton"
+                onClick="window.open('https://github.com/Indiethon/donation-tracker/blob/main/docs/prizes/Drawing%20Prizes.md', '_blank')">Help</button>
         </div>
     </div>
     <div class="loadingContent">
@@ -33,7 +34,7 @@
     <div class="content">
         <datalist id="prizeDatalist"></datalist>
         <datalist id="donorDatalist"></datalist>
-        <form>
+        <form id="drawPrizesForm">
             <div id="event" class="inputDiv">
                 <label class="label">Event<span class="required"> ✱</span></label>
                 <select class="select" id="eventSelect" onChange="updatePrizes(this.value)"></select>
@@ -51,6 +52,7 @@
                 <label class="label">Prizes<span class="required"> ✱</span></label>
                 <select class="select" id="prizeSelect" onChange="displayPrizeArray(this.value)">
                     <option value="all">All</option>
+                    <option value="expired">Unredeemed</option>
                     <option value="custom">Custom</option>
                 </select>
                 <span class="errorText"></span>
@@ -72,6 +74,14 @@
                 </div><span class="errorText"></span>
             </div>
         </form>
+        <form id="drawStatusForm" style="display: none">
+            <div id="drawStatus" class="inputDiv">
+                <label class="label">Draw Status</label>
+                <textarea class="textarea" id="drawStatusTextarea" disabled></textarea>
+                <span class="errorText"></span>
+            </div>
+        </form>
+
         <button id="submit" onClick="submit()"></button>
         <div></div>
     </div>
@@ -81,17 +91,16 @@
         // setBreadcrumb(urlParams.get('event'));
 
         async function pageLoaded() {
-            let eventSelect = document.querySelector('form #eventSelect');
+            let eventSelect = document.querySelector('#eventSelect');
             let events = await GET('events');
             events.data.forEach(event => eventSelect.innerHTML = eventSelect.innerHTML + `<option value="${event._id}">${event.name}</option>`);
-
 
             let datalistData2 = await GET(`donors`);
             for (const item of datalistData2.data) {
                 document.querySelector('#donorDatalist').innerHTML += `<option dataId="${item._id}" value="${item.email}">ID: ${item._id}</option>`
             }
 
-            await updatePrizes(document.querySelector('form #event select').value)
+            await updatePrizes(document.querySelector('#event select').value)
             showBody();
             document.querySelector('.title').innerHTML = 'Draw Prizes';
             document.getElementById('submit').innerHTML = 'Continue';
@@ -110,8 +119,8 @@
         }
 
         function displayPrizeArray(value) {
-            if (value === 'all') return document.querySelector('#prizes .array.container').style.display = 'none';
-            return document.querySelector('#prizes .array.container').style.display = 'inherit';
+            if (value === 'custom') return document.querySelector('#prizes .array.container').style.display = 'inherit';
+            return document.querySelector('#prizes .array.container').style.display = 'none';
         }
 
         function addNewArrayItem(group) {
@@ -221,39 +230,16 @@
             data.entryType = (document.querySelector('#entryType select').value === 'single') ? 'single' : 'multi';
             data.prizes = prizes;
             data.additionalEntrants = additionalEntrants;
+            if (document.querySelector('#prizes select').value === 'expired') data.expired = true;
 
-            console.log(data)
+            let prizeDrawData = await POST('drawPrizes', data);
 
-            await POST('drawPrizes', data);
-
-            // let options = {};
-            // options.short = document.querySelector('#short input').value;
-            // options.schedule = document.querySelector('#schedule input').value;
-
-            // document.getElementById('submit').disabled = true;
-            // let elementList = document.querySelectorAll('.inputDiv');
-            // [...elementList].forEach(element => {
-            //     let el = document.querySelector(`#${element.id} span`)
-            //     el.innerHTML = '';
-            //     el.style.visibility = 'hidden';
-            // });
-
-            // showToast('working', `Working, please wait...<br>Do not reload the page.`)
-
-            // let speedruns = await POST(`speedruns/import/${urlParams.get('event')}`, options);
-            // if (!speedruns.error) {
-            //     showToast('success', `Oengus import successful.`)
-            //     switchPage(`/content/pages/dashboard/admin/${model}/${model}.html?event=${urlParams.get('event')}`)
-            //     return;
-            // }
-
-            // document.getElementById('submit').disabled = false;
-            // data.data.errorCodes.forEach(error => {
-            //     let element = document.querySelector(`#${error.item.split('.')[0]} .errorText`);
-            //     element.innerHTML = error.code;
-            //     element.style.visibility = 'inherit';
-            // })
-            // showToast('error', `Validation errors found, please resolve them.`)
+            document.querySelector('#drawStatusTextarea').value = prizeDrawData.data.message;
+            document.querySelector('#drawPrizesForm').style.display = 'none'
+            document.querySelector('#drawStatusForm').style.display = 'block'
+            document.getElementById('submit').innerHTML = 'Finish';
+            document.getElementById('submit').setAttribute('onClick', 'switchPage(`/content/pages/dashboard/admin/home/home.html`)');
+            showToast('success', `Prize draw completed!`)
         }
     </script>
     <style>

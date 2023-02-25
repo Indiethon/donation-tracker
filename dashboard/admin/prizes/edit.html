@@ -85,8 +85,11 @@
                     data: 'type',
                     required: true,
                     options: {
-                        physical: 'Physical',
                         digital: 'Digital',
+                        physical: 'Physical',
+                    },
+                    attributes: {
+                        onClick: 'updatePrizeType()',
                     },
                     submit: (value) => {
                         return value;
@@ -111,6 +114,7 @@
                     attributes: {
                         min: 1,
                         step: 1,
+                        onChange: 'updateNumWinners(this.value)',
                     },
                     submit: (value) => {
                         return value;
@@ -179,7 +183,7 @@
                     submit: (value) => {
                         return value;
                     },
-                },{
+                }, {
                     name: 'Winners',
                     type: 'array',
                     data: 'winners',
@@ -202,6 +206,26 @@
                             for (const option of donorList) {
                                 if (option.getAttribute('value') === field.querySelector('input').value) data.push(option.getAttribute('dataId'));
                             }
+                        }
+                        return data;
+                    },
+                }, {
+                    name: 'Redemption Codes',
+                    type: 'array',
+                    data: 'redemptionCode',
+                    array: [{
+                        name: 'Redemption Code',
+                        type: 'input',
+                        textFunction: (value) => {
+                            return value
+                        },
+                    }],
+                    required: false,
+                    submit: (value) => {
+                        let fields = value.querySelectorAll('.array.childDiv');
+                        let data = [];
+                        for (const field of fields) {
+                            data.push(field.querySelector('input').value)
                         }
                         return data;
                     },
@@ -234,6 +258,26 @@
                     },
                 }]
             });
+
+            document.querySelector('#redemptionCode button').style.display = 'none';
+            updatePrizeType();
+        }
+
+        function updateNumWinners(value) {
+            document.querySelector('#redemptionCode .container .div').innerHTML = '';
+            for (let i = 0; i < value; i++) {
+                document.querySelector('#redemptionCode .addButton').click();
+            }
+        }
+
+        function updatePrizeType() {
+            let value = document.querySelector('#type select').value;
+            if (value === 'physical') {
+                document.getElementById('redemptionCode').style.display = 'none';
+            }
+            else if (value === 'digital') {
+                document.getElementById('redemptionCode').style.display = 'inherit';
+            }
         }
     </script>
 </body>

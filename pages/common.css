@@ -532,7 +532,33 @@ tr:nth-child(even).subTableRow:hover {
     transition-duration: 2s;
 }
 
+.prizeSuccessMessage {
+    width: 80%;
+    margin: 0 auto;
+    font-size: 24px;
+    opacity: 0;
+    transition-duration: 2s;
+}
+
 .errorMessage {
+    width: 80%;
+    text-align: center;
+    font-size: 24px;
+    opacity: 0;
+    transition-duration: 2s;
+    margin: 0 auto;
+}
+
+.prizeErrorMessage {
+    width: 80%;
+    text-align: center;
+    font-size: 24px;
+    opacity: 0;
+    transition-duration: 2s;
+    margin: 0 auto;
+}
+
+.prizeForfeitMessage {
     width: 80%;
     text-align: center;
     font-size: 24px;
