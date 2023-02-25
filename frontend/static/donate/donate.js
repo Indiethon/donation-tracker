@@ -1,5 +1,3 @@
-let data;
-let minDonation;
 let donationData = {
     alias: 'Anonymous',
     email: null,
@@ -8,7 +6,10 @@ let donationData = {
     incentives: [],
     custom: {},
 };
+
 let selectedIncentive = {};
+
+let donationDetails = {};
 
 const textareaPlaceholderArray = [
     'cheeky',
@@ -18,93 +19,96 @@ const textareaPlaceholderArray = [
     'embarrasing',
     'silly',
     'funny',
+    'emotional',
+    'heartwarming'
 ]
 
-function loadData() {
+async function load() {
+    if (!window.location.pathname.includes('/donate')) return;
     document.querySelector('textarea').setAttribute('placeholder', `Insert ${textareaPlaceholderArray[Math.floor(Math.random() * textareaPlaceholderArray.length)]} comment here...`)
 
-    fetch(`${window.location.origin}/api/donation/info`, {
-        method: 'GET',
-    }).then(response => response.json().then(resData => {
-        data = resData;
-        document.getElementById('privacyPolicy').href = data.privacyPolicy;
-        document.getElementById('sweepstakesRules').href = data.sweepstakesRules;
-        let navButtons = document.querySelectorAll('.topNavButton');
-        for (let button of navButtons) {
-            button.setAttribute('event', data.eventShort)
-        }
-        let div = document.querySelector('#custom');
-        for (const custom of data.custom) {
-            if (custom.type !== 'select') {
-                div.innerHTML += `
-                <div customId="${custom.id}" class="inputDiv">
-                    <label class="label">${custom.name}</label>
-                    <input class="input" type="${custom.type}">
-                    <div class="errorText">Error</div>
-                </div>
-                `
-            }
-        }
-        minDonation = data.minDonation;
-        document.querySelector('.pageTitle').innerHTML = `Donate to ${data.charityName}`;
-        document.querySelector('#amount .inputUnit').innerHTML = data.currencySymbol;
-        document.querySelector('#amount input').style.paddingLeft = `${document.querySelector('#amount .inputUnit').offsetWidth + 12}px`;
-        document.querySelector('#amount input').style.width = `calc(100% - ${document.querySelector('#amount .inputUnit').offsetWidth + 12}px + 8px)`;
-        document.querySelector('#amount .inputSubtext').innerHTML = `Minimum donation is <b>${data.currencySymbol}${data.minDonation.toFixed(2)}</b>`
-        document.querySelector('.pageSubtitle').innerHTML = `100% of your donation goes directly to ${data.charityName}.`;
-        if (data.incentives.length <= 0) document.querySelector('#incentives').style.display = 'none';
-        for (const incentive of data.incentives) {
-            let div = `
+    let res = await fetch('/api/donation/info');
+    donationDetails = await res.json();
+
+    document.getElementById('privacyPolicy').href = details.privacyPolicy;
+    document.getElementById('sweepstakesRules').href = details.sweepstakesRules;
+
+    // let div = document.querySelector('#custom');
+    // for (const custom of data.custom) {
+    //     if (custom.type !== 'select') {
+    //         div.innerHTML += `
+    //             <div customId="${custom.id}" class="inputDiv">
+    //                 <label class="label">${custom.name}</label>
+    //                 <input class="input" type="${custom.type}">
+    //                 <div class="errorText">Error</div>
+    //             </div>
+    //             `
+    //     }
+    // }
+
+    let amountInput = document.querySelector('#amount input');
+    let inputUnit = document.querySelector('.inputUnitTest');
+    inputUnit.innerHTML = details.currencySymbol;
+    let unitWidth = inputUnit.offsetWidth;
+    amountInput.style.paddingLeft = `${unitWidth + 12}px`;
+    amountInput.style.width = `calc(100% - ${unitWidth + 4}px)`
+    document.querySelector('#amount .inputUnit').innerHTML = details.currencySymbol;
+    if (donationDetails.incentives.length <= 0) document.querySelector('#incentives').style.display = 'none';
+    document.querySelector('#amount .inputSubtext').innerHTML = `Minimum donation is <b>${details.currencySymbol}${donationDetails.event.minDonation.toFixed(2)}</b>`
+
+    for (const incentive of donationDetails.incentives) {
+        let div = `
             <div class="incentiveListDiv" incentiveID=${incentive.id} onClick="showIncentiveInfo(this)">
                 <div class="incentiveGame">${incentive.run.game}</div>
                 <div class="incentiveName">${incentive.name}</div>
             </div>
             `
-            document.querySelector('.incentiveList').innerHTML += div;
-        }
-        if (data.prizes.length <= 0) {
-            document.querySelector('.prizesLabel').style.display = 'none';
-            document.querySelector('#prizes').style.display = 'none';
-        }
-        for (const prize of data.prizes) {
-            let div = `
+        document.querySelector('.incentiveList').innerHTML += div;
+    }
+    if (donationDetails.prizes.length <= 0) {
+        document.querySelector('.prizesLabel').style.display = 'none';
+        document.querySelector('#prizes').style.display = 'none';
+    }
+    for (const prize of donationDetails.prizes) {
+        let div = `
             <div class="prizeListDiv" prizeID="${prize.id}" onClick="showPrize()">
                 <p class="prizeName">${prize.name}</p>
-                <p class="prizeAmount">${data.currencySymbol}${prize.minDonation.toFixed(2)} Minimim Donation</p>
+                <p class="prizeAmount">${details.currencySymbol}${prize.minDonation.toFixed(2)} Minimim Donation</p>
             </div>
             `
-            document.querySelector('.prizeList').innerHTML += div;
-        }
-        document.querySelector('.content').style.visibility = 'visible';
+        document.querySelector('.prizeList').innerHTML += div;
+    }
 
-    }).catch(err => location.href = window.location.origin));
+    document.querySelector('.spinnerDiv').style.display = 'none'
+    document.querySelector('main').style.display = 'inline-block'
 }
 
-function donateForm() {
-    fetch(`${window.location.origin}/api/donation/create`, {
+async function donateForm() {
+    let res = await fetch('/api/donation/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(donationData),
-    }).then(response => response.json().then(data => {
-        if (response.status !== 200) return console.error(data);
-        document.body.insertAdjacentHTML("beforeend", `
-                <form id="donateForm" action="${data.url}" method="post" target="_top">
-                <input type="hidden" name="cmd" value="_donations" />
-                <input type="hidden" name="image_url" value="${data.logo}">
-                <input type="hidden" name="business" value="${data.payee}" />
-                <input type="hidden" name="amount" value="${donationData.amount}" />
-                <input type="hidden" name="currency_code" value="${data.currency}" />
-                <input type="hidden" name="item_name" value="${data.event} Donation" />
-                <input type="hidden" name="custom" value=${data.id} />
-                <input type="hidden" name="notify_url" value="${window.location.origin}/api/donation/ipn" />
-                <input type="hidden" name="return" value="${window.location.origin}/donate/success" />
-                <input type="hidden" name="cancel_return" value="${window.location.origin}/donate/error" />
-                </form>
-            `);
+    })
 
-        // Paypal Sandbox: sb-x55mn12091780@business.example.com
-        document.getElementById('donateForm').submit()
-    }));
+    let donationInfo = await res.json();
+    if (res.status !== 200) return console.error(donationInfo);
+
+    document.body.insertAdjacentHTML("beforeend", `
+        <form id="donateForm" action="${donationInfo.url}" method="post" target="_top">
+            <input type="hidden" name="cmd" value="_donations" />
+            <input type="hidden" name="image_url" value="${donationInfo.logo}">
+            <input type="hidden" name="business" value="${donationInfo.payee}" />
+            <input type="hidden" name="amount" value="${donationData.amount}" />
+            <input type="hidden" name="currency_code" value="${details.currency}" />
+            <input type="hidden" name="item_name" value="${donationInfo.event} Donation" />
+            <input type="hidden" name="custom" value=${donationInfo.id} />
+            <input type="hidden" name="notify_url" value="${window.location.origin}/api/donation/ipn" />
+            <input type="hidden" name="return" value="${window.location.origin}/donate/success" />
+            <input type="hidden" name="cancel_return" value="${window.location.origin}/donate/error" />
+        </form>
+    `);
+
+    document.getElementById('donateForm').submit()
 }
 
 function updateAlias(element) {
@@ -126,17 +130,17 @@ function updateEmailErrorText(element) {
 }
 
 function updateAmount(element) {
-    if (element.value === '' || element.value < data.minDonation) { donationData.amount = null; return checkStatus() };
+    if (element.value === '' || element.value < donationDetails.event.minDonation) { donationData.amount = null; return checkStatus() };
     element.parentElement.querySelector(`.errorText`).style.visibility = 'hidden';
     donationData.amount = parseFloat(element.value)
     checkStatus();
 }
 
 function updateAmountErrorText(element) {
-    if (element.value < data.minDonation && element.value !== '') element.parentElement.querySelector(`.errorText`).style.visibility = 'visible';
+    if (element.value < donationDetails.event.minDonation && element.value !== '') element.parentElement.querySelector(`.errorText`).style.visibility = 'visible';
     if (document.querySelector('#email input').value === '') document.querySelector('#email .errorText').style.visibility = 'visible';
     element.value = parseFloat(element.value).toFixed(2);
-    document.querySelector('.donateButtonAmount').innerHTML = data.currencySymbol + (parseFloat(element.value)).toFixed(2);
+    document.querySelector('.donateButtonAmount').innerHTML = details.currencySymbol + (parseFloat(element.value)).toFixed(2);
 }
 
 function updateComment(element) {
@@ -171,7 +175,7 @@ function showIncentiveInfo(element) {
     const divs = document.querySelectorAll('.incentiveList .incentiveListDiv');
     for (const div of divs) { div.classList.remove('selected') }
     element.classList.add('selected');
-    let incentive = data.incentives.find(x => x.id === element.getAttribute('incentiveid'))
+    let incentive = donationDetails.incentives.find(x => x.id === element.getAttribute('incentiveid'))
     let info = document.querySelector('.incentiveInfo');
     selectedIncentive.id = element.getAttribute('incentiveid');
     selectedIncentive.type = incentive.type;
@@ -179,12 +183,12 @@ function showIncentiveInfo(element) {
     info.querySelector('.incentiveGame').innerHTML = incentive.run.game;
     info.querySelector('.incentiveName').innerHTML = incentive.name;
     info.querySelector('.incentiveDescription').innerHTML = incentive.description;
-    info.querySelector('.inputUnit').innerHTML = data.currencySymbol;
+    info.querySelector('.inputUnit').innerHTML = details.currencySymbol;
     info.querySelector('#incentiveAmount').style.paddingLeft = `${info.querySelector('.inputUnit').offsetWidth + 12}px`;
     if (incentive.type === 'target') {
         info.querySelector('.incentiveOptions').style.display = 'none';
         info.querySelector('.incentiveTotalProgressBar').style.width = `${(((100 * incentive.total) / incentive.goal) > 100) ? 100 : (100 * incentive.total) / incentive.goal}%`;
-        info.querySelector('.incentiveTotal .incentiveTotalText').innerHTML = `Current Raised Amount: ${data.currencySymbol}${incentive.total.toFixed(2)} / ${data.currencySymbol}${incentive.goal.toFixed(2)}`
+        info.querySelector('.incentiveTotal .incentiveTotalText').innerHTML = `Current Raised Amount: ${details.currencySymbol}${incentive.total.toFixed(2)} / ${details.currencySymbol}${incentive.goal.toFixed(2)}`
         info.querySelector('.incentiveTotal').style.display = 'inherit';
         info.querySelector('#incentiveAddConfirm').disabled = false;
     }
@@ -198,7 +202,7 @@ function showIncentiveInfo(element) {
                 <div class="incentiveOptionDiv" optionID=${option.id} onClick="selectIncentiveOption(this, false)">
                     <input type="checkbox" class="incentiveOptionCheck"></input>
                     <div class="incentiveOptionName">${option.name}</div>
-                    <div class="incentiveOptionAmount">${data.currencySymbol}${option.total.toFixed(2)}</div>
+                    <div class="incentiveOptionAmount">${details.currencySymbol}${option.total.toFixed(2)}</div>
                 </div>
                 `
             info.querySelector('.incentiveOptions').innerHTML += div;
@@ -285,7 +289,7 @@ function updateSelectedIncentives() {
     let incentiveDiv = document.querySelector('.incentiveSelected');
     incentiveDiv.innerHTML = '';
     for (const incentive of donationData.incentives) {
-        let info = data.incentives.find(x => x.id === incentive.id);
+        let info = donationDetails.incentives.find(x => x.id === incentive.id);
         let option = '&nbsp';
         if (incentive.option !== undefined && incentive.option !== null) try { option = `Option: ${info.options.find(x => x.id === incentive.option).name}` } catch { option = '&nbsp' }
         else if (incentive.userOption !== undefined) option = `Option: ${incentive.userOption}`;
@@ -297,7 +301,7 @@ function updateSelectedIncentives() {
                     <div class="incentiveOption">${option}</div>
                 </div>
                 <div class="incentiveSelectedRightDiv">
-                    <div class="incentiveAmount">${data.currencySymbol}${parseFloat(incentive.amount).toFixed(2)}</div>
+                    <div class="incentiveAmount">${details.currencySymbol}${parseFloat(incentive.amount).toFixed(2)}</div>
                     <button type="button" class="incentiveSelectedRemove" onClick="removeIncentive('${info.id}')">Remove</button>
                 </div>
             </div>
@@ -317,7 +321,7 @@ function calculateIncentiveAmountRemaining() {
     let input = document.querySelector('.incentiveInfo #incentiveAmount');
     input.value = amount.toFixed(2);
     input.setAttribute('max', amount);
-    document.querySelector('.incentiveInfo .inputSubtext').innerHTML = `You have <b>${data.currencySymbol}${parseFloat(amount).toFixed(2)}</b> remaining.`;
+    document.querySelector('.incentiveInfo .inputSubtext').innerHTML = `You have <b>${details.currencySymbol}${parseFloat(amount).toFixed(2)}</b> remaining.`;
     addIncentiveAmount(input)
 }
 

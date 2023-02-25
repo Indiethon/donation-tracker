@@ -88,7 +88,7 @@
             options = {
                 name: 'donation',
                 model: 'donations',
-                endpoint: `donations/event/${details.data.eventShort}`,
+                endpoint: `donations/event/${details.data.event.short}`,
                 volunteer: true,
                 table: [{
                     name: 'Alias',
@@ -114,7 +114,7 @@
                     priority: 1,
                 }]
             }
-            await generateHomeTable(options);
+            //await generateHomeTable(options);
             // setRowVisibility(document.querySelector('#headerButtonDiv button.selected'))
         }
 

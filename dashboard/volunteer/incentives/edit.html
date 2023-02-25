@@ -40,7 +40,7 @@
 
         async function pageLoaded() {
             let details = await GET('details');
-            if (details.data === undefined || details.data.eventShort === undefined) return;
+            if (details.data === undefined || details.data.event.short === undefined) return;
             else {
                 document.body.style.visibility = 'visible';
                 await generateForm({
@@ -48,11 +48,11 @@
                     model: 'incentives',
                     type: undefined,
                     endpoint: (urlParams.get('id') !== undefined && urlParams.get('id') !== null) ? `${model}/${urlParams.get('id')}` : model,
-                    event: details.data.eventShort,
+                    event: details.data.event.short,
                     volunteer: true,
                     datalist: {
                         runDatalist: {
-                            endpoint: `speedruns/event/${details.data.eventShort}`,
+                            endpoint: `speedruns/event/${details.data.event.short}`,
                             textFunction: (value) => {
                                 return value.game + ' ' + value.category;
                             },

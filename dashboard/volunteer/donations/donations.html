@@ -71,13 +71,13 @@
 
         async function pageLoaded() {
             details = await GET('details');
-            if (details.data === undefined || details.data.eventShort === undefined) return;
+            if (details.data === undefined || details.data.event.short === undefined) return;
             else {
                 document.body.style.visibility = 'visible';
                 options = {
                     name: 'donation',
                     model: model,
-                    endpoint: `donations/event/${details.data.eventShort}`,
+                    endpoint: `donations/event/${details.data.event.short}`,
                     volunteer: true,
                     table: [{
                         name: 'Timestamp',

@@ -7,7 +7,7 @@ module.exports = {
     permissions: [{
         model: {
             type: String,
-            enum: ['ad', 'auditLog', 'charity', 'donation', 'donor', 'event', 'group', 'incentive', 'prize', 'run', 'runner', 'user', 'wordFilter'],
+            enum: ['ad', 'auditLog', 'charity', 'donation', 'donor', 'drawPrizes', 'emailAddress', 'emailTemplate', 'event', 'group', 'incentive', 'prize', 'prizeRedemption', 'sendPrizeEmails', 'run', 'runner', 'user', 'wordFilter'],
             required: [true, 'Model is required.'],
         },
         level: {

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title name="Runs">&#65279;</title>
+    <link rel="shortcut icon" href="/content/logo">
+    <script src="/content/pages/pages/utils.js"></script>
+    <link rel="stylesheet" href="/content/pages/pages/common.css" />
+</head>
+
+<body onLoad="load()">
+
+</body>
+
+<script>
+    async function load() {
+
+        let promise = await loadPage('Runs');
+
+        generateTable({
+            name: 'run',
+            model: 'runs',
+            endpoint: `speedruns/event/${promise[1]}`,
+            event: event,
+            table: [{
+                name: 'Game',
+                data: 'game',
+            }, {
+                name: 'Category',
+                data: 'category',
+            }, {
+                name: 'Players',
+                textFunction: (value) => {
+                    let runnerList = [];
+                    for (const runner of value.runners) {
+                        runnerList.push(runner.name)
+                    }
+                    return runnerList.join(', ');
+                }
+            }, {
+                name: 'Start Time',
+                textFunction: (value) => {
+                    if (value.actualStartTime) return new Date(value.actualStartTime).toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit', seconds: undefined })
+                    return new Date(value.startTime).toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit', seconds: undefined })
+                }
+            }, {
+                name: 'Estimate',
+                data: 'estimate',
+            }, {
+                name: 'Final Time',
+                textFunction: (value) => {
+
+                    if (value.finalTime && value.finalTime.length > 0) return value.finalTime;
+                    return '';
+                }
+            }],
+            clickFunction: (value) => {
+                return `location.href = '/runs/${value.id}'`
+            }
+        })
+    }
+</script>
+
+</html>

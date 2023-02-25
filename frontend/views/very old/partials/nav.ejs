@@ -1,0 +1,22 @@
+  <div class="topNav">
+    <div class="topNavImg" onClick="switchPage('<%= details.homepage %>')"><img src="/content/logo"></div>
+    <button class="topNavButton" href='#test' onClick="switchPage('/home<%= (eventDetails) ? `?event=${eventDetails.short}` : ``%>')"><a href="/home" data-link></a>Home</button>
+    <button class="topNavButton" onClick="switchPage('/runs<%= (eventDetails) ? `?event=${eventDetails.short}` : ``%>')" ><a href="/runs" data-link></a>Runs</button>
+    <button class="topNavButton" onClick="switchPage('/incentives<%= (eventDetails) ? `?event=${eventDetails.short}` : ``%>')"><a href="/incentives" data-link></a>Incentives</button>
+    <button class="topNavButton" onClick="switchPage('/prizes<%= (eventDetails) ? `?event=${eventDetails.short}` : ``%>')"><a href="/prizes" data-link></a>Prizes</button>
+    <button class="topNavButton" onClick="switchPage('/donations<%= (eventDetails) ? `?event=${eventDetails.short}` : ``%>')"><a href="/donations" data-link></a>Donations</button>
+  </div>
+  <div class="eventDropdown">
+    <div class="eventDropdownText"><%= (eventDetails) ? eventDetails.name : 'All Events' %></div>
+    <div class="material-icons-outlined">
+      arrow_drop_down
+    </div>
+    <div class="eventDropdownContent">
+      <div class="eventDropdownButton" event="" onClick="changeEvent(this)">All Events</div>
+      <div class="eventDropdownSpacer"></div>
+      <% Object.keys(eventList).forEach((event, index) => { %>
+        <div class="eventDropdownButton" event="?event=<%= event %>" onClick="changeEvent(this)"><%= eventList[event] %></div> 
+      <% }) %>
+    </div>
+  </div>
+  <button class="topNavButton topNavDonate" style="display: <%= (activeEvent) ? 'inline-block' : 'none' %>" onClick="location.href = '/donate'">Donate</button>

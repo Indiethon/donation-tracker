@@ -277,7 +277,7 @@ async function generateForm(options) {
 
     // Setup help button.
     if (options.help !== undefined) document.querySelector('.helpButton').setAttribute('onClick', `window.open('${options.help}', '_blank')`)
-    else document.querySelector('.helpButton').style.display = 'none';
+    else try { document.querySelector('.helpButton').style.display = 'none'; } catch {}
 
     // Show content.
     showContent();

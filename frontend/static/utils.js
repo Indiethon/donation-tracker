@@ -1,59 +1,33 @@
-let details;
+let short = new URLSearchParams(window.location.search).get('event');
 
-async function pageLoaded() {
-    let eventShort = (window.location.pathname.split('/')[2]) ? window.location.pathname.split('/')[2] : 'all';
-    let title = document.querySelector('title');
-    if (eventShort !== undefined && eventShort !== 'success' && eventShort !== 'error') details = await GET(`details/${eventShort}`)
-    else {
-        details = await GET('details');
-        eventShort = details.data.eventShort;
+// let details;
+
+
+async function loadPage() {
+    // let res = await fetch('/api/details', { method: 'GET' });
+    // details = await res.json();
+
+    // let dropdown = document.querySelector('.eventDropdownContent');
+    // for (const event of Object.keys(details.eventList)) {
+    //     dropdown.innerHTML += ` <div class="eventDropdownButton" event="${event}" onClick="changeEvent(this)">${details.eventList[event]}</div>`
+    // }
+    if (window.location.pathname.includes('/donate')) {
+        document.querySelector('.eventDropdownText').innerHTML = details.eventList[details.activeEvent.short];
+        short = details.activeEvent.short
     }
-    let eventName = (details.data.eventName) ? details.data.name : 'All Events';
-    title.innerHTML = `${title.getAttribute('name')} | ${eventName}`;
-    try { document.querySelector('.sweepstakesRulesLink').href = details.data.sweepstakesRules } catch { }
-    document.querySelector('.eventDropdownText').innerHTML = eventName;
-    const navButtons = document.querySelectorAll('.topNavButton');
-    for (const button of navButtons) {
-        button.setAttribute('event', eventShort)
-    }
-    document.querySelector('.topNavImg').setAttribute('onClick', `location.href = '${details.data.homepage}'`);
-    try { document.querySelector('.timezoneText').innerHTML += new window.Intl.DateTimeFormat().resolvedOptions().timeZone; } catch { };
-    try { document.querySelector('.successMessage').innerHTML = details.data.donationSuccessMessage } catch {}
-    try { document.querySelector('.errorMessage').innerHTML = details.data.donationErrorMessage } catch {}
-    try { document.querySelector('.prizeSuccessMessage').innerHTML = details.data.prizeClaimMessage } catch {}
-    try { document.querySelector('.prizeForfeitMessage').innerHTML = details.data.prizeForfeitMessage } catch {}
-    try { document.querySelector('.prizeErrorMessage').innerHTML = details.data.prizeErrorMessage } catch {}
-
-
-    if (details.data.activeEvent) { try { document.querySelector('.topNavDonate').style.display = 'inline-block' } catch {}}
-    generateEventDropdown()
-    try { loadData() } catch {};
+    else document.querySelector('.eventDropdownText').innerHTML = (short) ? details.eventList[short] : 'All Events';
 }
 
-async function generateEventDropdown() {
-    const eventList = await GET('events/list');
-    let dropdown = document.querySelector('.eventDropdownContent');
-    for (const event of Object.keys(eventList.data)) {
-        dropdown.innerHTML += `
-        <div class="eventDropdownButton" event="${event}" onClick="changeEvent(this)">${eventList.data[event]}</div>
-        `
-    }
-    document.querySelector('body').style.display = 'inherit';
+function changeEvent(button) {
+    short = button.getAttribute('event');
+    document.querySelector('.eventDropdownText').innerHTML = (short) ? details.eventList[short] : 'All Events';
+    changePath(short);
 }
+
 async function generateTable(options) {
 
     // Return if page is all.
-    if (window.location.pathname.split('/')[2] === 'all' || window.location.pathname.split('/')[2] === undefined) return;
-
-    // Wait for details to be defined.
-    await new Promise(async (resolve, reject) => {
-        let interval = setInterval(() => {
-            if (details !== undefined && details.data !== undefined) {
-                clearInterval(interval);
-                return resolve();
-            }
-        }, 10);
-    });
+    if (!short) return;
 
     // Create table.
     let table = document.createElement('table');
@@ -62,15 +36,16 @@ async function generateTable(options) {
     // Get data from API
     let data = await GET(options.endpoint);
 
+    console.log(data)
+
     // Generate table rows.
     table.append(await createHeader());
     table.append(await createBody());
 
     // Append to page.
-    document.querySelector('.content').append(table);
-
-    // Show content when generation is complete.
-    //showContent();
+    let div = document.createElement('div')
+    div.append(table)
+    document.querySelector('main').append(div);
 
     // Helper functions.
     async function createHeader() {
@@ -100,7 +75,7 @@ async function generateTable(options) {
                     }
 
                     // Temporarily disabled until the page is made!
-                    row.setAttribute('onClick', options.clickFunction(element));
+                    if (options.clickFunction) row.setAttribute('onClick', options.clickFunction(element));
 
                     // Create sub table.
                     tbody.append(row);
@@ -112,10 +87,10 @@ async function generateTable(options) {
                         let cell = subTableRow.insertCell();
                         cell.setAttribute('colSpan', 6)
                         cell.append(await generateSubTable(options.subTable, element[options.subTableData]));
-                        
+
                         let invisibleRow = document.createElement('tr');
                         invisibleRow.style.display = 'none';
-                        
+
                         tbody.append(subTableRow);
                         tbody.append(invisibleRow);
                     }
@@ -194,44 +169,7 @@ async function GET(endpoint) {
     }
 }
 
-// async function POST(endpoint, body) {
-//     let headers = { 'Content-Type': 'application/json' };
-//     let response = await fetch(`${window.location.origin}/api/${endpoint}`, { method: 'POST', headers: headers, body: JSON.stringify(body) });
-//     let data = await response.json();
-//     switch (response.status) {
-//         case 200: return { error: false, status: response.status, data: data }; break;
-//         default: apiError(response, data); return { error: true, status: response.status, data: data }; break;
-//     }
-// }
-
-// async function PUT(endpoint, body) {
-//     let headers = { 'Content-Type': 'application/json' };
-//     let response = await fetch(`${window.location.origin}/api/${endpoint}`, { method: 'PUT', headers: headers, body: JSON.stringify(body) });
-//     let data = await response.json();
-//     switch (response.status) {
-//         case 200: return { error: false, status: response.status, data: data }; break;
-//         default: apiError(response, data); return { error: true, status: response.status, data: data }; break;
-//     }
-// }
-
-// async function DELETE(endpoint, body) {
-//     let headers = { 'Content-Type': 'application/json' };
-//     let response = await fetch(`${window.location.origin}/api/${endpoint}`, { method: 'DELETE', headers: headers, body: JSON.stringify(body) });
-//     let data = await response.json();
-//     switch (response.status) {
-//         case 200: return { error: false, status: response.status, data: data }; break;
-//         default: apiError(response, data); return { error: true, status: response.status, data: data }; break;
-//     }
-// }
-
 async function apiError(error, body) {
     console.error('Error while making API request.\n\n', `Status:`, error.status, `\nStatus Text:`, body, `\nRequested Endpoint:`, error.url, `\n\nIf this issue persists, please open an issue in the Github repository https://github.com/Indiethon/donation-tracker/issues`);
 }
 
-function switchPage(button) {
-    location.href = `${button.getAttribute('page')}/${button.getAttribute('event')}`
-}
-
-function changeEvent(button) {
-    location.href = `/${window.location.pathname.split('/')[1]}/${button.getAttribute('event')}`
-}

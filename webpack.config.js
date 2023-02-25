@@ -15,7 +15,7 @@ module.exports = {
     filename: "bundle.js", // string
     // the filename template for entry chunks
 
-    publicPath: "/public/", // string
+    publicPath: "/content/", // string
     // the url to the output directory resolved relative to the HTML page
   },
 

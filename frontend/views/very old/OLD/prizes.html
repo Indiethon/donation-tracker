@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title name="Prizes">&#65279;</title>
+    <link rel="shortcut icon" href="/content/logo">
+    <script src="/content/pages/pages/utils.js"></script>
+    <link rel="stylesheet" href="/content/pages/pages/common.css" />
+</head>
+
+<body onLoad="load()">
+
+</body>
+
+<script>
+    async function load() {
+
+        let promise = await loadPage('Prizes');
+
+        generateTable({
+            name: 'prize',
+            model: 'prizes',
+            endpoint: `prizes/event/${promise[1]}`,
+            event: event,
+            table: [{
+                name: 'Name',
+                data: 'name',
+            }, {
+                name: 'Contributor',
+                data: 'contributor'
+            }, {
+                name: 'Minimum Donation',
+                textFunction: (value, details) => { return `${promise[0].currencySymbol}${value.minDonation.toFixed(2)}`; }
+            }, {
+                name: 'Start Time',
+                textFunction: (value) => {
+                    return new Date(value.startTime).toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit', seconds: undefined })
+                }
+            }, {
+                name: 'End Time',
+                textFunction: (value) => {
+                    return new Date(value.endTime).toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit', seconds: undefined })
+                }
+            }, {
+                name: 'Type',
+                textFunction: (value) => {
+                    return value.type.charAt(0).toUpperCase() + value.type.slice(1);
+                }
+            }, {
+                name: 'Winners',
+                textFunction: (value) => {
+                    let donorList = [];
+                    for (const donor of value.winners) {
+                        donorList.push(donor.alias[0])
+                    }
+                    return donorList.join(', ');
+                }
+            }],
+            clickFunction: (value) => {
+                return `location.href = '/prizes/${promise[1]}/${value.id}'`
+            }
+        })
+        document.querySelector('.content').style.visibility = 'visible';
+    }
+</script>
+
+</html>

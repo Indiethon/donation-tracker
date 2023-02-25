@@ -1,0 +1,96 @@
+<form>
+    <div id="alias" class="inputDiv">
+        <label class="label">Alias</label>
+        <input class="input" type="input" maxlength="32" onInput="updateAlias(this)">
+        <div class="inputCount">
+            <span class="inputCountCurrent">0</span>
+            <span class="inputCountMax">&nbsp/&nbsp32</span>
+        </div>
+        <div class="inputSubtext"> Leave blank to donate anonymously.</div>
+        <div class="errorText">Alias is invalid.</div>
+    </div>
+    <div id="email" class="inputDiv">
+        <label class="label">Email Address</label>
+        <input class="input" type="email" maxlength="160" onInput="updateEmail(this)"
+            onChange="updateEmailErrorText(this)" onChange="checkStatus()">
+        <div class="inputCount">
+            <span class="inputCountCurrent">0</span>
+            <span class="inputCountMax">&nbsp/&nbsp160</span>
+        </div>
+        <div class="inputSubtext">Our privacy policy can be found <a id="privacyPolicy" href="" target="_blank">here</a>.
+        </div>
+        <div class="errorText">Invalid email address.</div>
+    </div>
+    <div id="amount" class="inputDiv">
+        <label class="label">Amount</label>
+        <span class="inputUnit"></span>
+        <input class="input" type="number" min="0" step="0.01" onInput="updateAmount(this)"
+            onChange="updateAmountErrorText(this)"> 
+        <div class="inputSubtext"></div>
+        <div class="errorText">Amount is below the minimum donation.</div>
+    </div>
+    <div id="comment" class="inputDiv">
+        <label class="label">Comment</label>
+        <div class="textareaDiv">
+            <textarea class="input" cols="3" maxLength="5000" onInput="updateComment(this)"></textarea>
+            <div class="inputCount">
+                <span class="inputCountCurrent">0</span>
+                <span class="inputCountMax">&nbsp/&nbsp5000</span>
+            </div>
+        </div>
+        <div class="inputSubtext">Please refrain from using inapporpiate and offensive words. All donation
+            comments are screened.</div>
+        <div class="errorText">Comment is invalid.</div>
+    </div>
+    <div id="custom">
+
+    </div>
+    <div id="incentives" class="inputDiv">
+        <label class="label large">Incentives</label>
+        <div id="intentiveSubtext" class="inputSubtext">Donations can be used to influence certain runs in the schedule!</div>
+        <div class="incentiveSelected"></div>
+        <button type="button" id="incentiveAdd" class="incentiveAddButton" onClick="showIncentiveMenu(this)"
+            disabled>Add Incentives</button>
+        <div class="incentiveDiv">
+            <div class="incentiveList"></div>
+            <div class="incentiveInfo">
+                <div class="incentiveGame"></div>
+                <div class="incentiveName"></div>
+                <div class="incentiveDescription"></div>
+                <div class="incentiveTotal">
+                    <div class="incentiveTotalProgress">
+                        <div class="incentiveTotalProgressBar"></div>
+                    </div>
+                    <div class="incentiveTotalText"></div>
+                </div>
+                <label class="label">Amount to put towards incentive</label>
+                <span class="inputUnit"></span>
+                <input id="incentiveAmount" class="input" type="number" min="0" step="0.01"
+                    oninput="addIncentiveAmount(this)" onchange="checkIncentiveAmount(this)">
+                <div class="inputSubtext">You have $ remaining</div>
+                <div class="incentiveOptions"></div>
+                <button type="button" id="incentiveAddConfirm" class="incentiveAddButton" onClick="addIncentive()"
+                    disabled>Add</button>
+            </div>
+        </div>
+    </div>
+    <div class="prizesLabel">Prizes</div>
+    <div id="prizes" class="inputDiv">
+        <div class="prizeText">
+            <div>Donations can enter you to win prizes! By donating, you are automatically entered to win one of the
+                following prizes!</div>
+            <div><a id="sweepstakesRules" href="" target="_blank">Official Rules</a></div>
+            <div>No donation necessary for a chance to win. See sweepstakes rules for details and
+                instructions.</div>
+        </div>
+        <div class="prizeList">
+
+        </div>
+    </div>
+</form>
+<div class="incentiveErrorText">WARNING: You haven't selected any incentives! To select an incentive, please click the
+    'Add' button in the incentives box.</div>
+<button class="donateButton" onClick="donateForm()" disabled>
+    Donate
+    <span class="donateButtonAmount"></span>
+</button>
