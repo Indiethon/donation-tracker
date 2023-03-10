@@ -5,12 +5,14 @@ export default class {
             async getPreMain() {
                 return `
                 <div class="checkmarkDiv">
-                    <div class="checkmark wrapper"> <svg class="cross" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-                        <circle class="cross__circle" cx="26" cy="26" r="25" fill="none" />
-                        <path class="cross__check" fill="none" d="M16 16 36 36 M36 16 16 36" />
-                      </svg>
-                    </div>
-                    <div class="successText">Your donation couldn't be processed.</div>
+                <div class="checkmark wrapper"> <svg class="checkmark" xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 52 52">
+                        <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none" />
+                        <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+                    </svg>
+                </div>
+
+                    <div class="successText">You forfeited your prize.</div>
                     <div class="errorMessage"></div>
                 </div>
 
@@ -45,7 +47,7 @@ export default class {
             },
 
             async runFunction(details) {
-                document.querySelector('.errorMessage').innerHTML = details.donationErrorMessage;
+                document.querySelector('.errorMessage').innerHTML = details.prizeForfeitMessage;
                 setTimeout(() => {
                     document.querySelector('.successText').style.opacity = '1';
                     setTimeout(() => { document.querySelector('.errorMessage').style.opacity = '1'; document.querySelector('.footer').style.opacity = '1' }, 1250);

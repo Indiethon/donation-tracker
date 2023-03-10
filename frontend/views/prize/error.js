@@ -10,7 +10,7 @@ export default class {
                         <path class="cross__check" fill="none" d="M16 16 36 36 M36 16 16 36" />
                       </svg>
                     </div>
-                    <div class="successText">Your donation couldn't be processed.</div>
+                    <div class="successText">Your prize couldn't be claimed.</div>
                     <div class="errorMessage"></div>
                 </div>
 
@@ -45,7 +45,7 @@ export default class {
             },
 
             async runFunction(details) {
-                document.querySelector('.errorMessage').innerHTML = details.donationErrorMessage;
+                document.querySelector('.errorMessage').innerHTML = details.prizeErrorMessage;
                 setTimeout(() => {
                     document.querySelector('.successText').style.opacity = '1';
                     setTimeout(() => { document.querySelector('.errorMessage').style.opacity = '1'; document.querySelector('.footer').style.opacity = '1' }, 1250);

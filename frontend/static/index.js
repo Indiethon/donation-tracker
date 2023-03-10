@@ -6,6 +6,9 @@ import Donations from "/content/views/donations.js";
 import Donate from "/content/views/donate/donate.js";
 import DonateSuccess from "/content/views/donate/success.js";
 import DonateError from "/content/views/donate/error.js";
+import PrizeSuccess from "/content/views/prize/success.js";
+import PrizeError from "/content/views/prize/error.js";
+import PrizeForfeit from "/content/views/prize/forfeit.js";
 
 let event = new URLSearchParams(window.location.search).get('event');
 let loadedScripts = [];
@@ -25,8 +28,13 @@ const router = async () => {
         { name: "Donations", path: '/donations', view: Donations },
         { name: "Home", path: '/', view: Home },
         { name: "Donate", path: '/donate', view: Donate },
-        { name: "Success", path: '/donate/success', view: DonateSuccess },
-        { name: "Error", path: '/donate/error', view: DonateError },
+        { name: "Donation Successful", path: '/donate/success', view: DonateSuccess },
+        { name: "Donation Error", path: '/donate/error', view: DonateError },
+        { name: "Prize Claim Successful", path: '/prize/claim/success', view: PrizeSuccess },
+        { name: "Prize Claim Error", path: '/prize/claim/error', view: PrizeError },
+        { name: "Prize Forfeit Successful", path: '/prize/forfeit/success', view: PrizeForfeit },
+        { name: "Prize Forfeit Error", path: '/prize/forfeit/error', view: PrizeError },
+
     ]
 
     const potentialMatches = routes.map(route => {
