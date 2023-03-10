@@ -1,6 +1,6 @@
 const blockedShorts = ['all', 'active', 'tracker', 'create', 'edit', 'view', 'delete', 'donate', 'login', 'admin', 'volunteer', 'details']
 
-module.exports.schema = (mongoose, database) => {
+module.exports.schema = (mongoose, database, tracker) => {
     let optionsSchema = mongoose.Schema({
         type: {
             type: String,
@@ -100,8 +100,8 @@ module.exports.schema = (mongoose, database) => {
             }
         },
         customFields: [optionsSchema]
-    }, { toJSON: { virtuals: true } }, { toObject: { virtuals: true }});
-    
+    }, { toJSON: { virtuals: true } }, { toObject: { virtuals: true } });
+
     schema.virtual('charity', {
         ref: 'charity',
         localField: 'charityId',
@@ -109,21 +109,47 @@ module.exports.schema = (mongoose, database) => {
         justOne: true,
     });
 
-    schema.method('getStats', async function(callback) {
-        const donations = await database.models['donation'].find({ eventId: this.id, completed: true })
+    schema.method('getStats', async function (callback) {
         let stats = {};
+        const donations = await database.models['donation'].find({ eventId: this.id, completed: true })
+        if (donations.length <= 0) {
+            stats.total = 0;
+            stats.count = 0;
+            stats.min = 0;
+            stats.max = 0;
+            stats.avg = 0;
+            stats.median = 0;
+            callback(stats)
+            return;
+        }
         let totalArray = [];
         for (const donation of donations) {
             totalArray.push(donation.amount);
         }
-        stats.total = totalArray.reduce(function(a, b){ return a + b }, 0);
+        stats.total = totalArray.reduce(function (a, b) { return a + b }, 0);
         stats.count = donations.length;
         stats.min = Math.min(...totalArray)
         stats.max = Math.max(...totalArray)
         stats.avg = (stats.total / totalArray.length).toFixed(2);
         totalArray = [...totalArray].sort((a, b) => a - b);
         stats.median = (totalArray[totalArray.length - 1 >> 1] + totalArray[totalArray.length >> 1]) / 2;
-        callback(stats)   
-      });
+        callback(stats)
+    });
+
+    schema.post('save', async (doc) => {
+        let events = await database.models['event'].find();
+        let activeEvent = await database.models['event'].findOne({ active: true })
+        let sortedEvents = events.sort((a, b) => b.startTime - a.startTime);
+        let eventList = {};
+        let eventDetails = {};
+        for (const event of sortedEvents) {
+            eventList[event.short] = event.name;
+            eventDetails[event.short] = event;
+        }
+        tracker.cache.set('eventList', eventList);
+        tracker.cache.set('eventDetails', eventDetails);
+        tracker.cache.set('activeEvent', activeEvent);
+    });
+
     return schema;
 }

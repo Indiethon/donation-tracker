@@ -9,7 +9,9 @@
 </head>
 
 <body>
-    <nav class="header">
+    <!--
+    <div class="trackerTemplate">
+        <nav class="header">
         <div class="topNav">
             <div class="topNavImg"><img src="/content/logo"></div>
             <button class="topNavButton" page="/home" onClick="switchPage(this)">Home</button>
@@ -30,7 +32,30 @@
         </div>
         <button class="topNavButton topNavDonate" onClick="location.href = '/donate'">Donate</button>
     </nav>
-    <div class="body">
+
+    </div>
+
+    <script>
+        // fetch('/content/pages/pages/navbar.html')
+        //     .then(res => res.text())
+        //     .then(text => {
+        //         console.log(text)
+        //         document.querySelector('.trackerTemplate').innerHTML = text;
+
+        //         // let oldelem = document.querySelector(".trackerTemplate");
+        //         // let newelem = document.createElement("div");
+        //         // newelem.innerHTML = text;
+        //         // oldelem.parentNode.replaceChild(newelem, oldelem);
+        //     })
+
+    //     pageLoaded();
+
+
+    //     //let event = window.location.pathname.split('/')[2];
+
+    //     document.querySelector('body').style.visibility = 'visible';
+     </script>
+     <div class="body">
         <div class="content">
             <div class="pageTitle">Home</div>
         </div>
@@ -40,15 +65,16 @@
             <div>Found an issue? Open it on <a class="link"
                     href="https://github.com/Indiethon/donation-tracker">GitHub</a>!</div>
         </div>
-    </div>
+    </div> -->
 </body>
 
 <script>
     pageLoaded();
 
-    let event = window.location.pathname.split('/')[2];
 
-    document.querySelector('.content').style.visibility = 'visible';
+    // //let event = window.location.pathname.split('/')[2];
+
+    document.querySelector('body').style.visibility = 'visible';
 </script>
 
 </html>

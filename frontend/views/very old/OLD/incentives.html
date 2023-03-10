@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title name="Incentives">&#65279;</title>
+    <link rel="shortcut icon" href="/content/logo">
+    <script src="/content/pages/pages/utils.js"></script>
+    <link rel="stylesheet" href="/content/pages/pages/common.css" />
+</head>
+
+<body onLoad="load()">
+
+</body>
+
+<script>
+    async function load() {
+
+        let promise = await loadPage('Incentives');
+
+        generateTable({
+            name: 'incentive',
+            model: 'incentives',
+            endpoint: `incentives/event/${promise[1]}`,
+            event: event,
+            table: [{
+                name: 'Name',
+                textFunction: (value) => {
+                    if (value.type === 'target') return value.name;
+                    return `${value.name}<br>
+                    <button class="tableOptionsButton" incentiveid=${value._id} onClick="showOptionsSubtable(this)">Show Options</button>
+                `
+                }
+            }, {
+                name: 'Run',
+                textFunction: (value) => { return value.run.game; }
+            }, {
+                name: 'Description',
+                data: 'description'
+            }, {
+                name: 'Total',
+                textFunction: (value, details) => {
+                    return `${promise[0].currencySymbol}${value.total.toFixed(2)}`
+                }
+            }, {
+                name: 'Goal',
+                textFunction: (value, details) => {
+                    if (value.type === 'bidwar') return '(None)';
+                    return `${promise[0].currencySymbol}${value.goal.toFixed(2)}`
+                }
+            }],
+            clickFunction: (value) => {
+                return `location.href = '/incentives/${promise[1]}/${value.id}'`
+            },
+            subTableData: 'options',
+            subTableFunction: (value) => {
+                if (value.type === 'bidwar') return true;
+                return false;
+            },
+            subTable: [{
+                name: 'Option',
+                data: 'name',
+            }, {
+                name: 'Amount',
+                textFunction: (value, details) => {
+                    return `${promise[0].currencySymbol}${value.total.toFixed(2)}`
+                }
+            }, {
+                name: 'User Option',
+                textFunction: (value) => {
+                    if (value.userOption) return 'Yes';
+                    return 'No';
+                }
+            }]
+        })
+        document.querySelector('.content').style.visibility = 'visible';
+    }
+</script>
+
+</html>

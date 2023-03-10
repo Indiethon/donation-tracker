@@ -41,10 +41,10 @@
 
         async function pageLoaded() {
             let details = await GET('details');
-            if (details.data === undefined || details.data.eventShort === undefined) return;
+            if (details.data === undefined || details.data.event.short === undefined) return;
             else {
                 document.body.style.visibility = 'visible';
-                incentiveList = await GET(`incentives/event/${details.data.eventShort}`);
+                incentiveList = await GET(`incentives/event/${details.data.event.short}`);
                 for (let incentive of incentiveList.data) {
                     if (incentive && incentive.options.length > 0) {
                         let datalist = document.createElement('datalist');
@@ -62,7 +62,7 @@
                     model: 'donations',
                     type: 'edit',
                     endpoint: (urlParams.get('id') !== undefined && urlParams.get('id') !== null) ? `${model}/${urlParams.get('id')}` : model,
-                    event: details.data.eventShort,
+                    event: details.data.event.short,
                     volunteer: true,
                     datalist: {
                         donorDatalist: {
@@ -72,7 +72,7 @@
                             }
                         },
                         incentiveDatalist: {
-                            endpoint: `incentives/event/${details.data.eventShort}`,
+                            endpoint: `incentives/event/${details.data.event.short}`,
                             textFunction: (value) => {
                                 return value.name;
                             },
@@ -250,7 +250,7 @@
                     other: [{
                         data: 'eventId',
                         submit: (value) => {
-                            return details.data.eventID;
+                            return details.data.event.id;
                         },
                     }]
                 });

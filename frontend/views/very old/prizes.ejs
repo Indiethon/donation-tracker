@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <%- include("./partials/head", { pageTitle: "Prizes" }); %>
+</head>
+
+<body>
+
+    <nav>
+        <%- include ("./partials/nav"); %>
+    </nav>
+
+    <div class="content">
+        <header>
+            <%- include ("./partials/header", { pageTitle: "Prizes" }); %>
+
+        </header>
+
+        <main>
+        </main>
+
+        <footer>
+            <%- include ("./partials/footer"); %>
+        </footer>
+    </div>
+
+</body>
+<script id="tableScript">
+    start(new URLSearchParams(window.location.search).get('event'));
+
+function start(eventShort) {
+    let event = eventShort;
+
+        load(<% details %>)
+
+        generateTable({
+            name: 'prize',
+            model: 'prizes',
+            endpoint: `prizes/event/${event}`,
+            event: event,
+            table: [{
+                name: 'Name',
+                data: 'name',
+            }, {
+                name: 'Contributor',
+                data: 'contributor'
+            }, {
+                name: 'Minimum Donation',
+                textFunction: (value, details) => {
+                    return `<%= details.currencySymbol %>${value.minDonation.toFixed(2)}`;
+                }
+            }, {
+                name: 'Start Time',
+                textFunction: (value) => {
+                    return new Date(value.startTime).toLocaleString([], {
+                        year: 'numeric',
+                        month: 'numeric',
+                        day: 'numeric',
+                        hour: 'numeric',
+                        minute: '2-digit',
+                        seconds: undefined
+                    })
+                }
+            }, {
+                name: 'End Time',
+                textFunction: (value) => {
+                    return new Date(value.endTime).toLocaleString([], {
+                        year: 'numeric',
+                        month: 'numeric',
+                        day: 'numeric',
+                        hour: 'numeric',
+                        minute: '2-digit',
+                        seconds: undefined
+                    })
+                }
+            }, {
+                name: 'Type',
+                textFunction: (value) => {
+                    return value.type.charAt(0).toUpperCase() + value.type.slice(1);
+                }
+            }, {
+                name: 'Winners',
+                textFunction: (value) => {
+                    let donorList = [];
+                    for (const donor of value.winners) {
+                        donorList.push(donor.alias[0])
+                    }
+                    return donorList.join(', ');
+                }
+            }],
+            clickFunction: (value) => {
+                return `location.href = '/prizes/${event}/${value.id}'`
+            }
+        })
+    }
+</script>
+
+</html>

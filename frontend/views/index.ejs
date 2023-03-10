@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        <%= details.name %>
+    </title>
+    <meta content="<%= details.name %>" property="og:site_name" />
+    <meta content="" property="og:title" />
+    <meta content="<%= details.description %>" property="og:description" />
+    <meta content="" property="og:url" />
+    <meta content="/content/logo" property="og:image" />
+    <link id="favicon" rel="shortcut icon" href="/content/logo">
+    <link rel="stylesheet" href="/content/static/normalize.css" />
+    <link rel="stylesheet" href="/content/static/common.css" />
+    <script>
+        let details = <%- JSON.stringify(details) %>
+    </script>
+    <script type="module" src="/content/static/index.js"></script>
+    <script src="/content/static/utils.js"></script>
+</head>
+
+<body onLoad="loadPage(details)">
+    <nav>
+        <div class="topNav">
+            <div class="topNavImg" onClick="switchPage('<%= details.homepage %>')"><img src="/content/logo"></div>
+            <a href="/home" data-link><button class="topNavButton">Home</button></a>
+            <a href="/runs" data-link><button class="topNavButton">Runs</button></a>
+            <a href="/incentives" data-link><button class="topNavButton">Incentives</button></a>
+            <a href="/prizes" data-link><button class="topNavButton">Prizes</button></a>
+            <a href="/donations" data-link><button class="topNavButton">Donations</button></a>
+        </div>
+        <div class="eventDropdown">
+            <div class="eventDropdownText"></div>
+            <div class="material-icons-outlined">
+                arrow_drop_down
+            </div>
+            <div class="eventDropdownContent">
+                <div class="eventDropdownButton" onClick="changeEvent(this)">All Events</div>
+                <div class="eventDropdownSpacer"></div>
+                <% Object.keys(details.eventList).forEach((event, index)=> { %>
+                    <div class="eventDropdownButton" event="<%= event %>" onClick="changeEvent(this)">
+                        <%= details.eventList[event] %>
+                    </div>
+                    <% }) %>
+            </div>
+        </div>
+        <a href="/donate" data-link><button class="topNavButton topNavDonate"
+                style="display: <%= (details.activeEvent) ? 'inline-block' : 'none' %>">Donate</button></a>a
+    </nav>
+
+    <div class="content">
+        <header>
+        </header>
+
+        <div class="spinnerDiv">
+            <svg class="circular">
+                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="5" stroke-miterlimit="10" />
+            </svg>
+        </div>
+
+        <main>
+        </main>
+
+        <footer>
+        </footer>
+    </div>
+</body>
+
+</html>
