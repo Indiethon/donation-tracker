@@ -214,10 +214,10 @@ function showIncentiveInfo(element) {
                     <input type="checkbox" class="incentiveOptionCheck" customOption="true"></input>
                     <div class="incentiveOptionName">Nominate a new option!</div>
                 </div>
-                <input type="input" class="incentiveCustomOption" maxLength="${(incentive.userOptionMaxLength !== undefined) ? incentive.userOptionMaxLength : 160}" onInput="incentiveAddCustomOption(this)" disabled>
+                <input type="input" class="incentiveCustomOption" maxLength="${(incentive.userOptionMaxLength) ? incentive.userOptionMaxLength : 160}" onInput="incentiveAddCustomOption(this)" disabled>
                 <div class="inputCount">
                     <span class="inputCountCurrent">0</span>
-                    <span class="inputCountMax">&nbsp/&nbsp${(incentive.userOptionMaxLength !== undefined) ? incentive.userOptionMaxLength : 160}</span>
+                    <span class="inputCountMax">&nbsp/&nbsp${(incentive.userOptionMaxLength) ? incentive.userOptionMaxLength : 160}</span>
                 </div>
             </div>
             `
@@ -326,7 +326,7 @@ function calculateIncentiveAmountRemaining() {
 }
 
 function removeIncentive(id) {
-    donationData.incentives.splice(donationData.incentives.indexOf(x => x.id === id) - 1, 1);
+    donationData.incentives.splice(donationData.incentives.indexOf(x => x.id === id), 1);
     updateSelectedIncentives();
     calculateIncentiveAmountRemaining();
 }

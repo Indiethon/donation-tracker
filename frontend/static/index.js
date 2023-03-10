@@ -3,7 +3,9 @@ import Runs from "/content/views/runs.js";
 import Incentives from "/content/views/incentives.js";
 import Prizes from "/content/views/prizes.js";
 import Donations from "/content/views/donations.js";
-import Donate from "/content/views/donate.js";
+import Donate from "/content/views/donate/donate.js";
+import DonateSuccess from "/content/views/donate/success.js";
+import DonateError from "/content/views/donate/error.js";
 
 let event = new URLSearchParams(window.location.search).get('event');
 let loadedScripts = [];
@@ -21,8 +23,10 @@ const router = async () => {
         { name: "Incentives", path: '/incentives', view: Incentives },
         { name: "Prizes", path: '/prizes', view: Prizes },
         { name: "Donations", path: '/donations', view: Donations },
+        { name: "Home", path: '/', view: Home },
         { name: "Donate", path: '/donate', view: Donate },
-        { name: "Home", path: '/', view: Home }
+        { name: "Success", path: '/donate/success', view: DonateSuccess },
+        { name: "Error", path: '/donate/error', view: DonateError },
     ]
 
     const potentialMatches = routes.map(route => {
@@ -60,15 +64,15 @@ const router = async () => {
         headImport.remove();
     }
 
-    if (view.events.getHeader) header.innerHTML = await view.events.getHeader();
+    if (view.events.getHeader) header.innerHTML = await view.events.getHeader(details);
 
-    if (view.events.getPreMain) main.innerHTML = await view.events.getPreMain();
+    if (view.events.getPreMain) main.innerHTML = await view.events.getPreMain(details);
     if (view.events.table) await generateTable(view.events.table);
-    if (view.events.getPostMain) main.innerHTML += await view.events.getPostMain();
+    if (view.events.getPostMain) main.innerHTML += await view.events.getPostMain(details);
 
     if (view.events.getFooter) footer.innerHTML = await view.events.getFooter(new window.Intl.DateTimeFormat().resolvedOptions().timeZone);
 
-    if (view.events.runFunction) await view.events.runFunction();
+    if (view.events.runFunction) await view.events.runFunction(details);
 
     if (view.stylesheets) {
         let promiseArray = [];
