@@ -1,3 +1,7 @@
+body {
+    padding-bottom: 72px;
+}
+
 #volunteerFlexbox {
     display: flex;
     width: 100%;

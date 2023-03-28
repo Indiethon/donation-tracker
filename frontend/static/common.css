@@ -246,6 +246,7 @@ nav {
     overflow: hidden;
     white-space: nowrap;
     align-items: center;
+    vertical-align: middle;
     height: 100%;
 }
 
@@ -266,14 +267,21 @@ nav {
 }
 
 .topNavButton {
+    display: inline-block;
     color: var(--nav-button-foreground-color);
     background-color: transparent;
-    height: 100%;
     outline: none;
     border: none;
     text-decoration: none;
+    height: 50px;
     padding: 0 10px;
     font-size: 18px;
+    line-height: 50px;
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
+    user-select: none;
 }
 
 .topNavButton:hover {
@@ -284,7 +292,6 @@ nav {
 .topNavButton:active {
     color: var(--nav-button-click-foreground-color);
     cursor: pointer;
-    pointer-events: none;
 }
 
 .eventDropdown {
@@ -364,13 +371,29 @@ nav {
 }
 
 .topNavDonate {
-    color: var(--nav-donate-button-foreground-color);
     background-color: var(--nav-donate-button-background-color);
     border-radius: 5px;
     width: 100px;
-    height: 36px;
+    line-height: 36px;
+    text-align: center;
     margin-left: 16px;
     display: none;
+}
+
+.topNavDonate a {
+    display: block;
+    color: var(--nav-donate-button-foreground-color);
+    background-color: transparent;
+    outline: none;
+    border: none;
+    text-decoration: none;
+    width: 100px;
+    height: 36px;
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
+    user-select: none;
 }
 
 .topNavDonate:hover {
@@ -402,7 +425,7 @@ header {
 }
 
 main {
-    width: 80%;
+    width: 95%;
 }
 
 .donationStats {
@@ -675,59 +698,68 @@ footer {
 }
 
 .spinnerDiv {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.circular{
- animation: rotate 2s linear infinite;
- height: 100px;
- position: relative;
- width: 100px;
+.circular {
+    animation: rotate 2s linear infinite;
+    height: 100px;
+    position: relative;
+    width: 100px;
 }
 
 
 .path {
-  stroke-dasharray: 1,200;
-  stroke-dashoffset: 0;
-  animation:
-   dash 1.5s ease-in-out infinite,
-   color 6s ease-in-out infinite
-  ;
-  stroke-linecap: round;
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+    animation:
+        dash 1.5s ease-in-out infinite,
+        color 6s ease-in-out infinite;
+    stroke-linecap: round;
 }
 
-@keyframes rotate{
- 100%{
-  transform: rotate(360deg);
- }
+@keyframes rotate {
+    100% {
+        transform: rotate(360deg);
+    }
 }
-@keyframes dash{
- 0%{
-  stroke-dasharray: 1,200;
-  stroke-dashoffset: 0;
- }
- 50%{
-  stroke-dasharray: 89,200;
-  stroke-dashoffset: -35;
- }
- 100%{
-  stroke-dasharray: 89,200;
-  stroke-dashoffset: -124;
- }
+
+@keyframes dash {
+    0% {
+        stroke-dasharray: 1, 200;
+        stroke-dashoffset: 0;
+    }
+
+    50% {
+        stroke-dasharray: 89, 200;
+        stroke-dashoffset: -35;
+    }
+
+    100% {
+        stroke-dasharray: 89, 200;
+        stroke-dashoffset: -124;
+    }
 }
-@keyframes color{
-  100%, 0%{
-    stroke: #d62d20;
-  }
-  40%{
-    stroke: #0057e7;
-  }
-  66%{
-    stroke: #008744;
-  }
-  80%, 90%{
-    stroke: #ffa700;
-  }
+
+@keyframes color {
+
+    100%,
+    0% {
+        stroke: #d62d20;
+    }
+
+    40% {
+        stroke: #0057e7;
+    }
+
+    66% {
+        stroke: #008744;
+    }
+
+    80%,
+    90% {
+        stroke: #ffa700;
+    }
 }

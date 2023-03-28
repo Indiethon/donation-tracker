@@ -10,6 +10,12 @@
     <meta content="<%= details.description %>" property="og:description" />
     <meta content="" property="og:url" />
     <meta content="/content/logo" property="og:image" />
+    <meta content="<%= details.name %>" property="site_name" />
+    <meta content="" property="title" />
+    <meta content="<%= details.description %>" property="description" />
+    <meta content="" property="url" />
+    <meta content="/content/logo" property="image" />
+
     <link id="favicon" rel="shortcut icon" href="/content/logo">
     <link rel="stylesheet" href="/content/static/normalize.css" />
     <link rel="stylesheet" href="/content/static/common.css" />
@@ -23,12 +29,12 @@
 <body onLoad="loadPage(details)">
     <nav>
         <div class="topNav">
-            <div class="topNavImg" onClick="switchPage('<%= details.homepage %>')"><img src="/content/logo"></div>
-            <a href="/home" data-link><button class="topNavButton">Home</button></a>
-            <a href="/runs" data-link><button class="topNavButton">Runs</button></a>
-            <a href="/incentives" data-link><button class="topNavButton">Incentives</button></a>
-            <a href="/prizes" data-link><button class="topNavButton">Prizes</button></a>
-            <a href="/donations" data-link><button class="topNavButton">Donations</button></a>
+            <a class="topNavImg" href="<%= details.homepage %>"><img src="/content/logo"></a>
+                <a href="/home" class="topNavButton" data-link>Home</a>
+                <a href="/runs" class="topNavButton" data-link>Runs</a>
+                <a href="/incentives" class="topNavButton" data-link>Incentives</a>
+                <a href="/prizes" class="topNavButton" data-link>Prizes</a>
+                <a href="/donations" class="topNavButton" data-link>Donations</a>
         </div>
         <div class="eventDropdown">
             <div class="eventDropdownText"></div>
@@ -45,8 +51,7 @@
                     <% }) %>
             </div>
         </div>
-        <a href="/donate" data-link><button class="topNavButton topNavDonate"
-                style="display: <%= (details.activeEvent) ? 'inline-block' : 'none' %>">Donate</button></a>a
+        <div class="topNavDonate" style="display: <%= (details.activeEvent) ? 'inline-block' : 'none' %>"><a href="/donate" data-link>Donate</a></div>
     </nav>
 
     <div class="content">

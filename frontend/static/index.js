@@ -137,6 +137,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (details.activeEvent) document.querySelector('.topNavDonate').style.display = 'inline-block'
     if (details.analyticsMeasurmentId) attatchAnalytics(details.analyticsMeasurmentId);
 
+    if (!window.location.pathname.includes('?event=') && details.activeEvent) {
+        let href = `${window.location.pathname}?event=${details.activeEvent.short}`;
+        event = details.activeEvent.short;
+        history.pushState(null, null, href);
+    }
+
     document.body.addEventListener("click", e => {
         if (e.target.matches("[data-link]")) {
             e.preventDefault();

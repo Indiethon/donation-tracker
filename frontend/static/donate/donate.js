@@ -32,6 +32,7 @@ async function load() {
 
     document.getElementById('privacyPolicy').href = details.privacyPolicy;
     document.getElementById('sweepstakesRules').href = details.sweepstakesRules;
+    document.querySelector('.pageSubtitle').innerHTML = `100% of your donation goes to ${details.activeEvent.charity.name}.`
 
     // let div = document.querySelector('#custom');
     // for (const custom of data.custom) {

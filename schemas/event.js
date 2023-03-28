@@ -137,8 +137,8 @@ module.exports.schema = (mongoose, database, tracker) => {
     });
 
     schema.post('save', async (doc) => {
-        let events = await database.models['event'].find();
-        let activeEvent = await database.models['event'].findOne({ active: true })
+        let events = await database.models['event'].find().populate('charity');
+        let activeEvent = await database.models['event'].findOne({ active: true }).populate('charity')
         let sortedEvents = events.sort((a, b) => b.startTime - a.startTime);
         let eventList = {};
         let eventDetails = {};
