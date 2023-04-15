@@ -151,7 +151,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 href = `${e.target.href}?event=${details.activeEvent.short}`;
                 event = details.activeEvent.short;
             }
-            if (e.target.href.includes('/donate')) href = '/donate'
+            let url = new URL(e.target.href);
+            console.log(url.pathname)
+            if (url.pathname.includes('/donate')) href = '/donate'
             history.pushState(null, null, href);
             router();
         };
