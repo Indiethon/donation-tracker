@@ -65,8 +65,6 @@ async function start(tracker, database) {
   }, tracker.server).listen(tracker.config.port, () => console.info(`Donation tracker is running at ${tracker.url}`));
   else http.createServer(tracker.server).listen(tracker.config.port, () => console.info(`Donation tracker is running at ${tracker.url}`));
 
-  if (tracker.config.googleAnalytics.enabled) console.info(`Google Analytics tracking has been enabled with Measurment ID ${tracker.config.googleAnalytics.measurmentId}.`)
-
   // Setting up task scheduler...
   taskScheduler.start();
 
