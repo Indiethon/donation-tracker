@@ -13,7 +13,7 @@ A easy to use and open source donation tracker for speedrunning marathons. Inspi
 - Open `config.json` and change desired settings. Make sure to save!
 - Start the tracker. `npm start`
 
-If a page can't load in the dashboard, try disabling your ad blocker.
+To use the default frontend, please use the new dedicated frontend repository that can be hosted on Github Pages: [donation-tracker-frontend](https://github.com/Indiethon/donation-tracker-frontend).
 
 # Simple Docs
 

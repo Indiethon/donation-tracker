@@ -3,8 +3,8 @@
     "$id": "http://example.com/example.json",
     "type": "object",
     "default": {
-        "baseURL": "tracker.example.com",
-        "port": 3000,
+        "baseURL": "trackerApi.example.com",
+        "port": 8080,
         "ssl": {
             "enabled": false,
             "keyPath": "",
@@ -16,34 +16,15 @@
         },
         "tracker": {
             "name": "Donation Tracker",
-            "databaseURL": "mongodb://localhost/Indiethon",
+            "databaseURL": "mongodb://localhost:27017",
             "homepage": "https://example.com",
             "logoPath": "",
-            "passwordHash": "Please change this!",
-            "tokens": [
-                ""
-            ]
+            "passwordHash": "",
+            "tokens": []
         },
         "prizes": {
             "maxDrawAttempts": 10,
-            "prizeLinkKey": "Please change this!",
-            "prizeClaimMessage": "You will receive another email shortly with your prize redemption details. Thank your for your support!",
-            "prizeForfeitMessage": "You have successfully forfeited your prize. We're sorry to hear thar you did not want your prize.",
-            "prizeErrorMessage": "Please try clicking the link sent to your email again. If you're still having issues, contact the event organizers for help."
-        },
-        "legal": {
-            "privacyPolicy": "",
-            "sweepstakesRules": ""
-        },
-        "frontend": {
-            "useDefault": true,
-            "donationSuccessMessage": "Thanks for donating! Enjoy the event!",
-            "donationErrorMessage": "Your card was not charged. If you didn't cancel your transaction, try donating again, otherwise contact the event organizers for help.",
-            "description": "Donation Tracker, the donation tracking system created by nicnacnic. View stats, incentives, prizes, speedruns and more!"
-        },
-        "googleAnalytics": {
-            "enabled": false,
-            "measurmentId": ""
+            "prizeLinkKey": ""
         }
     },
     "title": "Root Schema",
@@ -53,10 +34,7 @@
         "ssl",
         "paypal",
         "tracker",
-        "prizes",
-        "legal",
-        "frontend",
-        "googleAnalytics"
+        "prizes"
     ],
     "properties": {
         "baseURL": {
@@ -64,7 +42,7 @@
             "default": "",
             "title": "The baseURL Schema",
             "examples": [
-                "tracker.example.com"
+                "trackerApi.example.com"
             ]
         },
         "port": {
@@ -72,7 +50,7 @@
             "default": 0,
             "title": "The port Schema",
             "examples": [
-                3000
+                8080
             ]
         },
         "ssl": {
@@ -173,7 +151,7 @@
                     "default": "",
                     "title": "The databaseURL Schema",
                     "examples": [
-                        "mongodb://localhost/Indiethon"
+                        "mongodb://localhost:27017"
                     ]
                 },
                 "homepage": {
@@ -197,36 +175,26 @@
                     "default": "",
                     "title": "The passwordHash Schema",
                     "examples": [
-                        "Please change this!"
+                        ""
                     ]
                 },
                 "tokens": {
                     "type": "array",
                     "default": [],
                     "title": "The tokens Schema",
-                    "items": {
-                        "type": "string",
-                        "default": "",
-                        "title": "A Schema",
-                        "examples": [
-                            ""
-                        ]
-                    },
+                    "items": {},
                     "examples": [
-                        [
-                            ""]
+                        []
                     ]
                 }
             },
             "examples": [{
                 "name": "Donation Tracker",
-                "databaseURL": "mongodb://localhost/Indiethon",
+                "databaseURL": "mongodb://localhost:27017",
                 "homepage": "https://example.com",
                 "logoPath": "",
-                "passwordHash": "Please change this!",
-                "tokens": [
-                    ""
-                ]
+                "passwordHash": "",
+                "tokens": []
             }]
         },
         "prizes": {
@@ -235,10 +203,7 @@
             "title": "The prizes Schema",
             "required": [
                 "maxDrawAttempts",
-                "prizeLinkKey",
-                "prizeClaimMessage",
-                "prizeForfeitMessage",
-                "prizeErrorMessage"
+                "prizeLinkKey"
             ],
             "properties": {
                 "maxDrawAttempts": {
@@ -254,159 +219,19 @@
                     "default": "",
                     "title": "The prizeLinkKey Schema",
                     "examples": [
-                        "Please change this!"
-                    ]
-                },
-                "prizeClaimMessage": {
-                    "type": "string",
-                    "default": "",
-                    "title": "The prizeClaimMessage Schema",
-                    "examples": [
-                        "You will receive another email shortly with your prize redemption details. Thank your for your support!"
-                    ]
-                },
-                "prizeForfeitMessage": {
-                    "type": "string",
-                    "default": "",
-                    "title": "The prizeForfeitMessage Schema",
-                    "examples": [
-                        "You have successfully forfeited your prize. We're sorry to hear thar you did not want your prize."
-                    ]
-                },
-                "prizeErrorMessage": {
-                    "type": "string",
-                    "default": "",
-                    "title": "The prizeErrorMessage Schema",
-                    "examples": [
-                        "Please try clicking the link sent to your email again. If you're still having issues, contact the event organizers for help."
+                        ""
                     ]
                 }
             },
             "examples": [{
                 "maxDrawAttempts": 10,
-                "prizeLinkKey": "Please change this!",
-                "prizeClaimMessage": "You will receive another email shortly with your prize redemption details. Thank your for your support!",
-                "prizeForfeitMessage": "You have successfully forfeited your prize. We're sorry to hear thar you did not want your prize.",
-                "prizeErrorMessage": "Please try clicking the link sent to your email again. If you're still having issues, contact the event organizers for help."
-            }]
-        },
-        "legal": {
-            "type": "object",
-            "default": {},
-            "title": "The legal Schema",
-            "required": [
-                "privacyPolicy",
-                "sweepstakesRules"
-            ],
-            "properties": {
-                "privacyPolicy": {
-                    "type": "string",
-                    "default": "",
-                    "title": "The privacyPolicy Schema",
-                    "examples": [
-                        ""
-                    ]
-                },
-                "sweepstakesRules": {
-                    "type": "string",
-                    "default": "",
-                    "title": "The sweepstakesRules Schema",
-                    "examples": [
-                        ""
-                    ]
-                }
-            },
-            "examples": [{
-                "privacyPolicy": "",
-                "sweepstakesRules": ""
-            }]
-        },
-        "frontend": {
-            "type": "object",
-            "default": {},
-            "title": "The frontend Schema",
-            "required": [
-                "useDefault",
-                "donationSuccessMessage",
-                "donationErrorMessage",
-                "description"
-            ],
-            "properties": {
-                "useDefault": {
-                    "type": "boolean",
-                    "default": false,
-                    "title": "The useDefault Schema",
-                    "examples": [
-                        true
-                    ]
-                },
-                "donationSuccessMessage": {
-                    "type": "string",
-                    "default": "",
-                    "title": "The donationSuccessMessage Schema",
-                    "examples": [
-                        "Thanks for donating! Enjoy the event!"
-                    ]
-                },
-                "donationErrorMessage": {
-                    "type": "string",
-                    "default": "",
-                    "title": "The donationErrorMessage Schema",
-                    "examples": [
-                        "Your card was not charged. If you didn't cancel your transaction, try donating again, otherwise contact the event organizers for help."
-                    ]
-                },
-                "description": {
-                    "type": "string",
-                    "default": "",
-                    "title": "The description Schema",
-                    "examples": [
-                        "Donation Tracker, the donation tracking system created by nicnacnic. View stats, incentives, prizes, speedruns and more!"
-                    ]
-                }
-            },
-            "examples": [{
-                "useDefault": true,
-                "donationSuccessMessage": "Thanks for donating! Enjoy the event!",
-                "donationErrorMessage": "Your card was not charged. If you didn't cancel your transaction, try donating again, otherwise contact the event organizers for help.",
-                "description": "Donation Tracker, the donation tracking system created by nicnacnic. View stats, incentives, prizes, speedruns and more!"
-            }]
-        },
-        "googleAnalytics": {
-            "type": "object",
-            "default": {},
-            "title": "The googleAnalytics Schema",
-            "required": [
-                "enabled",
-                "measurmentId"
-            ],
-            "properties": {
-                "enabled": {
-                    "type": "boolean",
-                    "default": false,
-                    "title": "The enabled Schema",
-                    "examples": [
-                        false
-                    ]
-                },
-                "measurmentId": {
-                    "type": "string",
-                    "default": "",
-                    "title": "The measurmentId Schema",
-                    "examples": [
-                        ""
-                    ]
-                }
-            },
-            "examples": [{
-                "enabled": false,
-                "measurmentId": ""
+                "prizeLinkKey": ""
             }]
         }
     },
     "examples": [{
-        "baseURL": "tracker.example.com",
-        "port": 3000,
+        "baseURL": "trackerApi.example.com",
+        "port": 8080,
         "ssl": {
             "enabled": false,
             "keyPath": "",
@@ -418,34 +243,15 @@
         },
         "tracker": {
             "name": "Donation Tracker",
-            "databaseURL": "mongodb://localhost/Indiethon",
+            "databaseURL": "mongodb://localhost:27017",
             "homepage": "https://example.com",
             "logoPath": "",
-            "passwordHash": "Please change this!",
-            "tokens": [
-                ""
-            ]
+            "passwordHash": "",
+            "tokens": []
         },
         "prizes": {
             "maxDrawAttempts": 10,
-            "prizeLinkKey": "Please change this!",
-            "prizeClaimMessage": "You will receive another email shortly with your prize redemption details. Thank your for your support!",
-            "prizeForfeitMessage": "You have successfully forfeited your prize. We're sorry to hear thar you did not want your prize.",
-            "prizeErrorMessage": "Please try clicking the link sent to your email again. If you're still having issues, contact the event organizers for help."
-        },
-        "legal": {
-            "privacyPolicy": "",
-            "sweepstakesRules": ""
-        },
-        "frontend": {
-            "useDefault": true,
-            "donationSuccessMessage": "Thanks for donating! Enjoy the event!",
-            "donationErrorMessage": "Your card was not charged. If you didn't cancel your transaction, try donating again, otherwise contact the event organizers for help.",
-            "description": "Donation Tracker, the donation tracking system created by nicnacnic. View stats, incentives, prizes, speedruns and more!"
-        },
-        "googleAnalytics": {
-            "enabled": false,
-            "measurmentId": ""
+            "prizeLinkKey": ""
         }
     }]
 }
