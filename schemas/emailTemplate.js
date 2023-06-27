@@ -1,4 +1,4 @@
-module.exports.schema = (mongoose, database) => {
+module.exports.schema = (mongoose, database, localStorage) => {
     let schema = mongoose.Schema({
         name: {
             type: String,
@@ -28,5 +28,9 @@ module.exports.schema = (mongoose, database) => {
         }
     }, { toJSON: { virtuals: true } }, { toObject: { virtuals: true } });
 
+    schema.post('save', async (doc) => {
+        let emailTemplates = await database.models['emailTemplate'].find();
+        localStorage.setItem('emailTemplate', JSON.stringify(emailTemplates));
+    })
     return schema;
 }

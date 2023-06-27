@@ -106,5 +106,6 @@ dist
 # Config file.
 config.json
 
-# Pending donations.
-db/pendingDonations.json
+# Database cache.
+cache/
+

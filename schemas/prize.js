@@ -1,6 +1,6 @@
 const blockedShorts = ['all', 'active', 'tracker', 'create', 'edit', 'view', 'delete']
 
-module.exports.schema = (mongoose, database) => {
+module.exports.schema = (mongoose, database, localStorage) => {
     let schema = mongoose.Schema({
         eventId: {
             type: mongoose.Schema.Types.ObjectId,
@@ -87,5 +87,17 @@ module.exports.schema = (mongoose, database) => {
         },
     }, { toJSON: { virtuals: true } }, { toObject: { virtuals: true }});
 
+    schema.post('save', async (doc) => {
+        let prizes = await database.models['prize'].find();
+        localStorage.setItem('prize', JSON.stringify(prizes));
+    })
+
     return schema;
 }
+
+module.exports.populate = [{
+    ref: 'donor',
+    localField: 'winners',
+    foreignField: '_id',
+    array: true,
+}]

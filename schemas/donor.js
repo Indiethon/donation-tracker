@@ -1,4 +1,4 @@
-module.exports.schema = (mongoose, database) => {
+module.exports.schema = (mongoose, database, localStorage) => {
     let schema = mongoose.Schema({
         alias: [{
             type: String,
@@ -21,5 +21,10 @@ module.exports.schema = (mongoose, database) => {
             ref: 'donation',
         }]
     }, { toJSON: { virtuals: true } }, { toObject: { virtuals: true } });
+
+    schema.post('save', async (doc) => {
+        let donors = await database.models['donor'].find();
+        localStorage.setItem('donor', JSON.stringify(donors));
+    })
     return schema;
 }

@@ -1,4 +1,4 @@
-module.exports.schema = (mongoose, database) => {
+module.exports.schema = (mongoose, database, localStorage) => {
     let schema = mongoose.Schema({
         eventId: {
             type: mongoose.Schema.Types.ObjectId,
@@ -92,5 +92,17 @@ module.exports.schema = (mongoose, database) => {
             required: [true, 'Completed is required.']
         },
     }, { toJSON: { virtuals: true } }, { toObject: { virtuals: true } });
+
+    schema.post('save', async (doc) => {
+        let runs = await database.models['run'].find();
+        localStorage.setItem('run', JSON.stringify(runs));
+    })
     return schema;
 }
+
+module.exports.populate = [{
+    ref: 'runner',
+    localField: 'runners',
+    foreignField: '_id',
+    array: true,
+}]

@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt-nodejs')
 
-module.exports.schema = (mongoose, database) => {
+module.exports.schema = (mongoose, database, localStorage) => {
     let schema = mongoose.Schema({
         username: {
             type: String,
@@ -55,5 +55,16 @@ module.exports.schema = (mongoose, database) => {
         justOne: true,
     });
 
+    schema.post('save', async (doc) => {
+        let users = await database.models['user'].find();
+        localStorage.setItem('user', JSON.stringify(users));
+    })
+
     return schema;
 }
+
+module.exports.populate = [{
+    ref: 'group',
+    localField: 'groupId',
+    foreignField: '_id',
+}]

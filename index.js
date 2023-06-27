@@ -5,6 +5,7 @@ const http = require('http')
 const https = require('https')
 const Tracker = require('./lib/tracker/tracker');
 const taskScheduler = require('./lib/taskScheduler/taskScheduler');
+const websocketLib = require('./lib/websocket/websocket')
 const betterLogging = require('better-logging');
 
 const { MessageConstructionStrategy } = betterLogging;
@@ -25,19 +26,26 @@ betterLogging(console, {
 // });
 
 let startTime = Date.now();
+load();
 
-console.debug("Debug logging enabled!")
-console.info(`Starting donation tracker (running on Node.JS ${process.version})`)
+async function load() {
 
-// Set the program's base directory.
-global.__rootdir = __dirname;
+  console.debug("Debug logging enabled!")
+  console.info(`Starting donation tracker (running on Node.JS ${process.version})`)
 
-// Create the tracker and database objects.
-console.debug("Creating tracker object...")
-new Tracker(start);
+  // Set the program's base directory.
+  global.__rootdir = __dirname;
+
+  // Delete cached database entries.
+  await deleteCachedFiles();
+
+  // Create the tracker and database objects.
+  console.debug("Creating tracker object...")
+  new Tracker(start);
+}
 
 // Wait for tracker object to initialize.
-function start(tracker, database) {
+async function start(tracker, database) {
 
   console.debug("Tracker loaded successfully!")
 
@@ -59,10 +67,23 @@ function start(tracker, database) {
 
   if (tracker.config.googleAnalytics.enabled) console.info(`Google Analytics tracking has been enabled with Measurment ID ${tracker.config.googleAnalytics.measurmentId}.`)
 
-
   // Setting up task scheduler...
   taskScheduler.start();
 
   console.debug('Tracker start up complete!');
   console.debug(`Startup time: ${Date.now() - startTime}ms`)
+}
+
+async function deleteCachedFiles() {
+  return new Promise(async (resolve, reject) => {
+    fs.readdir('./cache', (err, files) => {
+      if (err) console.log(err)
+
+      files.forEach((file, index) => {
+        const fileDir = path.join(__dirname, 'cache', file);
+        if (file !== '.empty-directory' && file !== 'sessions') fs.unlinkSync(fileDir);
+        if (files.length - 1 >= index) return resolve();
+      });
+    });
+  })
 }

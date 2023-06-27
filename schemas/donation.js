@@ -1,4 +1,4 @@
-module.exports.schema = (mongoose, database) => {
+module.exports.schema = (mongoose, database, localStorage) => {
     let incentiveSchema = mongoose.Schema({
         incentiveId: {
             type: mongoose.Schema.Types.ObjectId,
@@ -94,5 +94,26 @@ module.exports.schema = (mongoose, database) => {
         foreignField: '_id',
         justOne: true,
     });
+
+    schema.post('save', async (doc) => {
+        let donations = await database.models['donation'].find();
+        localStorage.setItem('donation', JSON.stringify(donations));
+    })
     return schema;
 }
+
+module.exports.populate = [{
+    ref: 'incentive',
+    localField: 'incentives',
+    arrayField: 'incentiveId',
+    foreignField: '_id',
+    subArray: true,
+}, {
+    ref: 'event',
+    localField: 'eventId',
+    foreignField: '_id',
+}, {
+    ref: 'donor',
+    localField: 'donorId',
+    foreignField: '_id',
+}]

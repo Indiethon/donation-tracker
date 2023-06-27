@@ -1,4 +1,4 @@
-module.exports.schema = (mongoose, database) => {
+module.exports.schema = (mongoose, database, localStorage) => {
     let schema = mongoose.Schema({
         eventId: {
             type: mongoose.Schema.Types.ObjectId,
@@ -38,7 +38,7 @@ module.exports.schema = (mongoose, database) => {
         expiryTimestamp: {
             type: Date,
         },
-    }, { toJSON: { virtuals: true } }, { toObject: { virtuals: true }});
+    }, { toJSON: { virtuals: true } }, { toObject: { virtuals: true } });
     schema.virtual('event', {
         ref: 'event',
         localField: 'eventId',
@@ -70,5 +70,32 @@ module.exports.schema = (mongoose, database) => {
         justOne: true,
     });
 
+    schema.post('save', async (doc) => {
+        let prizeRedemptions = await database.models['prizeRedemption'].find();
+        localStorage.setItem('prizeRedemption', JSON.stringify(prizeRedemptions));
+    })
+
     return schema;
 }
+
+module.exports.populate = [{
+    ref: 'event',
+    localField: 'eventId',
+    foreignField: '_id',
+}, {
+    ref: 'prize',
+    localField: 'prizeId',
+    foreignField: '_id',
+}, {
+    ref: 'donor',
+    localField: 'donorId',
+    foreignField: '_id',
+}, {
+    ref: 'emailTemplate',
+    localField: 'claimEmailTemplate',
+    foreignField: '_id',
+}, {
+    ref: 'emailAddress',
+    localField: 'claimEmailAddress',
+    foreignField: '_id',
+}]

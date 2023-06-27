@@ -1,4 +1,4 @@
-module.exports.schema = (mongoose, database) => {
+module.exports.schema = (mongoose, database, localStorage) => {
     let schema = mongoose.Schema({
         eventId: {
             type: mongoose.Schema.Types.ObjectId,
@@ -28,5 +28,17 @@ module.exports.schema = (mongoose, database) => {
         justOne: true,
     });
 
+    schema.post('save', async (doc) => {
+        let ads = await database.models['ad'].find();
+        console.log('refreshing blurb')
+        localStorage.setItem('ad', JSON.stringify(ads));
+    })
+
     return schema;
 }
+
+module.exports.populate = [{
+    ref: 'event',
+    localField: 'eventId',
+    foreignField: '_id',
+}]

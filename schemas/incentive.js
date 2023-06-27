@@ -1,4 +1,4 @@
-module.exports.schema = (mongoose, database) => {
+module.exports.schema = (mongoose, database, localStorage) => {
     let optionsSchema = mongoose.Schema({
         name: {
             type: String,
@@ -109,5 +109,37 @@ module.exports.schema = (mongoose, database) => {
         }
         callback(total);
     })
+    schema.post('save', async (doc) => {
+        let incentives = await database.models['incentive'].find();
+        localStorage.setItem('incentive', JSON.stringify(incentives));
+    })
     return schema;
+}
+
+module.exports.populate = [{
+    ref: 'run',
+    localField: 'runId',
+    foreignField: '_id',
+}]
+
+module.exports.getStats = async (database, document) => {
+    return new Promise(async (resolve, reject) => {
+        let stats = { total: 0, options: {} };
+        if (document.type === 'bidwar') {
+            for (const option of document.options) {
+                stats.options[option._id] = 0;
+            }
+        }
+        const donations = await database.find('donation', { eventId: document.eventId, completed: true });
+        for (const donation of donations) {
+            for (const incentive of donation.incentives) {
+                if (document.type === 'target' && incentive.incentiveId === document._id) stats.total += incentive.amount;
+                else if (document.type === 'bidwar' && incentive.incentiveId === document._id) {
+                    stats.total += incentive.amount;
+                    stats.options[incentive.option] += incentive.amount;
+                }
+            }
+        }
+        resolve(stats)
+    })
 }

@@ -1,6 +1,6 @@
 const blockedShorts = ['all', 'active', 'tracker', 'create', 'edit', 'view', 'delete', 'donate', 'login', 'admin', 'volunteer', 'details']
 
-module.exports.schema = (mongoose, database, tracker) => {
+module.exports.schema = (mongoose, database, localStorage) => {
     let optionsSchema = mongoose.Schema({
         type: {
             type: String,
@@ -136,20 +136,61 @@ module.exports.schema = (mongoose, database, tracker) => {
         callback(stats)
     });
 
+    // schema.post('save', async (doc) => {
+    //     let events = await database.models['event'].find().populate('charity');
+    //     let activeEvent = await database.models['event'].findOne({ active: true }).populate('charity')
+    //     let sortedEvents = events.sort((a, b) => b.startTime - a.startTime);
+    //     let eventList = {};
+    //     let eventDetails = {};
+    //     for (const event of sortedEvents) {
+    //         eventList[event.short] = event.name;
+    //         eventDetails[event.short] = event;
+    //     }
+    //     localStorage.setItem('event', events);
+    //     tracker.cache.set('eventList', eventList);
+    //     tracker.cache.set('eventDetails', eventDetails);
+    //     tracker.cache.set('activeEvent', activeEvent);
+    // });
+
     schema.post('save', async (doc) => {
-        let events = await database.models['event'].find().populate('charity');
-        let activeEvent = await database.models['event'].findOne({ active: true }).populate('charity')
-        let sortedEvents = events.sort((a, b) => b.startTime - a.startTime);
-        let eventList = {};
-        let eventDetails = {};
-        for (const event of sortedEvents) {
-            eventList[event.short] = event.name;
-            eventDetails[event.short] = event;
-        }
-        tracker.cache.set('eventList', eventList);
-        tracker.cache.set('eventDetails', eventDetails);
-        tracker.cache.set('activeEvent', activeEvent);
-    });
+        let events = await database.models['event'].find();
+        localStorage.setItem('event', JSON.stringify(events));
+    })
 
     return schema;
+}
+
+module.exports.populate = [{
+    ref: 'charity',
+    localField: 'charityId',
+    foreignField: '_id',
+}]
+
+module.exports.getStats = async (database, document) => {
+    return new Promise(async (resolve, reject) => {
+        let stats = {};
+        const donations = await database.find('donation', { eventId: document._id, completed: true })
+        if (donations.length <= 0) {
+            stats.total = 0;
+            stats.count = 0;
+            stats.min = 0;
+            stats.max = 0;
+            stats.avg = 0;
+            stats.median = 0;
+            resolve(stats)
+            return;
+        }
+        let totalArray = [];
+        for (const donation of donations) {
+            totalArray.push(donation.amount);
+        }
+        stats.total = totalArray.reduce(function (a, b) { return a + b }, 0);
+        stats.count = donations.length;
+        stats.min = Math.min(...totalArray)
+        stats.max = Math.max(...totalArray)
+        stats.avg = parseFloat((stats.total / totalArray.length).toFixed(2));
+        totalArray = [...totalArray].sort((a, b) => a - b);
+        stats.median = (totalArray[totalArray.length - 1 >> 1] + totalArray[totalArray.length >> 1]) / 2;
+        resolve(stats)
+    })
 }
